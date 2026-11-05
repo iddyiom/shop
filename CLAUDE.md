@@ -34,7 +34,9 @@ Wireframes (Phase 2) are published as a design artifact: https://claude.ai/artif
 - Passwords are stored hashed.
 
 ## Current phase
-Phase 3: Coding. Step 1: project setup (folder, Git, virtual environment, FastAPI hello world), then database models from docs/database-design.md, then auth, then sales.
+Phase 3: Coding. Done: project setup, database models (all 9 tables), auth (login, lockout, roles, users), sales (POST/GET /sales, receipts). Next: items and sub-items (groups/products, prices), deliveries, stock balance and adjustments, home summary. Before PostgreSQL: add Alembic migrations (tables are made with create_all for now).
+
+Run: `.venv\Scripts\activate`, then `uvicorn app.main:app --reload`. Tests: `pytest`. First owner: `python -m app.manage create-owner`.
 
 ## Parked (do not build now)
 TRA/VAT, van tracking, profit reports, debts (Version 2), expenditure, printing.
