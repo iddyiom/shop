@@ -32,7 +32,7 @@ Unit F4: Home for owner and shopkeeper (write `docs/specs/f04-home.md` first).
 |---|---|---|---|
 | F1 | Setup: Vite + React + TypeScript in `frontend/`, dev proxy, theme colors, first test | Done | 4c93a08 |
 | F2 | App shell: menu, top bar, light/dark switch, routes | Done | 01837e9 |
-| F3 | Log in and auth: api.ts, login, locked account, log out, menu by role | Done | |
+| F3 | Log in and auth: api.ts, login, locked account, log out, menu by role | Done | 8f30727 |
 | F4 | Home for owner and shopkeeper | Next | |
 | F5 | New sale and receipt | Planned | |
 | F6 | Receive stock | Planned | |
