@@ -1,23 +1,13 @@
 # The entry point of our Depot Management System API.
-from contextlib import asynccontextmanager
-
+# Tables are NOT made here: run "alembic upgrade head" first (docs/specs/09-migrations.md).
 from fastapi import FastAPI
 
-from app.database import Base, engine
 from app.errors import add_error_handler
 from app.routers import auth, deliveries, groups, products, sales, stock, summary, users
 
 
-@asynccontextmanager
-async def lifespan(_app: FastAPI):
-    # Runs once when the server starts: create any tables that do not exist yet.
-    # (Before PostgreSQL we will replace this with proper migrations: Alembic.)
-    Base.metadata.create_all(engine)
-    yield
-
-
 # Create the application. Every endpoint is attached to this object.
-app = FastAPI(title="Depot Management System", lifespan=lifespan)
+app = FastAPI(title="Depot Management System")
 add_error_handler(app)
 
 app.include_router(auth.router)

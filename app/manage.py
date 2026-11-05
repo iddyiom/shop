@@ -6,9 +6,9 @@ import argparse
 import getpass
 import sys
 
-from sqlalchemy import select
+from sqlalchemy import inspect, select
 
-from app.database import Base, SessionLocal, engine
+from app.database import SessionLocal, engine
 from app.models import (
     ROLE_OWNER, Delivery, DeliveryItem, Product, ProductGroup, User, now_local,
 )
@@ -84,7 +84,9 @@ def main() -> None:
     commands.add_parser("add-example-data")
     args = parser.parse_args()
 
-    Base.metadata.create_all(engine)  # make sure the tables exist
+    # Tables come from the migrations, never from here (docs/specs/09-migrations.md).
+    if not inspect(engine).has_table("users"):
+        sys.exit("The database has no tables yet. Run: alembic upgrade head")
     with SessionLocal() as db:
         if args.command == "create-owner":
             create_owner(db)

@@ -16,7 +16,7 @@ Tables are in docs/database-design.md. Endpoints are in docs/api-plan.md. Code s
 | Login tokens | PyJWT (signed tokens, 12 hours) | The server can check a token without storing sessions |
 | Tests | pytest + FastAPI TestClient | Each test gets a fresh in-memory database |
 | Front end | React (later phase) | |
-| Migrations | Alembic (before PostgreSQL) | Change tables safely without losing data |
+| Migrations | Alembic 1.20 (`migrations/`) | Change tables safely without losing data; one numbered script per change, kept in Git |
 
 Not used, on purpose: hosted login services (Clerk), real-time services (Liveblocks), background job services (Trigger.dev), file storage. See "Decisions made" in docs/progress.md.
 
@@ -91,8 +91,8 @@ A new unit that touches one of these rules must keep its test green and add test
 - Server: `uvicorn app.main:app --reload`, then open `http://127.0.0.1:8000/docs`.
 - Tests: `pytest`.
 - Terminal commands (`app/manage.py`): `create-owner`, `unlock USERNAME`, `add-example-data`.
-- Tables are created at startup with `create_all`. This is replaced by Alembic (unit 9) before PostgreSQL.
+- Tables: `alembic upgrade head` creates or updates them (run it before the first start and after pulling new migrations). The server never creates tables itself. Tests build their own in-memory tables with `create_all`.
+- After changing `app/models.py`: `alembic revision --autogenerate -m "what changed"`, review the file, `alembic upgrade head`.
 
 ## 7. Known gaps (to fix in their own unit, not by the way)
 - Login rules (attempt counting, locking) live in `app/routers/auth.py`, not in a service. Move to `app/services/auth.py` when auth is next touched.
-- No migrations yet (unit 9).

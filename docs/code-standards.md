@@ -55,6 +55,8 @@ Rule of thumb: if a router function is longer than about 10 lines, the rules pro
 - Never hard-delete. Stopping something sets `is_active = False`.
 - History tables (`sales`, `sale_items`, `deliveries`, `delivery_items`, `price_history`, `stock_entries`) are insert-only. No update or delete code for them.
 - Name constraints: `ck_<table>_<what>`, `uq_<table>_<columns>`.
+- **A model change always comes with a migration, in the same commit:** change `app/models.py`, run `alembic revision --autogenerate -m "what changed"`, read the new file in `migrations/versions/` by hand, run `alembic upgrade head`. `test_migrated_database_matches_models` fails if you forget.
+- Constraints we do not name get a name from `NAMING_CONVENTION` in `app/database.py`. CHECK constraints are always named by hand.
 - No SQLite-only features in app code (the app must also run on PostgreSQL). SQLite-specific setup stays inside `make_engine`.
 
 ## 6. Schemas

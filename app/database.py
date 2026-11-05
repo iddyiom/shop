@@ -1,5 +1,5 @@
 # The connection to the database, and the "session" each request uses.
-from sqlalchemy import create_engine, event
+from sqlalchemy import MetaData, create_engine, event
 from sqlalchemy.orm import DeclarativeBase, sessionmaker
 
 from app.config import DATABASE_URL
@@ -26,8 +26,21 @@ engine = make_engine(DATABASE_URL)
 SessionLocal = sessionmaker(bind=engine, autoflush=False, expire_on_commit=False)
 
 
+# Names for constraints we did not name ourselves, so they are the same on SQLite and
+# PostgreSQL and a later migration can find them. Our CHECK constraints are all named
+# by hand (ck_products_stock...), so there is no "ck" pattern: it would rename them.
+NAMING_CONVENTION = {
+    "pk": "pk_%(table_name)s",
+    "fk": "fk_%(table_name)s_%(column_0_name)s_%(referred_table_name)s",
+    "uq": "uq_%(table_name)s_%(column_0_name)s",
+    "ix": "ix_%(table_name)s_%(column_0_name)s",
+}
+
+
 class Base(DeclarativeBase):
     """Every table class in models.py inherits from this."""
+
+    metadata = MetaData(naming_convention=NAMING_CONVENTION)
 
 
 def get_db():

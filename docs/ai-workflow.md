@@ -36,6 +36,7 @@ Ask one clear question, give a recommendation, and wait. Do not guess.
 - [ ] Tests added for the new rules, including the forbidden path (shopkeeper gets 403).
 - [ ] `pytest` is fully green.
 - [ ] Code follows docs/code-standards.md.
+- [ ] If `app/models.py` changed: a reviewed migration is in `migrations/versions/` and `alembic upgrade head` works.
 - [ ] docs/progress.md updated: unit Done with its commit, new decisions added, "Next" set, test count updated.
 - [ ] Committed (only when Iddy says so).
 
