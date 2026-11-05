@@ -6,18 +6,13 @@ import { Link, useLocation, useNavigate } from 'react-router';
 import PageHeader from '../components/PageHeader';
 import Panel from '../components/Panel';
 import StatusBadge from '../components/StatusBadge';
-import { shortDate, timeOf } from '../format';
+import { shortDate, signed, timeOf } from '../format';
 import type { StockEntry, StockLine, StockStatus } from '../types';
 import { useApi } from '../useApi';
 import { useCurrentUser } from '../user';
 
 const STATUSES: StockStatus[] = ['OUT', 'LOW', 'OK'];
 const LATEST_FIXES = 10;
-
-/** +3 / −2: the change with its sign, so "added" and "removed" are clear at a glance. */
-export function signed(change: number): string {
-  return change > 0 ? `+${change}` : `−${Math.abs(change)}`;
-}
 
 export default function Stock() {
   const isOwner = useCurrentUser().role === 'owner';

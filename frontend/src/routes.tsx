@@ -50,6 +50,7 @@ export const routes: RouteObject[] = [
               { path: 'stock', element: <Stock /> },
               { path: 'sales', element: <SalesRecords /> },
               { path: 'restock', element: <Restock /> },
+              { path: 'restock/:deliveryId', element: <Restock /> },
               {
                 element: <RequireOwner />,
                 children: [

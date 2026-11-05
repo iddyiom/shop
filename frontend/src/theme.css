@@ -1958,6 +1958,122 @@ a {
   font-weight: 600;
 }
 
+/* ---------- Sales records and restock history ---------- */
+
+.date-pill {
+  min-height: 44px;
+  padding: 0 18px;
+  border-radius: 999px;
+  border: 2px solid var(--field-border);
+  background: var(--field);
+  color: var(--text);
+  font: inherit;
+  color-scheme: light dark; /* the calendar pop-up follows the theme */
+}
+
+.day-card {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.day-card h2 {
+  font-size: 24px;
+}
+
+.day-total {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.day-total strong {
+  font-family: Montserrat, sans-serif;
+  font-weight: 800;
+  font-size: 30px;
+  font-variant-numeric: tabular-nums;
+}
+
+.restock-layout {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+.delivery-list {
+  flex: 1 1 240px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.delivery-card {
+  padding: 14px 18px;
+  border-radius: 24px;
+  border: 3px solid transparent;
+  background: var(--card);
+  color: var(--text);
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+.delivery-card.selected {
+  border-color: var(--text);
+}
+
+.delivery-top {
+  align-self: stretch;
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  font-variant-numeric: tabular-nums;
+}
+
+.delivery-card .muted-text {
+  font-size: 14px;
+}
+
+.restock-main {
+  flex: 2.4 1 480px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.section-label {
+  margin: 18px 0 10px;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.correction-card {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.field-select {
+  min-height: 50px;
+  padding: 0 14px;
+  border-radius: 16px;
+  border: 2px solid var(--field-border);
+  background: var(--field);
+  color: var(--text);
+  font: inherit;
+}
+
 /* ---------- Phone width ---------- */
 
 @media (max-width: 700px) {

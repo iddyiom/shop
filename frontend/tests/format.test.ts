@@ -1,7 +1,7 @@
-// Tests for src/format.ts. Spec: docs/specs/f04-home.md, section 7.
+// Tests for src/format.ts. Specs: docs/specs/f04-home.md and f09-records.md, section 7.
 import { describe, expect, it } from 'vitest';
 
-import { formatTsh, itemsSummary, shortDate, timeOf } from '../src/format';
+import { dayBefore, formatTsh, itemsSummary, longDate, shortDate, timeOf } from '../src/format';
 
 describe('format', () => {
   it('formatTsh adds thousands separators', () => {
@@ -26,5 +26,18 @@ describe('format', () => {
       { product_id: 2, product: 'Chocolate', quantity: 1, unit_price: 500, line_total: 500 },
     ];
     expect(itemsSummary(lines)).toBe('2 Fanta, 1 Chocolate');
+  });
+
+  it('dayBefore steps back one day, across month ends and leap years', () => {
+    expect(dayBefore('2026-11-05')).toBe('2026-11-04');
+    expect(dayBefore('2026-11-01')).toBe('2026-10-31');
+    expect(dayBefore('2027-01-01')).toBe('2026-12-31');
+    expect(dayBefore('2027-03-01')).toBe('2027-02-28');
+    expect(dayBefore('2028-03-01')).toBe('2028-02-29'); // 2028 is a leap year
+  });
+
+  it('longDate turns 2026-11-05 into Thursday 5 November', () => {
+    expect(longDate('2026-11-05')).toBe('Thursday 5 November');
+    expect(longDate('2028-02-29')).toBe('Tuesday 29 February');
   });
 });

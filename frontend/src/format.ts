@@ -23,6 +23,34 @@ export function shortDate(date: string): string {
   return `${day} ${MONTHS[month - 1]}`;
 }
 
+const LONG_MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September',
+  'October', 'November', 'December'];
+const WEEKDAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+/** "2026-11-05" → a Date at midnight UTC. UTC on purpose: no laptop time zone can shift the day. */
+function utcDay(date: string): Date {
+  const [year, month, day] = date.split('-').map(Number);
+  return new Date(Date.UTC(year, month - 1, day));
+}
+
+/** "2026-11-05" → "2026-11-04". Month ends and leap years are handled by Date. */
+export function dayBefore(date: string): string {
+  const d = utcDay(date);
+  d.setUTCDate(d.getUTCDate() - 1);
+  return d.toISOString().slice(0, 10);
+}
+
+/** "2026-11-05" → "Thursday 5 November". */
+export function longDate(date: string): string {
+  const d = utcDay(date);
+  return `${WEEKDAYS[d.getUTCDay()]} ${d.getUTCDate()} ${LONG_MONTHS[d.getUTCMonth()]}`;
+}
+
+/** +3 / −2: a stock change with its sign, so "added" and "removed" are clear at a glance. */
+export function signed(change: number): string {
+  return change > 0 ? `+${change}` : `−${Math.abs(change)}`;
+}
+
 /** Receipt lines → "2 Fanta, 1 Chocolate". */
 export function itemsSummary(lines: ReceiptLine[]): string {
   return lines.map((line) => `${line.quantity} ${line.product}`).join(', ');
