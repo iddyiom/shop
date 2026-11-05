@@ -16,6 +16,8 @@ Read these first, they are the source of truth:
 - docs/requirements.md
 - docs/database-design.md
 - docs/api-plan.md
+- docs/progress.md (where we are: read at the start of every session, update at the end of every unit)
+- docs/code-standards.md (how code is written: where it goes, routers, services, errors, tests)
 Wireframes (Phase 2) are published as a design artifact: https://claude.ai/artifact/LmiixK7Lj3BtMVbTrsCgcK (private to Iddy).
 
 ## Tech track
@@ -34,7 +36,10 @@ Wireframes (Phase 2) are published as a design artifact: https://claude.ai/artif
 - Passwords are stored hashed.
 
 ## Current phase
-Phase 3: Coding. Done: project setup, database models (all 9 tables), auth (login, lockout, roles, users), sales (POST/GET /sales, receipts). Next: items and sub-items (groups/products, prices), deliveries, stock balance and adjustments, home summary. Before PostgreSQL: add Alembic migrations (tables are made with create_all for now).
+Phase 3: Coding. Units, status and decisions are in docs/progress.md (the single place for this, so it never goes out of date here). Tables are made with create_all for now; Alembic comes before PostgreSQL.
+
+## How we build (spec-driven)
+One unit at a time. Before coding a unit, write its spec in docs/specs/ with a "done" checklist. Build only what the spec says. When the checklist passes: tests green, commit, update docs/progress.md.
 
 Run: `.venv\Scripts\activate`, then `uvicorn app.main:app --reload`. Tests: `pytest`. First owner: `python -m app.manage create-owner`.
 
