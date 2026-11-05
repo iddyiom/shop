@@ -23,7 +23,7 @@ Unit 9: Alembic migrations (write `docs/specs/09-migrations.md` first).
 | 5 | Items and sub-items: /groups, /products, prices, price history, stop / bring back | Done | 55654f4 |
 | 6 | Deliveries: POST/GET /deliveries, owner-only buying price, corrections | Done | 4f20e56 |
 | 7 | Store balance and adjustments: /stock, /stock/low, adjustments, /stock-entries | Done | 4c9d96c |
-| 8 | Home summary: GET /summary/today | Done | |
+| 8 | Home summary: GET /summary/today | Done | 75e2514 |
 | 9 | Alembic migrations (must be done before switching to PostgreSQL) | Next | |
 
 Statuses: Planned, Next, In progress, Done.
