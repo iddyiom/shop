@@ -1,6 +1,7 @@
 // The frame around every page except Log in: menu on the left, top bar, page in the middle.
-import { Link, Outlet } from 'react-router';
+import { Outlet } from 'react-router';
 
+import { useAuth } from '../auth';
 import { ROLE_LABEL, useCurrentUser } from '../user';
 import ApiStatus from './ApiStatus';
 import Menu from './Menu';
@@ -8,6 +9,7 @@ import ThemeSwitch from './ThemeSwitch';
 
 export default function Layout() {
   const user = useCurrentUser();
+  const { logOut } = useAuth();
 
   return (
     <div className="shell">
@@ -25,9 +27,10 @@ export default function Layout() {
         <div className="user-card">
           <span className="user-name">{user.fullName}</span>
           <span className="user-role">{ROLE_LABEL[user.role]}</span>
-          <Link to="/login" className="user-logout">
+          {/* After logOut() there is no user, so RequireAuth sends us to /login. */}
+          <button type="button" className="user-logout" onClick={logOut}>
             Log out
-          </Link>
+          </button>
         </div>
       </nav>
 

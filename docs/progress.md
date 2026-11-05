@@ -10,7 +10,7 @@ Phase 4: React front end (plan: docs/frontend-plan.md). Phase 3, the API, is com
 (nothing)
 
 ## Next
-Unit F3: Log in and auth (write `docs/specs/f03-auth.md` first).
+Unit F4: Home for owner and shopkeeper (write `docs/specs/f04-home.md` first).
 
 ## Units
 
@@ -32,8 +32,8 @@ Unit F3: Log in and auth (write `docs/specs/f03-auth.md` first).
 |---|---|---|---|
 | F1 | Setup: Vite + React + TypeScript in `frontend/`, dev proxy, theme colors, first test | Done | 4c93a08 |
 | F2 | App shell: menu, top bar, light/dark switch, routes | Done | 01837e9 |
-| F3 | Log in and auth: api.ts, login, locked account, log out, menu by role | Next | |
-| F4 | Home for owner and shopkeeper | Planned | |
+| F3 | Log in and auth: api.ts, login, locked account, log out, menu by role | Done | |
+| F4 | Home for owner and shopkeeper | Next | |
 | F5 | New sale and receipt | Planned | |
 | F6 | Receive stock | Planned | |
 | F7 | Store balance and adjust stock | Planned | |
@@ -48,6 +48,9 @@ Statuses: Planned, Next, In progress, Done.
 ## Decisions made (newest first)
 Short notes on choices that are not obvious from the docs, so nobody undoes them by accident.
 
+- 2026-11-05: Unit F3: token only in sessionStorage (`depot-token`); the user and role are never stored in the browser, they come from GET /auth/me. api.ts adds the Bearer token to every call; any 401 or 423 (except from /auth/login) clears it and returns to Log in. After log in you land on the page you wanted. Shopkeepers typing an owner address see an Owner only page. A new log in try clears the old "session ended" note (found by a test that first failed to catch a broken rule).
+- 2026-11-05: Known gap (accepted for Version 1): log out only makes the browser forget the token; the token stays valid on the server until it expires (12 hours). Fix with deployment (token version per user or blocklist).
+- 2026-11-05: Noticed (not built): the login message says "1 tries remaining"; should be "1 try remaining" (app/routers/auth.py).
 - 2026-11-05: Unit F2: one address per screen (routes.tsx); every page except /login sits in Layout (menu, top bar). The menu list and its roles live only in menu.ts; New sale is never in the menu. Theme remembered per browser in localStorage (`depot-theme`), applied before the first draw; broken storage falls back to light. Until F3 the user is a fixed owner from `useCurrentUser()` in user.ts. The F1 card is now the API pill in the top bar. Lesson: restart `npm run dev` after `npm install`, or Vite can load two copies of React ("Invalid hook call").
 - 2026-11-05: Unit F1: front end set up by hand in `frontend/` (no template). Exact versions (React 19.3.1, Vite 8.3.6, TypeScript 7.0.2, Vitest 5.1.0), lockfile committed. Vite forwards `/api` to 127.0.0.1:8000 and strips the prefix. Fonts bundled (@fontsource) so the app works offline. Colors only as CSS variables in theme.css; light by default until F2's switch. Note: on Windows the dev server answers on `localhost` (IPv6), not 127.0.0.1.
 - 2026-11-05: Phase 4 plan agreed: TypeScript, plain CSS with theme variables (light = Sage, dark = Deep Blue), login token in sessionStorage, code in `frontend/` in this repo. Vite, React Router, plain fetch in one `api.ts`, Vitest. In development Vite forwards `/api` to FastAPI, so no CORS yet. The designs found two backend gaps: B1 (`PATCH /users/{id}`) and B2 (sales date range).
@@ -70,4 +73,4 @@ Short notes on choices that are not obvious from the docs, so nobody undoes them
 - 2026-11-05: Business rules live in `app/services/`, not in routers, so they are easy to read and test.
 
 ## Test status
-Backend: 102 tests passing. Front end: 23 tests passing (last run 2026-11-05).
+Backend: 102 tests passing. Front end: 38 tests passing (last run 2026-11-05).

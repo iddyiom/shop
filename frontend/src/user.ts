@@ -1,5 +1,5 @@
-// Who is using the app. Until F3 (log in) this is a fixed example owner.
-// F3 changes only the inside of useCurrentUser(); everything else stays the same.
+// Who is using the app, in the shape the screens need. The real user comes from auth.tsx.
+import { useAuth } from './auth';
 
 export type Role = 'owner' | 'shopkeeper';
 
@@ -13,6 +13,9 @@ export const ROLE_LABEL: Record<Role, string> = {
   shopkeeper: 'Shopkeeper',
 };
 
+/** Only for pages inside RequireAuth, where a user always exists. */
 export function useCurrentUser(): CurrentUser {
-  return { fullName: 'Depot Owner', role: 'owner' };
+  const { user } = useAuth();
+  if (!user) throw new Error('useCurrentUser() needs a logged-in user (use it inside RequireAuth)');
+  return { fullName: user.full_name, role: user.role };
 }

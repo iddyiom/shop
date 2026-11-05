@@ -95,4 +95,5 @@ A new unit that touches one of these rules must keep its test green and add test
 - After changing `app/models.py`: `alembic revision --autogenerate -m "what changed"`, review the file, `alembic upgrade head`.
 
 ## 7. Known gaps (to fix in their own unit, not by the way)
+- Log out cannot end a token on the server: tokens are signed and checked, but there is no list of ended tokens, so a copied token works until it expires (12 hours). Accepted for Version 1; fix with deployment (a token version per user, raised at log out, or a blocklist).
 - Login rules (attempt counting, locking) live in `app/routers/auth.py`, not in a service. Move to `app/services/auth.py` when auth is next touched.
