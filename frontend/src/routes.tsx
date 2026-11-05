@@ -14,6 +14,7 @@ import ItemForm from './pages/ItemForm';
 import Items from './pages/Items';
 import Login from './pages/Login';
 import NotFound from './pages/NotFound';
+import Receipt from './pages/Receipt';
 import Receive from './pages/Receive';
 import Restock from './pages/Restock';
 import Sale from './pages/Sale';
@@ -43,6 +44,7 @@ export const routes: RouteObject[] = [
             children: [
               { index: true, element: <Home /> }, // "/"
               { path: 'sale', element: <Sale /> },
+              { path: 'receipt/:saleId', element: <Receipt /> },
               { path: 'receive', element: <Receive /> },
               { path: 'stock', element: <Stock /> },
               { path: 'sales', element: <SalesRecords /> },

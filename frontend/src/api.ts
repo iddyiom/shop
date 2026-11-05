@@ -5,12 +5,14 @@
 export class ApiError extends Error {
   readonly status: number; // HTTP status, e.g. 403
   readonly code: string; // the API's "error" field, e.g. "owner_only"
+  readonly details: Record<string, unknown>; // any extra fields, e.g. product_id, available
 
-  constructor(status: number, code: string, message: string) {
+  constructor(status: number, code: string, message: string, details: Record<string, unknown> = {}) {
     super(message); // the API's "message": the exact sentence to show on screen
     this.name = 'ApiError';
     this.status = status;
     this.code = code;
+    this.details = details;
   }
 }
 
@@ -62,14 +64,17 @@ type Options = {
 };
 
 /** Read {"error", "message"} from an error body; fall back to a plain message. */
-function readError(body: unknown, status: number): { code: string; message: string } {
+function readError(
+  body: unknown,
+  status: number,
+): { code: string; message: string; details: Record<string, unknown> } {
   if (typeof body === 'object' && body !== null) {
-    const { error, message } = body as Record<string, unknown>;
+    const { error, message, ...details } = body as Record<string, unknown>;
     if (typeof error === 'string' && typeof message === 'string') {
-      return { code: error, message };
+      return { code: error, message, details };
     }
   }
-  return { code: 'request_failed', message: `Request failed (${status})` };
+  return { code: 'request_failed', message: `Request failed (${status})`, details: {} };
 }
 
 async function request<T>(method: string, path: string, body: unknown, options: Options): Promise<T> {
@@ -87,8 +92,8 @@ async function request<T>(method: string, path: string, body: unknown, options: 
   const data: unknown = await response.json().catch(() => null);
 
   if (!response.ok) {
-    const { code, message } = readError(data, response.status);
-    const error = new ApiError(response.status, code, message);
+    const { code, message, details } = readError(data, response.status);
+    const error = new ApiError(response.status, code, message, details);
     const sessionOver = response.status === 401 || response.status === 423;
     if (sessionOver && options.endsSession !== false) {
       clearToken();

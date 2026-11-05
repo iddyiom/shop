@@ -10,7 +10,7 @@ Phase 4: React front end (plan: docs/frontend-plan.md). Phase 3, the API, is com
 (nothing)
 
 ## Next
-Unit F5: New sale and receipt (write `docs/specs/f05-sale.md` first).
+Unit F7: Store balance and adjust stock (write `docs/specs/f07-stock.md` first).
 
 ## Units
 
@@ -37,8 +37,8 @@ Unit F5: New sale and receipt (write `docs/specs/f05-sale.md` first).
 | F4 | Home for owner and shopkeeper | Done | 0ead0a8 |
 | F8 | Items and prices, add or edit item, price change (moved first) | Done | 0ead0a8 |
 | F6 | Receive stock (moved before F5) | Done | a75b0bf |
-| F5 | New sale and receipt | Next | |
-| F7 | Store balance and adjust stock | Planned | |
+| F5 | New sale and receipt | Done | |
+| F7 | Store balance and adjust stock | Next | |
 | F9 | Sales records, restock history and corrections | Planned | |
 | B1 | Backend: `PATCH /users/{id}` (rename, deactivate) | Planned (before F10) | |
 | B2 | Backend: `GET /sales?from=&to=` date range | Planned (before F9, or drop "This week") | |
@@ -49,6 +49,9 @@ Statuses: Planned, Next, In progress, Done.
 ## Decisions made (newest first)
 Short notes on choices that are not obvious from the docs, so nobody undoes them by accident.
 
+- 2026-11-05: Unit F5: the sale request carries only product_id, quantity and payment_method (checked in the real browser); totals on screen are a preview and the receipt shows the server's numbers, with a note when a price changed while the page was open. Stock is checked on screen and again by the server; a server 409 is shown on its line (ApiError now keeps the error's extra fields, e.g. product_id) and the cards reload. Payment must be chosen each time. The unfinished bill (ids and quantities only) is kept in sessionStorage for the tab and cleared after the sale, by Clear, or at log out. Receipt has its own address (/receipt/:id). Bill logic lives in bill.ts as plain functions.
+- 2026-11-05: Front-end tests got random timeouts on a busy laptop (findBy gives up after 1 s by default). tests/setup.ts raises it to 5 s and vite.config.ts sets testTimeout 20 s; one test that checked a reload instantly now waits for it. Three full runs green afterwards.
+- 2026-11-05: Bug found in the browser and fixed: bill changes used a stale copy (setBill(addProduct(bill, id))), so fast clicks overwrote each other. All bill changes now use React's updater form (setBill(current => ...)); a test reproduces it with three clicks in one batch and fails on the old code.
 - 2026-11-05: Unit F6: the delivery date uses the browser's own date picker, starting on the server's today with max = today. The default is worked out on every draw (pickedDate ?? today), not copied in a useEffect: the effect left a moment with an empty date (a timing race the full test run exposed). Shopkeepers have no buying price column at all and never send the field. The "3 → 51" preview is only a preview; after saving, stock is reloaded from the API. A refused save keeps the form. Tested on a throwaway API for both roles, yesterday's date, and the server refusing a future date.
 - 2026-11-05: Unit F8: every price change (item or sub-item) goes through PriceConfirm (old → new, affected sub-items, "old receipts keep"); nothing is sent until Yes, change. Forms send only changed fields; a sub-item edit that changes the price sends the PATCH (if any) and then the PUT after confirm. No Delete anywhere: stop / bring back only. Stopped items behind a Show stopped switch. Pages: /items, /items/new, /items/:id/edit, /items/:id/new-sub-item, /items/sub-items/:id/edit. api.ts gained apiPatch and apiPut; money.ts parses TSh and levels (the server still decides). Tested end to end on a throwaway API; depot.db kept empty for Iddy's real items.
 - 2026-11-05: Order changed again to F8 → F6 → F5: with a clean database there are no items, and a delivery or sale needs items to choose from.
@@ -80,4 +83,4 @@ Short notes on choices that are not obvious from the docs, so nobody undoes them
 - 2026-11-05: Business rules live in `app/services/`, not in routers, so they are easy to read and test.
 
 ## Test status
-Backend: 106 tests passing. Front end: 85 tests passing (last run 2026-11-05).
+Backend: 106 tests passing. Front end: 102 tests passing (last run 2026-11-05).

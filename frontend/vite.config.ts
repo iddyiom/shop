@@ -19,5 +19,7 @@ export default defineConfig({
   test: {
     environment: 'jsdom', // a pretend browser, so tests run without opening one
     include: ['tests/**/*.test.{ts,tsx}'],
+    setupFiles: ['tests/setup.ts'], // fairer timeouts for findBy… (see the file)
+    testTimeout: 20000, // a whole test may take longer than a single find on a slow laptop
   },
 });

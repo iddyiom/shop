@@ -3,6 +3,7 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
 
 import { apiGet, apiPost, clearToken, readToken, saveToken, setSessionEndHandler } from './api';
+import { clearBill } from './bill';
 import type { LoginResponse, User } from './types';
 
 type AuthValue = {
@@ -62,6 +63,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   function logOut() {
     clearToken();
+    clearBill(); // an unfinished bill belongs to this person's visit only
     setNotice(null);
     setUser(null);
   }
