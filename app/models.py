@@ -120,6 +120,11 @@ class Delivery(Base):
     note: Mapped[str | None] = mapped_column(Text)
 
     items: Mapped[list["DeliveryItem"]] = relationship(back_populates="delivery")
+    receiver: Mapped[User] = relationship()
+    # Corrections of this delivery, newest first.
+    corrections: Mapped[list["StockEntry"]] = relationship(
+        order_by=lambda: StockEntry.id.desc(), viewonly=True
+    )
 
 
 class DeliveryItem(Base):
@@ -158,6 +163,9 @@ class StockEntry(Base):
     reason: Mapped[str] = mapped_column(Text)
     created_by: Mapped[int] = mapped_column(ForeignKey("users.id"))
     created_at: Mapped[datetime] = mapped_column(default=now_local)
+
+    product: Mapped[Product] = relationship()
+    creator: Mapped[User] = relationship()
 
 
 class Sale(Base):

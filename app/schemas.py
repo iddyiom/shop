@@ -1,6 +1,6 @@
 # The shape of the JSON that comes IN to the API and goes OUT of it.
 # Pydantic checks incoming data and rejects bad input with a 422 error.
-from datetime import datetime
+from datetime import date, datetime
 from typing import Annotated, Literal
 
 from pydantic import BaseModel, ConfigDict, Field, StringConstraints, field_validator
@@ -157,3 +157,82 @@ class PriceHistoryOut(BaseModel):
     price: int | None
     changed_at: datetime
     changed_by: str
+
+
+# ---------- Deliveries ----------
+
+Note = Annotated[str, StringConstraints(strip_whitespace=True, min_length=1, max_length=500)]
+
+
+class DeliveryLineIn(BaseModel):
+    product_id: int
+    quantity: int = Field(gt=0, le=100_000)
+    buying_price: Price | None = None  # per unit; the owner only may send it
+
+
+class DeliveryCreate(BaseModel):
+    delivered_at: date | None = None  # None = today (depot time)
+    note: Note | None = None
+    items: list[DeliveryLineIn] = Field(min_length=1)
+
+
+class CorrectionCreate(BaseModel):
+    product_id: int
+    quantity_change: int = Field(ge=-100_000, le=100_000)  # signed: -2 removes 2
+    reason: Note
+
+    @field_validator("quantity_change")
+    @classmethod
+    def not_zero(cls, change: int) -> int:
+        if change == 0:
+            raise ValueError("Quantity change cannot be 0")
+        return change
+
+
+class DeliveryLineOut(BaseModel):
+    """A delivery line as a shopkeeper sees it: no buying price."""
+
+    product_id: int
+    product: str
+    quantity: int
+
+
+class DeliveryLineOwnerOut(DeliveryLineOut):
+    buying_price: int | None
+
+
+class CorrectionEntryOut(BaseModel):
+    """One correction, as listed inside a delivery."""
+
+    id: int
+    product_id: int
+    product: str
+    quantity_change: int
+    reason: str
+    by: str
+    at: datetime
+
+
+class CorrectionOut(CorrectionEntryOut):
+    """The answer to POST .../corrections: also the stock before and after."""
+
+    delivery_id: int
+    before: int
+    after: int
+
+
+class DeliveryOut(BaseModel):
+    """A delivery as a shopkeeper sees it."""
+
+    id: int
+    delivered_at: date
+    received_by: str
+    note: str | None
+    items: list[DeliveryLineOut]
+    corrections: list[CorrectionEntryOut]
+
+
+class DeliveryOwnerOut(DeliveryOut):
+    """A delivery as the owner sees it: lines include the buying price."""
+
+    items: list[DeliveryLineOwnerOut]
