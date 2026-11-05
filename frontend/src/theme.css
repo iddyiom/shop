@@ -1077,6 +1077,161 @@ a {
   color: var(--on-strong);
 }
 
+/* ---------- Receive stock ---------- */
+
+/* Visible only to screen readers (labels for table inputs). */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.receive-layout {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+.receive-main {
+  flex: 1.6 1 520px;
+  min-width: 0;
+}
+
+.receive-side {
+  flex: 1 1 320px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.receive-fields {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 14px;
+}
+
+.field input[type='date'] {
+  color-scheme: light dark; /* the calendar pop-up follows the theme */
+}
+
+.lines-table select,
+.small-input {
+  min-height: 50px;
+  padding: 0 14px;
+  border-radius: 16px;
+  border: 2px solid var(--field-border);
+  background: var(--field);
+  color: var(--text);
+  font: inherit;
+}
+
+.lines-table select {
+  width: 100%;
+  min-width: 170px;
+}
+
+.small-input {
+  width: 130px;
+}
+
+.lines-table td {
+  white-space: normal;
+}
+
+.line-error select,
+.line-error input {
+  border-color: var(--error-text);
+}
+
+.remove-button {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: none;
+  background: var(--inner);
+  color: var(--text);
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.remove-button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.dashed-button {
+  align-self: flex-start;
+  min-height: 48px;
+  padding: 0 22px;
+  border-radius: 999px;
+  border: 2px dashed var(--muted);
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.strong-card {
+  padding: 28px;
+  border-radius: 40px 40px 40px 10px;
+  background: var(--strong);
+  color: var(--on-strong);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.strong-card h2 {
+  font-size: 24px;
+}
+
+.strong-muted {
+  margin: 0;
+  color: var(--strong-muted);
+}
+
+.small-center {
+  font-size: 14px;
+  text-align: center;
+}
+
+.preview-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.preview-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 18px;
+  background: rgb(255 255 255 / 0.08);
+  font-variant-numeric: tabular-nums;
+}
+
+.preview-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.preview-total strong {
+  font-family: Montserrat, sans-serif;
+  font-weight: 800;
+  font-size: 34px;
+}
+
 /* ---------- Log in (no menu) ---------- */
 
 .login-page {

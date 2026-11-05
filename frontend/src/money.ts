@@ -25,3 +25,16 @@ export function parseLevel(text: string): Parsed {
   if (value > MAX_LEVEL) return { ok: false, error: 'That low-stock level is too big.' };
   return { ok: true, value };
 }
+
+export const MAX_QUANTITY = 100_000; // same limit as the API
+
+/** A quantity on a delivery or sale line: a whole number from 1 to 100,000. */
+export function parseQuantity(text: string): Parsed {
+  const cleaned = text.replace(/,/g, '').trim();
+  if (cleaned === '') return { ok: false, error: 'enter a quantity.' };
+  if (!/^\d+$/.test(cleaned)) return { ok: false, error: 'the quantity must be a whole number.' };
+  const value = Number(cleaned);
+  if (value < 1) return { ok: false, error: 'the quantity must be at least 1.' };
+  if (value > MAX_QUANTITY) return { ok: false, error: 'that quantity is too big.' };
+  return { ok: true, value };
+}

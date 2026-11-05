@@ -1,7 +1,17 @@
 // Tests for src/money.ts. Spec: docs/specs/f08-items.md, section 7.
 import { describe, expect, it } from 'vitest';
 
-import { parseLevel, parseTsh } from '../src/money';
+import { parseLevel, parseQuantity, parseTsh } from '../src/money';
+
+describe('parseQuantity', () => {
+  it('accepts 1..100000, refuses 0, -1, 1.5, "abc", ""', () => {
+    expect(parseQuantity('1')).toEqual({ ok: true, value: 1 });
+    expect(parseQuantity('100,000')).toEqual({ ok: true, value: 100000 });
+    for (const bad of ['0', '-1', '1.5', 'abc', '', '100001']) {
+      expect(parseQuantity(bad).ok).toBe(false);
+    }
+  });
+});
 
 describe('parseTsh', () => {
   it('accepts "1200" and "1,200", refuses "abc", "-5", "10000001", ""', () => {

@@ -97,3 +97,21 @@ export type PriceHistoryEntry = {
   changed_at: string;
   changed_by: string;
 };
+
+/** DeliveryLineOut / DeliveryLineOwnerOut. buying_price exists only in the owner's answer. */
+export type DeliveryLine = {
+  product_id: number;
+  product: string;
+  quantity: number;
+  buying_price?: number | null;
+};
+
+/** DeliveryOut / DeliveryOwnerOut: GET /deliveries, POST /deliveries */
+export type Delivery = {
+  id: number;
+  delivered_at: string; // "2026-11-05", the date on the paperwork
+  received_by: string;
+  note: string | null;
+  items: DeliveryLine[];
+  corrections: unknown[]; // shown in Restock history (F9)
+};

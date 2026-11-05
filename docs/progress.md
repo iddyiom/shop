@@ -10,7 +10,7 @@ Phase 4: React front end (plan: docs/frontend-plan.md). Phase 3, the API, is com
 (nothing)
 
 ## Next
-Unit F6: Receive stock (write `docs/specs/f06-receive.md` first; include the date picker).
+Unit F5: New sale and receipt (write `docs/specs/f05-sale.md` first).
 
 ## Units
 
@@ -36,8 +36,8 @@ Unit F6: Receive stock (write `docs/specs/f06-receive.md` first; include the dat
 | D1 | Demo accounts and one-click log in (development only) | Done | 0e6bb2c |
 | F4 | Home for owner and shopkeeper | Done | 0ead0a8 |
 | F8 | Items and prices, add or edit item, price change (moved first) | Done | 0ead0a8 |
-| F6 | Receive stock (moved before F5) | Next | |
-| F5 | New sale and receipt | Planned | |
+| F6 | Receive stock (moved before F5) | Done | |
+| F5 | New sale and receipt | Next | |
 | F7 | Store balance and adjust stock | Planned | |
 | F9 | Sales records, restock history and corrections | Planned | |
 | B1 | Backend: `PATCH /users/{id}` (rename, deactivate) | Planned (before F10) | |
@@ -49,6 +49,7 @@ Statuses: Planned, Next, In progress, Done.
 ## Decisions made (newest first)
 Short notes on choices that are not obvious from the docs, so nobody undoes them by accident.
 
+- 2026-11-05: Unit F6: the delivery date uses the browser's own date picker, starting on the server's today with max = today. The default is worked out on every draw (pickedDate ?? today), not copied in a useEffect: the effect left a moment with an empty date (a timing race the full test run exposed). Shopkeepers have no buying price column at all and never send the field. The "3 → 51" preview is only a preview; after saving, stock is reloaded from the API. A refused save keeps the form. Tested on a throwaway API for both roles, yesterday's date, and the server refusing a future date.
 - 2026-11-05: Unit F8: every price change (item or sub-item) goes through PriceConfirm (old → new, affected sub-items, "old receipts keep"); nothing is sent until Yes, change. Forms send only changed fields; a sub-item edit that changes the price sends the PATCH (if any) and then the PUT after confirm. No Delete anywhere: stop / bring back only. Stopped items behind a Show stopped switch. Pages: /items, /items/new, /items/:id/edit, /items/:id/new-sub-item, /items/sub-items/:id/edit. api.ts gained apiPatch and apiPut; money.ts parses TSh and levels (the server still decides). Tested end to end on a throwaway API; depot.db kept empty for Iddy's real items.
 - 2026-11-05: Order changed again to F8 → F6 → F5: with a clean database there are no items, and a delivery or sale needs items to choose from.
 - 2026-11-05: Iddy: screens must show real counts only. The local depot.db was cleared (example items and test sales removed; backup kept outside the repo), only the demo log ins remain. F6 Receive stock comes before F5 New sale, so real stock enters first. "Calendar" = a date picker on screens (the browser's built-in `<input type="date">`, offline, no outside service): delivery date in F6, day choice in F9. No outside calendar service.
@@ -79,4 +80,4 @@ Short notes on choices that are not obvious from the docs, so nobody undoes them
 - 2026-11-05: Business rules live in `app/services/`, not in routers, so they are easy to read and test.
 
 ## Test status
-Backend: 106 tests passing. Front end: 70 tests passing (last run 2026-11-05).
+Backend: 106 tests passing. Front end: 85 tests passing (last run 2026-11-05).
