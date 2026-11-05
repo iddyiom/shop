@@ -10,7 +10,7 @@ Phase 3: Coding (building the API, one unit at a time).
 (nothing)
 
 ## Next
-Unit 5: Items and sub-items. Spec not written yet: write `docs/specs/05-items.md` first.
+Unit 6: Deliveries (write `docs/specs/06-deliveries.md` first).
 
 ## Units
 
@@ -20,7 +20,7 @@ Unit 5: Items and sub-items. Spec not written yet: write `docs/specs/05-items.md
 | 2 | Database models (all 9 tables), test setup, password hashing | Done | 083e258 |
 | 3 | Auth: login, lockout after 3 tries, roles, owner manages users | Done | d663588 |
 | 4 | Sales: POST/GET /sales, receipts, list by day, `create-owner` command | Done | 1ef37df |
-| 5 | Items and sub-items: /groups, /products, prices, price history, stop / bring back | Next | |
+| 5 | Items and sub-items: /groups, /products, prices, price history, stop / bring back | Done | |
 | 6 | Deliveries: POST/GET /deliveries, owner-only buying price, corrections | Planned | |
 | 7 | Store balance and adjustments: /stock, /stock/low, adjustments, /stock-entries | Planned | |
 | 8 | Home summary: GET /summary/today | Planned | |
@@ -31,6 +31,8 @@ Statuses: Planned, Next, In progress, Done.
 ## Decisions made (newest first)
 Short notes on choices that are not obvious from the docs, so nobody undoes them by accident.
 
+- 2026-11-05: Unit 5: prices change only through the `/price` endpoints, so every change (including the first price) writes price_history. Same price again = no row. Lists hide stopped items unless `?include_stopped=true`. An item's price history includes its sub-items' own-price changes.
+- 2026-11-05: Unit 5: names are unique ignoring upper/lower case (checked in the service). If two requests race past the check, the database unique constraint refuses one and the service answers 409, not 500.
 - 2026-11-05: Keep the current stack (FastAPI, SQLAlchemy, own auth). No Clerk, Liveblocks or Trigger.dev: the depot has no live shared canvas, no long background jobs, and auth with lockout is already built and tested.
 - 2026-11-05: Wrote docs/architecture.md. Every invariant lists where it is enforced and which test proves it. Known gap: login rules live in the auth router, move to a service when auth is next touched.
 - 2026-11-05: Wrote docs/ai-workflow.md: no code before an agreed spec, no new tools without asking, one definition of done for every unit.
@@ -40,4 +42,4 @@ Short notes on choices that are not obvious from the docs, so nobody undoes them
 - 2026-11-05: Business rules live in `app/services/`, not in routers, so they are easy to read and test.
 
 ## Test status
-29 tests passing (last run 2026-11-05).
+52 tests passing (last run 2026-11-05).

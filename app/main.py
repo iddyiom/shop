@@ -5,7 +5,7 @@ from fastapi import FastAPI
 
 from app.database import Base, engine
 from app.errors import add_error_handler
-from app.routers import auth, sales, users
+from app.routers import auth, groups, products, sales, users
 
 
 @asynccontextmanager
@@ -22,6 +22,8 @@ add_error_handler(app)
 
 app.include_router(auth.router)
 app.include_router(users.router)
+app.include_router(groups.router)
+app.include_router(products.router)
 app.include_router(sales.router)
 
 

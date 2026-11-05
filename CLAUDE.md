@@ -41,7 +41,7 @@ Wireframes (Phase 2) are published as a design artifact: https://claude.ai/artif
 Phase 3: Coding. Units, status and decisions are in docs/progress.md (the single place for this, so it never goes out of date here). Tables are made with create_all for now; Alembic comes before PostgreSQL.
 
 ## How we build (spec-driven)
-One unit at a time. Before coding a unit, write its spec in docs/specs/ with a "done" checklist. Build only what the spec says. When the checklist passes: tests green, commit, update docs/progress.md.
+One unit at a time. Before coding a unit, write its spec in docs/specs/ (copy docs/specs/_template.md) with a "done" checklist. Build only what the spec says. When the checklist passes: tests green, commit, update docs/progress.md.
 
 Run: `.venv\Scripts\activate`, then `uvicorn app.main:app --reload`. Tests: `pytest`. First owner: `python -m app.manage create-owner`.
 

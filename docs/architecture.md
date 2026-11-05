@@ -67,7 +67,7 @@ Every unit that changes stock (deliveries, corrections, adjustments) follows the
 | 2 | A sale (later: a delivery, a correction) is all or nothing | One transaction + rollback in the service | `test_sale_is_all_or_nothing` |
 | 3 | The server calculates every price and total | Service reads prices from the DB; input schemas have no price fields | `test_server_ignores_prices_sent_by_the_screen` |
 | 4 | A receipt keeps the price at the time of sale | `sale_items.unit_price` is a copy, never recalculated | `test_old_receipt_keeps_old_price` |
-| 5 | History is never edited (sales, deliveries, price_history, stock_entries) | No update or delete code for these tables; changes are new rows | (unit 5 onward adds tests) |
+| 5 | History is never edited (sales, deliveries, price_history, stock_entries) | No update or delete code for these tables; changes are new rows | `test_set_own_price_then_remove_it`, `test_change_item_price_returns_old_and_new_and_adds_history` |
 | 6 | Nothing is hard-deleted | `is_active` flags instead of delete | `test_stopped_sub_item_cannot_be_sold` |
 | 7 | Owner-only actions are refused for shopkeepers | `OwnerUser` dependency on the endpoint | `test_shopkeeper_cannot_manage_users` |
 | 8 | Owner-only fields (buying prices, money totals) never reach a shopkeeper | Separate response schemas per role (from unit 6) | (units 6 and 8 add tests) |
