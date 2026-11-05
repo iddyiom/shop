@@ -281,3 +281,21 @@ class AdjustmentOut(StockEntryOut):
 
     before: int
     after: int
+
+
+# ---------- Home summary ----------
+
+
+class SummaryOut(BaseModel):
+    """Today's numbers as a shopkeeper sees them: no money."""
+
+    date: date
+    items_sold: int  # units, e.g. 2 Fanta + 1 Chocolate = 3
+    low_stock_count: int  # LOW and OUT, the same list as GET /stock/low
+    last_restock: date | None  # the latest delivery date, None if no deliveries yet
+
+
+class SummaryOwnerOut(SummaryOut):
+    """Today's numbers as the owner sees them: also the money taken."""
+
+    sales_total: int  # whole TSh

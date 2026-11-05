@@ -10,7 +10,7 @@ Phase 3: Coding (building the API, one unit at a time).
 (nothing)
 
 ## Next
-Unit 8: Home summary (write `docs/specs/08-summary.md` first).
+Unit 9: Alembic migrations (write `docs/specs/09-migrations.md` first).
 
 ## Units
 
@@ -23,14 +23,15 @@ Unit 8: Home summary (write `docs/specs/08-summary.md` first).
 | 5 | Items and sub-items: /groups, /products, prices, price history, stop / bring back | Done | 55654f4 |
 | 6 | Deliveries: POST/GET /deliveries, owner-only buying price, corrections | Done | 4f20e56 |
 | 7 | Store balance and adjustments: /stock, /stock/low, adjustments, /stock-entries | Done | 4c9d96c |
-| 8 | Home summary: GET /summary/today | Next | |
-| 9 | Alembic migrations (must be done before switching to PostgreSQL) | Planned | |
+| 8 | Home summary: GET /summary/today | Done | |
+| 9 | Alembic migrations (must be done before switching to PostgreSQL) | Next | |
 
 Statuses: Planned, Next, In progress, Done.
 
 ## Decisions made (newest first)
 Short notes on choices that are not obvious from the docs, so nobody undoes them by accident.
 
+- 2026-11-05: Unit 8: home summary is today only (depot time). Items sold = units; low-stock count reuses `list_low_stock` (LOW + OUT, active), so it always matches /stock/low; last restock = latest `delivered_at`. Totals are summed by the database. `sales_total` is owner-only via a separate schema.
 - 2026-11-05: Unit 7: corrections and adjustments share `change_stock` in `app/services/stock.py` (database-side add, guarded removal). Sales keep their own update because their errors differ.
 - 2026-11-05: Unit 7: adjustment reasons are exactly Damaged, Expired, Lost or missing, Counted differently. Only Counted differently can add. Stopped sub-items are hidden from /stock unless asked and never in /stock/low, but can still be adjusted. `/stock` uses `?group_id=` (API plan updated).
 - 2026-11-05: Unit 6: stock goes up with a database-side add (`stock = stock + n`) so a sale at the same moment is never overwritten. A shopkeeper who sends a buying price gets 403 (not silently dropped). Shopkeeper responses use a schema with no `buying_price` key at all.
@@ -47,4 +48,4 @@ Short notes on choices that are not obvious from the docs, so nobody undoes them
 - 2026-11-05: Business rules live in `app/services/`, not in routers, so they are easy to read and test.
 
 ## Test status
-89 tests passing (last run 2026-11-05).
+97 tests passing (last run 2026-11-05).

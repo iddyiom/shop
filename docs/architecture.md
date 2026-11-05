@@ -70,7 +70,7 @@ Every unit that changes stock (deliveries, corrections, adjustments) follows the
 | 5 | History is never edited (sales, deliveries, price_history, stock_entries) | No update or delete code for these tables; changes are new rows | `test_set_own_price_then_remove_it`, `test_change_item_price_returns_old_and_new_and_adds_history` |
 | 6 | Nothing is hard-deleted | `is_active` flags instead of delete | `test_stopped_sub_item_cannot_be_sold` |
 | 7 | Owner-only actions are refused for shopkeepers | `OwnerUser` dependency on the endpoint | `test_shopkeeper_cannot_manage_users` |
-| 8 | Owner-only fields (buying prices, money totals) never reach a shopkeeper | Separate response schemas per role (`DeliveryOut` / `DeliveryOwnerOut`); shopkeepers sending a buying price get 403 | `test_shopkeeper_never_sees_buying_price`, `test_shopkeeper_cannot_send_buying_price` (unit 8 adds money totals) |
+| 8 | Owner-only fields (buying prices, money totals) never reach a shopkeeper | Separate response schemas per role (`DeliveryOut` / `DeliveryOwnerOut`, `SummaryOut` / `SummaryOwnerOut`); shopkeepers sending a buying price get 403 | `test_shopkeeper_never_sees_buying_price`, `test_shopkeeper_cannot_send_buying_price`, `test_shopkeeper_never_sees_sales_total` |
 | 9 | Passwords are stored hashed | `hash_password` (bcrypt) on every create | `test_owner_creates_user_with_hashed_password` |
 | 10 | 3 wrong passwords lock the account until the owner unlocks it | Login counts `failed_attempts`; `CurrentUser` refuses locked users | `test_third_wrong_password_locks_account`, `test_owner_unlocks_account` |
 | 11 | The code runs on SQLite and PostgreSQL | No SQLite-only SQL; SQLite setup only inside `make_engine` | (checked when switching) |
