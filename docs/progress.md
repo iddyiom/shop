@@ -37,7 +37,7 @@ Unit F7: Store balance and adjust stock (write `docs/specs/f07-stock.md` first).
 | F4 | Home for owner and shopkeeper | Done | 0ead0a8 |
 | F8 | Items and prices, add or edit item, price change (moved first) | Done | 0ead0a8 |
 | F6 | Receive stock (moved before F5) | Done | a75b0bf |
-| F5 | New sale and receipt | Done | |
+| F5 | New sale and receipt | Done | 6c77b75 |
 | F7 | Store balance and adjust stock | Next | |
 | F9 | Sales records, restock history and corrections | Planned | |
 | B1 | Backend: `PATCH /users/{id}` (rename, deactivate) | Planned (before F10) | |
