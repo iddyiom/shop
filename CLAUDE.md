@@ -45,7 +45,7 @@ Phase 4: React front end (Phase 3, the API, is complete). Units, status and deci
 ## How we build (spec-driven)
 One unit at a time. Before coding a unit, write its spec in docs/specs/ (copy docs/specs/_template.md) with a "done" checklist. Build only what the spec says. When the checklist passes: tests green, commit, update docs/progress.md.
 
-Run: `.venv\Scripts\activate`, then `alembic upgrade head` (makes or updates the tables), then `uvicorn app.main:app --reload`. Tests: `pytest`. First owner: `python -m app.manage create-owner`.
+Run: `.venv\Scripts\activate`, then `alembic upgrade head` (makes or updates the tables), then `uvicorn app.main:app --reload`. Tests: `pytest`. First owner: `python -m app.manage create-owner`. Demo accounts for testing (local SQLite only; one-click log in under `npm run dev`): `python -m app.manage add-demo-users` (run again to reset or unlock them).
 Front end (second terminal): `cd frontend`, `npm install` (first time), `npm run dev`, open http://localhost:5173. Front-end tests: `npm test`; type check and build: `npm run build`.
 
 ## Parked (do not build now)

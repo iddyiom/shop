@@ -1,5 +1,5 @@
 // Log in. No menu on this page. Shows the API's own messages (tries left, locked).
-import { useEffect, useState, type FormEvent } from 'react';
+import { lazy, Suspense, useEffect, useState, type FormEvent } from 'react';
 import { Navigate, useLocation } from 'react-router';
 
 import { ApiError } from '../api';
@@ -7,6 +7,10 @@ import { useAuth } from '../auth';
 import ThemeSwitch from '../components/ThemeSwitch';
 
 const CANNOT_REACH = 'Cannot reach the API. Is it running?';
+
+// Demo accounts: only under `npm run dev`. In a build, DEV is false, so Vite drops
+// this import entirely and the demo passwords never reach the depot's app.
+const DemoLogin = import.meta.env.DEV ? lazy(() => import('../components/DemoLogin')) : null;
 
 export default function Login() {
   const { user, checking, notice, logIn } = useAuth();
@@ -54,58 +58,65 @@ export default function Login() {
       <div className="login-theme">
         <ThemeSwitch />
       </div>
-      <form className="login-card" onSubmit={submit} noValidate>
-        <div className="logo">
-          <span className="logo-mark" aria-hidden="true">D</span>
-          Depot
-        </div>
-        <div>
-          <h1>Karibu</h1>
-          <p className="login-lead">Log in to the depot system.</p>
-        </div>
+      <div className="login-column">
+        <form className="login-card" onSubmit={submit} noValidate>
+          <div className="logo">
+            <span className="logo-mark" aria-hidden="true">D</span>
+            Depot
+          </div>
+          <div>
+            <h1>Karibu</h1>
+            <p className="login-lead">Log in to the depot system.</p>
+          </div>
 
-        {/* Why the last session ended (expired token, locked account). */}
-        {notice && (
-          <p className="form-note" role="status">
-            {notice}
-          </p>
+          {/* Why the last session ended (expired token, locked account). */}
+          {notice && (
+            <p className="form-note" role="status">
+              {notice}
+            </p>
+          )}
+          {/* What went wrong with this try (the API's own sentence). */}
+          {error && (
+            <p className="form-message" role="alert">
+              {error}
+            </p>
+          )}
+
+          <div className="field">
+            <label htmlFor="username">Username</label>
+            <input
+              id="username"
+              name="username"
+              autoComplete="username"
+              value={username}
+              onChange={(event) => setUsername(event.target.value)}
+              required
+            />
+          </div>
+          <div className="field">
+            <label htmlFor="password">Password</label>
+            <input
+              id="password"
+              name="password"
+              type="password"
+              autoComplete="current-password"
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+              required
+            />
+          </div>
+
+          <button type="submit" className="primary-button" disabled={sending || !username || !password}>
+            {sending ? 'Logging in…' : 'Log in'}
+          </button>
+          <p className="login-help">Forgot your password? Ask the owner.</p>
+        </form>
+        {DemoLogin && (
+          <Suspense fallback={null}>
+            <DemoLogin />
+          </Suspense>
         )}
-        {/* What went wrong with this try (the API's own sentence). */}
-        {error && (
-          <p className="form-message" role="alert">
-            {error}
-          </p>
-        )}
-
-        <div className="field">
-          <label htmlFor="username">Username</label>
-          <input
-            id="username"
-            name="username"
-            autoComplete="username"
-            value={username}
-            onChange={(event) => setUsername(event.target.value)}
-            required
-          />
-        </div>
-        <div className="field">
-          <label htmlFor="password">Password</label>
-          <input
-            id="password"
-            name="password"
-            type="password"
-            autoComplete="current-password"
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
-            required
-          />
-        </div>
-
-        <button type="submit" className="primary-button" disabled={sending || !username || !password}>
-          {sending ? 'Logging in…' : 'Log in'}
-        </button>
-        <p className="login-help">Forgot your password? Ask the owner.</p>
-      </form>
+      </div>
     </main>
   );
 }

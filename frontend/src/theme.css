@@ -400,13 +400,85 @@ a {
 
 .login-card {
   width: 100%;
-  max-width: 440px;
   padding: 40px 36px;
   border-radius: 40px 40px 40px 10px;
   background: var(--card);
   display: flex;
   flex-direction: column;
   gap: 14px;
+}
+
+.login-column {
+  width: 100%;
+  max-width: 440px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* DEVELOPMENT ONLY: the demo accounts box (DemoLogin.tsx). Dashed to look temporary. */
+.demo-box {
+  padding: 20px 22px;
+  border-radius: 28px;
+  border: 2px dashed var(--field-border);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.demo-box h2 {
+  font-size: 18px;
+}
+
+.demo-note {
+  margin: 0;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.demo-buttons {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 10px;
+}
+
+.demo-button {
+  min-height: 64px;
+  padding: 10px 16px;
+  border-radius: 20px;
+  border: none;
+  background: var(--card);
+  color: var(--text);
+  font: inherit;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  cursor: pointer;
+}
+
+.demo-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.demo-label {
+  font-weight: 800;
+}
+
+.demo-credentials {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.demo-error p {
+  margin: 0;
+  font-size: 14px;
+}
+
+.demo-error p[role='alert'] {
+  color: var(--error-text);
+  font-weight: 700;
 }
 
 .login-card h1 {

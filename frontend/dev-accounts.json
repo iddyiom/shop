@@ -1,0 +1,19 @@
+{
+  "_note": "DEVELOPMENT ONLY. Demo accounts for a local SQLite database. Created by: python -m app.manage add-demo-users. Never used in the built app or on a real server.",
+  "accounts": [
+    {
+      "label": "Owner",
+      "username": "demo_owner",
+      "full_name": "Demo Owner",
+      "role": "owner",
+      "password": "demo-owner-2026"
+    },
+    {
+      "label": "Shopkeeper",
+      "username": "demo_shop",
+      "full_name": "Demo Shopkeeper",
+      "role": "shopkeeper",
+      "password": "demo-shop-2026"
+    }
+  ]
+}

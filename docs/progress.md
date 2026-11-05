@@ -33,6 +33,7 @@ Unit F4: Home for owner and shopkeeper (write `docs/specs/f04-home.md` first).
 | F1 | Setup: Vite + React + TypeScript in `frontend/`, dev proxy, theme colors, first test | Done | 4c93a08 |
 | F2 | App shell: menu, top bar, light/dark switch, routes | Done | 01837e9 |
 | F3 | Log in and auth: api.ts, login, locked account, log out, menu by role | Done | 8f30727 |
+| D1 | Demo accounts and one-click log in (development only) | Done | |
 | F4 | Home for owner and shopkeeper | Next | |
 | F5 | New sale and receipt | Planned | |
 | F6 | Receive stock | Planned | |
@@ -48,6 +49,7 @@ Statuses: Planned, Next, In progress, Done.
 ## Decisions made (newest first)
 Short notes on choices that are not obvious from the docs, so nobody undoes them by accident.
 
+- 2026-11-05: Unit D1: demo accounts (demo_owner, demo_shop) live in frontend/dev-accounts.json. `python -m app.manage add-demo-users` creates or resets them and refuses any non-SQLite database. The Log in page shows one-click buttons only under `npm run dev`: DemoLogin is loaded with `import.meta.env.DEV ? lazy(...) : null`, so the build contains no demo password (checked by searching dist/, and the search was proven by removing the guard). No sign up page, by design.
 - 2026-11-05: Unit F3: token only in sessionStorage (`depot-token`); the user and role are never stored in the browser, they come from GET /auth/me. api.ts adds the Bearer token to every call; any 401 or 423 (except from /auth/login) clears it and returns to Log in. After log in you land on the page you wanted. Shopkeepers typing an owner address see an Owner only page. A new log in try clears the old "session ended" note (found by a test that first failed to catch a broken rule).
 - 2026-11-05: Known gap (accepted for Version 1): log out only makes the browser forget the token; the token stays valid on the server until it expires (12 hours). Fix with deployment (token version per user or blocklist).
 - 2026-11-05: Noticed (not built): the login message says "1 tries remaining"; should be "1 try remaining" (app/routers/auth.py).
@@ -73,4 +75,4 @@ Short notes on choices that are not obvious from the docs, so nobody undoes them
 - 2026-11-05: Business rules live in `app/services/`, not in routers, so they are easy to read and test.
 
 ## Test status
-Backend: 102 tests passing. Front end: 38 tests passing (last run 2026-11-05).
+Backend: 106 tests passing. Front end: 41 tests passing (last run 2026-11-05).
