@@ -36,7 +36,7 @@ Unit F5: New sale and receipt (write `docs/specs/f05-sale.md` first).
 | D1 | Demo accounts and one-click log in (development only) | Done | 0e6bb2c |
 | F4 | Home for owner and shopkeeper | Done | 0ead0a8 |
 | F8 | Items and prices, add or edit item, price change (moved first) | Done | 0ead0a8 |
-| F6 | Receive stock (moved before F5) | Done | |
+| F6 | Receive stock (moved before F5) | Done | a75b0bf |
 | F5 | New sale and receipt | Next | |
 | F7 | Store balance and adjust stock | Planned | |
 | F9 | Sales records, restock history and corrections | Planned | |
