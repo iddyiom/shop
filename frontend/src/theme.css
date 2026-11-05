@@ -1,0 +1,162 @@
+/* The depot's colors, copied from the design's THEMES lists.
+   Components use only var(--name), never a raw color, so dark mode is one switch:
+   <html data-theme="light"> or <html data-theme="dark">. */
+
+[data-theme='light'] {
+  /* Sage */
+  --page: #b9cbc1;
+  --shape: #a6bbaf;
+  --nav: #5f7a6f;
+  --nav-text: #ffffff;
+  --text: #1e2b26;
+  --muted: #4e625a;
+  --eyebrow: #2f4a3f;
+  --card: #f4f7f3;
+  --inner: #e4ece6;
+  --line: #d3ded7;
+  --field: #ffffff;
+  --field-border: #9fb3a8;
+  --accent: #f2e14c;
+  --on-accent: #1e2b26;
+  --strong: #1e2b26;
+  --on-strong: #ffffff;
+  --strong-muted: #c5d3cb;
+  --out: #f2a193;
+  --low: #f2e14c;
+  --ok: #dce6df;
+  --badge-text: #1e2b26;
+  --error-bg: #fbe3de;
+  --error-text: #8a2416;
+}
+
+[data-theme='dark'] {
+  /* Deep Blue */
+  --page: #081633;
+  --shape: #0e2350;
+  --nav: #0b1c40;
+  --nav-text: #c9d7ee;
+  --text: #eaf2ff;
+  --muted: #9fb3d1;
+  --eyebrow: #7dd3fc;
+  --card: #0e2350;
+  --inner: #11295a;
+  --line: #1b3a74;
+  --field: #081633;
+  --field-border: #2a4c8c;
+  --accent: #5bc0f8;
+  --on-accent: #071a3a;
+  --strong: #11295a;
+  --on-strong: #eaf2ff;
+  --strong-muted: #9fb3d1;
+  --out: #ff9a8b;
+  --low: #fbbf6b;
+  --ok: #163a78;
+  --badge-text: #1e1206;
+  --error-bg: #2a1830;
+  --error-text: #ffb4a8;
+}
+
+/* ---------- Base ---------- */
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--page);
+  color: var(--text);
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+h1,
+h2,
+h3 {
+  font-family: Montserrat, Inter, sans-serif;
+  font-weight: 800;
+  line-height: 1.1;
+  margin: 0;
+}
+
+/* ---------- F1: the API status card ---------- */
+
+.status-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.status-card {
+  width: 100%;
+  max-width: 520px;
+  padding: 40px 36px;
+  border-radius: 40px 40px 40px 10px;
+  background: var(--card);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: Montserrat, sans-serif;
+  font-weight: 800;
+  font-size: 22px;
+}
+
+.logo-mark {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--on-accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.status-card h1 {
+  font-size: 36px;
+}
+
+.status-card p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.status-card code {
+  padding: 2px 8px;
+  border-radius: 8px;
+  background: var(--inner);
+  color: var(--text);
+}
+
+.status-pill {
+  align-self: flex-start;
+  padding: 4px 14px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  color: var(--badge-text);
+}
+
+.status-pill.running {
+  background: var(--ok);
+  color: var(--text);
+}
+
+.status-pill.checking {
+  background: var(--low);
+}
+
+.status-pill.unreachable {
+  background: var(--out);
+}

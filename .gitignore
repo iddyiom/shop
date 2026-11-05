@@ -12,3 +12,7 @@ __pycache__/
 
 # Login token secret (made automatically on a laptop)
 .secret_key
+
+# Front end: installed libraries and build output (made again by npm)
+frontend/node_modules/
+frontend/dist/

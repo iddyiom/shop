@@ -10,7 +10,7 @@ Phase 4: React front end (plan: docs/frontend-plan.md). Phase 3, the API, is com
 (nothing)
 
 ## Next
-Unit F1: Front-end setup (write `docs/specs/f01-setup.md` first).
+Unit F2: App shell (write `docs/specs/f02-shell.md` first).
 
 ## Units
 
@@ -30,8 +30,8 @@ Unit F1: Front-end setup (write `docs/specs/f01-setup.md` first).
 
 | # | Unit | Status | Commit |
 |---|---|---|---|
-| F1 | Setup: Vite + React + TypeScript in `frontend/`, dev proxy, theme colors, first test | Next | |
-| F2 | App shell: menu, top bar, light/dark switch, routes | Planned | |
+| F1 | Setup: Vite + React + TypeScript in `frontend/`, dev proxy, theme colors, first test | Done | |
+| F2 | App shell: menu, top bar, light/dark switch, routes | Next | |
 | F3 | Log in and auth: api.ts, login, locked account, log out, menu by role | Planned | |
 | F4 | Home for owner and shopkeeper | Planned | |
 | F5 | New sale and receipt | Planned | |
@@ -48,6 +48,7 @@ Statuses: Planned, Next, In progress, Done.
 ## Decisions made (newest first)
 Short notes on choices that are not obvious from the docs, so nobody undoes them by accident.
 
+- 2026-11-05: Unit F1: front end set up by hand in `frontend/` (no template). Exact versions (React 19.3.1, Vite 8.3.6, TypeScript 7.0.2, Vitest 5.1.0), lockfile committed. Vite forwards `/api` to 127.0.0.1:8000 and strips the prefix. Fonts bundled (@fontsource) so the app works offline. Colors only as CSS variables in theme.css; light by default until F2's switch. Note: on Windows the dev server answers on `localhost` (IPv6), not 127.0.0.1.
 - 2026-11-05: Phase 4 plan agreed: TypeScript, plain CSS with theme variables (light = Sage, dark = Deep Blue), login token in sessionStorage, code in `frontend/` in this repo. Vite, React Router, plain fetch in one `api.ts`, Vitest. In development Vite forwards `/api` to FastAPI, so no CORS yet. The designs found two backend gaps: B1 (`PATCH /users/{id}`) and B2 (sales date range).
 - 2026-11-05: Laptop redesign done as a design canvas (13 screens, light and dark). "New sale" is a big button on the home screens, not a menu item.
 - 2026-11-05: Unit 9: tables are created and changed only by Alembic (`migrations/`, first revision bdc11083e66f). The server does not migrate on start; run `alembic upgrade head` deliberately. The database address comes from app/config.py, never alembic.ini. Unnamed constraints get names from NAMING_CONVENTION (no "ck" pattern: our CHECKs are named by hand). Migrations run with SQLite foreign-key checks off and batch mode on. The practice depot.db was rebuilt from the migration.
@@ -68,4 +69,4 @@ Short notes on choices that are not obvious from the docs, so nobody undoes them
 - 2026-11-05: Business rules live in `app/services/`, not in routers, so they are easy to read and test.
 
 ## Test status
-102 tests passing (last run 2026-11-05).
+Backend: 102 tests passing. Front end: 6 tests passing (last run 2026-11-05).

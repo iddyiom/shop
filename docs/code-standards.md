@@ -87,3 +87,20 @@ Rule of thumb: if a router function is longer than about 10 lines, the rules pro
 
 - One unit = one commit (or a few small ones), only with tests green.
 - Commit message: `Area: what changed, in plain words`, e.g. `Sales: confirm sale in one transaction, receipts`.
+
+## 10. Front end (`frontend/`, Phase 4)
+
+| Folder / file | Job |
+|---|---|
+| `src/api.ts` | The ONLY place that calls `fetch`. Adds `/api`, reads JSON, turns error answers into `ApiError` |
+| `src/theme.css` | Every color, as a CSS variable, for light (Sage) and dark (Deep Blue) |
+| `src/pages/` | One file per screen (from F2) |
+| `src/components/` | Shared pieces used by several pages (from F2) |
+| `tests/` | Vitest tests; `fetch` is faked, the real API is never needed |
+
+- TypeScript strict mode; no `any`. Type every API answer (e.g. `type Health = { status: string }`).
+- Colors only as `var(--name)` from `theme.css`. No raw colors in components.
+- Show the API's `message` as it is; do not invent different wording for the same error.
+- Never `dangerouslySetInnerHTML`. Never put the token in a URL, a log or `localStorage`.
+- Libraries are pinned exactly (`.npmrc` has `save-exact=true`); `package-lock.json` is committed.
+- Every unit: `npm test` and `npm run build` green, and the backend's `pytest` still green.
