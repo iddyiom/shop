@@ -24,7 +24,7 @@ Phase 3 (the API) is complete. Plan the next phase with Iddy: the React front en
 | 6 | Deliveries: POST/GET /deliveries, owner-only buying price, corrections | Done | 4f20e56 |
 | 7 | Store balance and adjustments: /stock, /stock/low, adjustments, /stock-entries | Done | 4c9d96c |
 | 8 | Home summary: GET /summary/today | Done | 75e2514 |
-| 9 | Alembic migrations (must be done before switching to PostgreSQL) | Done | |
+| 9 | Alembic migrations (must be done before switching to PostgreSQL) | Done | cb2e49d |
 
 Statuses: Planned, Next, In progress, Done.
 
