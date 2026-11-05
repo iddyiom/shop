@@ -236,3 +236,48 @@ class DeliveryOwnerOut(DeliveryOut):
     """A delivery as the owner sees it: lines include the buying price."""
 
     items: list[DeliveryLineOwnerOut]
+
+
+# ---------- Store balance and adjustments ----------
+
+REMOVE_ONLY_REASONS = ("Damaged", "Expired", "Lost or missing")
+
+
+class StockLineOut(BaseModel):
+    """One sub-item's balance. Quantities only: no money here (rule 1)."""
+
+    product_id: int
+    product: str
+    group_id: int
+    group: str
+    quantity_in_store: int
+    min_level: int
+    stock_status: Literal["OK", "LOW", "OUT"]
+    is_active: bool
+
+
+class AdjustmentCreate(BaseModel):
+    direction: Literal["add", "remove"]
+    quantity: int = Field(gt=0, le=100_000)
+    reason: Literal["Damaged", "Expired", "Lost or missing", "Counted differently"]
+
+
+class StockEntryOut(BaseModel):
+    """One correction or adjustment from the stock_entries history."""
+
+    id: int
+    kind: Literal["correction", "adjustment"]
+    product_id: int
+    product: str
+    delivery_id: int | None  # set only for corrections
+    quantity_change: int
+    reason: str
+    by: str
+    at: datetime
+
+
+class AdjustmentOut(StockEntryOut):
+    """The answer to POST /products/{id}/adjustments: also the stock before and after."""
+
+    before: int
+    after: int

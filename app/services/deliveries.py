@@ -11,6 +11,7 @@ from app.schemas import (
     CorrectionCreate, CorrectionEntryOut, CorrectionOut, DeliveryCreate,
     DeliveryLineOut, DeliveryLineOwnerOut, DeliveryOut, DeliveryOwnerOut,
 )
+from app.services.stock import change_stock
 
 
 def _check_can_receive(product: Product | None, product_id: int) -> Product:
@@ -104,21 +105,8 @@ def add_correction(db: Session, owner: User, delivery_id: int,
 
     product = db.get(Product, request.product_id)
     try:
-        stock_change = update(Product).where(Product.id == product.id)
-        if change < 0:
-            # Same guard as sales: "take N away only if at least N are still there".
-            stock_change = stock_change.where(Product.quantity_in_store >= -change)
-        result = db.execute(
-            stock_change.values(quantity_in_store=Product.quantity_in_store + change)
-        )
-        if result.rowcount != 1:
-            db.rollback()
-            db.refresh(product)
-            available = product.quantity_in_store
-            raise AppError(
-                409, "not_enough_stock",
-                f"Not enough stock: only {available} in store", available=available,
-            )
+        # Shared with adjustments (unit 7): guarded for removals, 409 if not enough stock.
+        change_stock(db, product, change)
 
         # The delivery is never edited: the fix is a NEW row (rule 7).
         entry = StockEntry(

@@ -59,7 +59,7 @@
 ### Store balance and adjustments
 | Method | Path | Who | Purpose |
 |---|---|---|---|
-| GET | /stock | all | Balance of every sub-item (supports `?group=` and `?search=`) |
+| GET | /stock | all | Balance of every sub-item (supports `?group_id=`, `?search=` and `?include_stopped=true`) |
 | GET | /stock/low | all | Only LOW and OUT items |
 | POST | /products/{id}/adjustments | owner | Add or remove stock with a required reason (Damaged, Expired, Lost or missing, Counted differently) |
 | GET | /stock-entries | owner | History of corrections and adjustments |

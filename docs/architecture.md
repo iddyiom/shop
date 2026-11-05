@@ -63,7 +63,7 @@ Every unit that changes stock (deliveries, corrections, adjustments) follows the
 
 | # | Invariant | Enforced by | Tested by |
 |---|---|---|---|
-| 1 | Stock never below 0 | DB constraint `ck_products_stock` + guarded update in services | `test_database_refuses_negative_stock`, `test_more_than_stock_is_item_over` |
+| 1 | Stock never below 0 | DB constraint `ck_products_stock` + guarded update (sales; `change_stock` for corrections and adjustments) | `test_database_refuses_negative_stock`, `test_more_than_stock_is_item_over`, `test_adjustment_cannot_push_stock_below_zero` |
 | 2 | A sale (later: a delivery, a correction) is all or nothing | One transaction + rollback in the service | `test_sale_is_all_or_nothing`, `test_delivery_is_all_or_nothing` |
 | 3 | The server calculates every price and total | Service reads prices from the DB; input schemas have no price fields | `test_server_ignores_prices_sent_by_the_screen` |
 | 4 | A receipt keeps the price at the time of sale | `sale_items.unit_price` is a copy, never recalculated | `test_old_receipt_keeps_old_price` |

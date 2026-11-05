@@ -1,10 +1,13 @@
 # Sub-items (products) endpoints. Everyone can list; only the owner changes anything.
-# No endpoint here changes stock: that only happens through sales, deliveries and adjustments.
+# Stock only changes through sales, deliveries and the adjustments endpoint at the bottom.
 from fastapi import APIRouter
 
 from app.deps import CurrentUser, DbSession, OwnerUser
-from app.schemas import PriceChangeOut, ProductCreate, ProductOut, ProductPriceSet, ProductUpdate
-from app.services import catalog
+from app.schemas import (
+    AdjustmentCreate, AdjustmentOut, PriceChangeOut, ProductCreate, ProductOut, ProductPriceSet,
+    ProductUpdate,
+)
+from app.services import catalog, stock
 
 router = APIRouter(prefix="/products", tags=["sub-items"])
 
@@ -30,3 +33,9 @@ def update_product(product_id: int, body: ProductUpdate, db: DbSession, _owner: 
 @router.put("/{product_id}/price", response_model=PriceChangeOut)
 def set_product_price(product_id: int, body: ProductPriceSet, db: DbSession, owner: OwnerUser):
     return catalog.set_product_price(db, owner, product_id, body.price)
+
+
+@router.post("/{product_id}/adjustments", response_model=AdjustmentOut, status_code=201)
+def add_adjustment(product_id: int, body: AdjustmentCreate, db: DbSession, owner: OwnerUser):
+    """Add or remove stock for damaged, expired, lost or miscounted goods. Owner only."""
+    return stock.add_adjustment(db, owner, product_id, body)

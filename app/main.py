@@ -5,7 +5,7 @@ from fastapi import FastAPI
 
 from app.database import Base, engine
 from app.errors import add_error_handler
-from app.routers import auth, deliveries, groups, products, sales, users
+from app.routers import auth, deliveries, groups, products, sales, stock, users
 
 
 @asynccontextmanager
@@ -26,6 +26,7 @@ app.include_router(groups.router)
 app.include_router(products.router)
 app.include_router(sales.router)
 app.include_router(deliveries.router)
+app.include_router(stock.router)
 
 
 # When someone sends GET /, FastAPI runs this function
