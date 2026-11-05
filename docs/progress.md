@@ -22,7 +22,7 @@ Unit 8: Home summary (write `docs/specs/08-summary.md` first).
 | 4 | Sales: POST/GET /sales, receipts, list by day, `create-owner` command | Done | 1ef37df |
 | 5 | Items and sub-items: /groups, /products, prices, price history, stop / bring back | Done | 55654f4 |
 | 6 | Deliveries: POST/GET /deliveries, owner-only buying price, corrections | Done | 4f20e56 |
-| 7 | Store balance and adjustments: /stock, /stock/low, adjustments, /stock-entries | Done | |
+| 7 | Store balance and adjustments: /stock, /stock/low, adjustments, /stock-entries | Done | 4c9d96c |
 | 8 | Home summary: GET /summary/today | Next | |
 | 9 | Alembic migrations (must be done before switching to PostgreSQL) | Planned | |
 
