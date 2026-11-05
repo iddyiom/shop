@@ -10,7 +10,7 @@ Phase 4: React front end (plan: docs/frontend-plan.md). Phase 3, the API, is com
 (nothing)
 
 ## Next
-Unit F7: Store balance and adjust stock (write `docs/specs/f07-stock.md` first).
+Unit F9: Sales records, restock history and corrections. First decide B2 (`GET /sales?from=&to=`) or drop "This week"; then write `docs/specs/f09-records.md`.
 
 ## Units
 
@@ -38,8 +38,8 @@ Unit F7: Store balance and adjust stock (write `docs/specs/f07-stock.md` first).
 | F8 | Items and prices, add or edit item, price change (moved first) | Done | 0ead0a8 |
 | F6 | Receive stock (moved before F5) | Done | a75b0bf |
 | F5 | New sale and receipt | Done | 6c77b75 |
-| F7 | Store balance and adjust stock | Next | |
-| F9 | Sales records, restock history and corrections | Planned | |
+| F7 | Store balance and adjust stock | Done (not committed yet) | |
+| F9 | Sales records, restock history and corrections | Next | |
 | B1 | Backend: `PATCH /users/{id}` (rename, deactivate) | Planned (before F10) | |
 | B2 | Backend: `GET /sales?from=&to=` date range | Planned (before F9, or drop "This week") | |
 | F10 | Users: list, unlock, add, deactivate | Planned | |
@@ -49,6 +49,7 @@ Statuses: Planned, Next, In progress, Done.
 ## Decisions made (newest first)
 Short notes on choices that are not obvious from the docs, so nobody undoes them by accident.
 
+- 2026-11-05: Unit F7: Store balance loads `/stock?include_stopped=true` once and filters on the screen (search, item chips, Show stopped, and the OUT / LOW / OK counts, which are also filters). The counts are counted after search, chip and stopped but before the status filter, so they always match what the table can show. Shopkeepers never ask `/stock-entries`. Adjust (`/stock/:id/adjust`, owner only, stopped sub-items too): direction and reason must both be chosen; choosing Add locks Damaged / Expired / Lost and drops one already chosen; "Only N in store" is checked on screen and again by the server (409 → message + reload). After saving, back to Store balance with a note built from the server's before / after (a test makes the server answer different numbers from the preview to prove it). On phones the Item column hides so the Adjust button fits. Checked on a throwaway API: remove 2 Damaged, add 1 Counted differently, a real 409 race, shopkeeper view, dark mode, phone width.
 - 2026-11-05: Unit F5: the sale request carries only product_id, quantity and payment_method (checked in the real browser); totals on screen are a preview and the receipt shows the server's numbers, with a note when a price changed while the page was open. Stock is checked on screen and again by the server; a server 409 is shown on its line (ApiError now keeps the error's extra fields, e.g. product_id) and the cards reload. Payment must be chosen each time. The unfinished bill (ids and quantities only) is kept in sessionStorage for the tab and cleared after the sale, by Clear, or at log out. Receipt has its own address (/receipt/:id). Bill logic lives in bill.ts as plain functions.
 - 2026-11-05: Front-end tests got random timeouts on a busy laptop (findBy gives up after 1 s by default). tests/setup.ts raises it to 5 s and vite.config.ts sets testTimeout 20 s; one test that checked a reload instantly now waits for it. Three full runs green afterwards.
 - 2026-11-05: Bug found in the browser and fixed: bill changes used a stale copy (setBill(addProduct(bill, id))), so fast clicks overwrote each other. All bill changes now use React's updater form (setBill(current => ...)); a test reproduces it with three clicks in one batch and fails on the old code.
@@ -83,4 +84,4 @@ Short notes on choices that are not obvious from the docs, so nobody undoes them
 - 2026-11-05: Business rules live in `app/services/`, not in routers, so they are easy to read and test.
 
 ## Test status
-Backend: 106 tests passing. Front end: 102 tests passing (last run 2026-11-05).
+Backend: 106 tests passing. Front end: 117 tests passing (last run 2026-11-05).

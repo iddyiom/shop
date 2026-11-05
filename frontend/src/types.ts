@@ -115,3 +115,22 @@ export type Delivery = {
   items: DeliveryLine[];
   corrections: unknown[]; // shown in Restock history (F9)
 };
+
+/** StockEntryOut: one correction or adjustment (GET /stock-entries, owner only). Never edited. */
+export type StockEntry = {
+  id: number;
+  kind: 'correction' | 'adjustment';
+  product_id: number;
+  product: string;
+  delivery_id: number | null; // only for corrections
+  quantity_change: number; // +1 added, -2 removed
+  reason: string;
+  by: string;
+  at: string; // "2026-11-05T14:32:00", already depot time
+};
+
+/** AdjustmentOut: the answer to POST /products/{id}/adjustments, with the stock before and after. */
+export type Adjustment = StockEntry & {
+  before: number;
+  after: number;
+};

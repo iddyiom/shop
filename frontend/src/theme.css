@@ -1802,9 +1802,170 @@ a {
   font-size: 18px;
 }
 
+/* ---------- Store balance and adjust stock ---------- */
+
+.stock-layout,
+.adjust-layout {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+.stock-main {
+  flex: 1.7 1 520px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.stock-side {
+  flex: 1 1 300px;
+  min-width: 0;
+}
+
+.count-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+/* A count is also a filter button (question 4). */
+.count-pill {
+  min-height: 72px;
+  padding: 12px 18px;
+  border-radius: 28px;
+  border: 3px solid transparent;
+  background: var(--card);
+  color: var(--text);
+  font: inherit;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.count-pill[aria-pressed='true'] {
+  border-color: var(--text);
+}
+
+.count-number {
+  font-family: Montserrat, sans-serif;
+  font-weight: 800;
+  font-size: 30px;
+  font-variant-numeric: tabular-nums;
+}
+
+.stopped-row td {
+  opacity: 0.6;
+}
+
+.change-up,
+.change-down {
+  font-family: Montserrat, sans-serif;
+  font-weight: 800;
+  font-size: 18px;
+  white-space: nowrap;
+}
+
+.change-down {
+  color: var(--error-text);
+}
+
+.small-note {
+  margin-top: 10px;
+  font-size: 13px;
+}
+
+.muted-text {
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.adjust-main {
+  flex: 1.6 1 460px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.adjust-main h2 {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.adjust-side {
+  flex: 1 1 300px;
+  min-width: 0;
+}
+
+.adjust-step {
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+.adjust-step legend,
+.adjust-step .step-label {
+  margin-bottom: 10px;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.choice-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 10px;
+}
+
+.choice-tile {
+  min-height: 56px;
+  padding: 10px 16px;
+  border-radius: 20px;
+  border: 2px solid var(--field-border);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.choice-tile.chosen {
+  border-color: var(--text);
+  background: var(--text);
+  color: var(--card);
+  font-weight: 800;
+}
+
+/* Rule 4: a reason that cannot add, while Add is chosen. */
+.choice-tile.locked {
+  border-style: dashed;
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.tile-note {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+}
+
 /* ---------- Phone width ---------- */
 
 @media (max-width: 700px) {
+  /* Store balance: the item chips already say which item; the Adjust button must fit. */
+  .phone-hide {
+    display: none;
+  }
+
   .menu {
     margin: 12px 12px 0;
     padding: 18px 12px;

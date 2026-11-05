@@ -9,6 +9,7 @@ import { AuthProvider } from './auth';
 import Layout from './components/Layout';
 import RequireAuth from './components/RequireAuth';
 import RequireOwner from './components/RequireOwner';
+import Adjust from './pages/Adjust';
 import Home from './pages/Home';
 import ItemForm from './pages/ItemForm';
 import Items from './pages/Items';
@@ -57,6 +58,7 @@ export const routes: RouteObject[] = [
                   { path: 'items/:groupId/edit', element: <ItemForm /> },
                   { path: 'items/:groupId/new-sub-item', element: <SubItemForm /> },
                   { path: 'items/sub-items/:productId/edit', element: <SubItemForm /> },
+                  { path: 'stock/:productId/adjust', element: <Adjust /> },
                   { path: 'users', element: <Users /> },
                 ],
               },
