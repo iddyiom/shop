@@ -32,6 +32,8 @@ Statuses: Planned, Next, In progress, Done.
 Short notes on choices that are not obvious from the docs, so nobody undoes them by accident.
 
 - 2026-11-05: Keep the current stack (FastAPI, SQLAlchemy, own auth). No Clerk, Liveblocks or Trigger.dev: the depot has no live shared canvas, no long background jobs, and auth with lockout is already built and tested.
+- 2026-11-05: Wrote docs/architecture.md. Every invariant lists where it is enforced and which test proves it. Known gap: login rules live in the auth router, move to a service when auth is next touched.
+- 2026-11-05: Wrote docs/ai-workflow.md: no code before an agreed spec, no new tools without asking, one definition of done for every unit.
 - 2026-11-05: Wrote docs/code-standards.md from the patterns units 1-4 already use (routers thin, rules in services, AppError, insert-only history).
 - 2026-11-05: Adopted spec-driven development: one spec file per unit in `docs/specs/`, each with a "done" checklist.
 - 2026-11-05: Sale stock is reduced with a guarded update ("take N only if at least N remain") so two sales at the same moment cannot push stock below 0.

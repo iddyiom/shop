@@ -17,7 +17,9 @@ Read these first, they are the source of truth:
 - docs/database-design.md
 - docs/api-plan.md
 - docs/progress.md (where we are: read at the start of every session, update at the end of every unit)
+- docs/architecture.md (stack and why, the layers, how a request flows, invariants with where each is enforced and tested)
 - docs/code-standards.md (how code is written: where it goes, routers, services, errors, tests)
+- docs/ai-workflow.md (how the agent works: one unit at a time, spec first, stay in scope, when to ask, definition of done)
 Wireframes (Phase 2) are published as a design artifact: https://claude.ai/artifact/LmiixK7Lj3BtMVbTrsCgcK (private to Iddy).
 
 ## Tech track
