@@ -30,7 +30,7 @@ Unit F2: App shell (write `docs/specs/f02-shell.md` first).
 
 | # | Unit | Status | Commit |
 |---|---|---|---|
-| F1 | Setup: Vite + React + TypeScript in `frontend/`, dev proxy, theme colors, first test | Done | |
+| F1 | Setup: Vite + React + TypeScript in `frontend/`, dev proxy, theme colors, first test | Done | 4c93a08 |
 | F2 | App shell: menu, top bar, light/dark switch, routes | Next | |
 | F3 | Log in and auth: api.ts, login, locked account, log out, menu by role | Planned | |
 | F4 | Home for owner and shopkeeper | Planned | |
