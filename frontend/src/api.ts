@@ -108,3 +108,13 @@ export function apiGet<T>(path: string, options: Options = {}): Promise<T> {
 export function apiPost<T>(path: string, body: unknown, options: Options = {}): Promise<T> {
   return request<T>('POST', path, body, options);
 }
+
+/** PATCH /api<path>: change part of something (send only the fields that changed). */
+export function apiPatch<T>(path: string, body: unknown): Promise<T> {
+  return request<T>('PATCH', path, body, {});
+}
+
+/** PUT /api<path>: replace one value, e.g. a price. */
+export function apiPut<T>(path: string, body: unknown): Promise<T> {
+  return request<T>('PUT', path, body, {});
+}

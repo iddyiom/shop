@@ -10,7 +10,7 @@ Phase 4: React front end (plan: docs/frontend-plan.md). Phase 3, the API, is com
 (nothing)
 
 ## Next
-Unit F4: Home for owner and shopkeeper (write `docs/specs/f04-home.md` first).
+Unit F6: Receive stock (write `docs/specs/f06-receive.md` first; include the date picker).
 
 ## Units
 
@@ -34,11 +34,11 @@ Unit F4: Home for owner and shopkeeper (write `docs/specs/f04-home.md` first).
 | F2 | App shell: menu, top bar, light/dark switch, routes | Done | 01837e9 |
 | F3 | Log in and auth: api.ts, login, locked account, log out, menu by role | Done | 8f30727 |
 | D1 | Demo accounts and one-click log in (development only) | Done | 0e6bb2c |
-| F4 | Home for owner and shopkeeper | Next | |
+| F4 | Home for owner and shopkeeper | Done | |
+| F8 | Items and prices, add or edit item, price change (moved first) | Done | |
+| F6 | Receive stock (moved before F5) | Next | |
 | F5 | New sale and receipt | Planned | |
-| F6 | Receive stock | Planned | |
 | F7 | Store balance and adjust stock | Planned | |
-| F8 | Items and prices, add or edit item, price change | Planned | |
 | F9 | Sales records, restock history and corrections | Planned | |
 | B1 | Backend: `PATCH /users/{id}` (rename, deactivate) | Planned (before F10) | |
 | B2 | Backend: `GET /sales?from=&to=` date range | Planned (before F9, or drop "This week") | |
@@ -49,6 +49,10 @@ Statuses: Planned, Next, In progress, Done.
 ## Decisions made (newest first)
 Short notes on choices that are not obvious from the docs, so nobody undoes them by accident.
 
+- 2026-11-05: Unit F8: every price change (item or sub-item) goes through PriceConfirm (old → new, affected sub-items, "old receipts keep"); nothing is sent until Yes, change. Forms send only changed fields; a sub-item edit that changes the price sends the PATCH (if any) and then the PUT after confirm. No Delete anywhere: stop / bring back only. Stopped items behind a Show stopped switch. Pages: /items, /items/new, /items/:id/edit, /items/:id/new-sub-item, /items/sub-items/:id/edit. api.ts gained apiPatch and apiPut; money.ts parses TSh and levels (the server still decides). Tested end to end on a throwaway API; depot.db kept empty for Iddy's real items.
+- 2026-11-05: Order changed again to F8 → F6 → F5: with a clean database there are no items, and a delivery or sale needs items to choose from.
+- 2026-11-05: Iddy: screens must show real counts only. The local depot.db was cleared (example items and test sales removed; backup kept outside the repo), only the demo log ins remain. F6 Receive stock comes before F5 New sale, so real stock enters first. "Calendar" = a date picker on screens (the browser's built-in `<input type="date">`, offline, no outside service): delivery date in F6, day choice in F9. No outside calendar service.
+- 2026-11-05: Unit F4: Home reads /summary/today, /stock/low and /sales?day=<the summary's date> (the server decides "today"). Times and dates are read as text (no browser time-zone conversion). The money card exists only if the API sends sales_total. Shopkeepers see "Latest sales" (everyone's receipts), not "My receipts" (seller names are not unique). useApi(path) and Panel handle loading / error / Try again per panel. CSS: the shell uses overflow-x: clip, not hidden (hidden let the browser scroll the box 200px and hide the menu); long table text is cut with … so totals always fit.
 - 2026-11-05: Unit D1: demo accounts (demo_owner, demo_shop) live in frontend/dev-accounts.json. `python -m app.manage add-demo-users` creates or resets them and refuses any non-SQLite database. The Log in page shows one-click buttons only under `npm run dev`: DemoLogin is loaded with `import.meta.env.DEV ? lazy(...) : null`, so the build contains no demo password (checked by searching dist/, and the search was proven by removing the guard). No sign up page, by design.
 - 2026-11-05: Unit F3: token only in sessionStorage (`depot-token`); the user and role are never stored in the browser, they come from GET /auth/me. api.ts adds the Bearer token to every call; any 401 or 423 (except from /auth/login) clears it and returns to Log in. After log in you land on the page you wanted. Shopkeepers typing an owner address see an Owner only page. A new log in try clears the old "session ended" note (found by a test that first failed to catch a broken rule).
 - 2026-11-05: Known gap (accepted for Version 1): log out only makes the browser forget the token; the token stays valid on the server until it expires (12 hours). Fix with deployment (token version per user or blocklist).
@@ -75,4 +79,4 @@ Short notes on choices that are not obvious from the docs, so nobody undoes them
 - 2026-11-05: Business rules live in `app/services/`, not in routers, so they are easy to read and test.
 
 ## Test status
-Backend: 106 tests passing. Front end: 41 tests passing (last run 2026-11-05).
+Backend: 106 tests passing. Front end: 70 tests passing (last run 2026-11-05).

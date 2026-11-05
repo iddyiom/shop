@@ -67,10 +67,10 @@ frontend/
 | F2 | App shell: menu, top bar, light/dark switch, routes with empty pages | layout of every screen | (none) |
 | F3 | Log in and auth: `api.ts`, login, wrong password and locked messages, log out, protected pages, menu by role | Log in | `/auth/login`, `/auth/me` |
 | F4 | Home for owner and shopkeeper | Owner home, Shopkeeper home | `/summary/today`, `/stock/low`, `/sales?day=` |
+| F6 | Receive stock (built after F8, before F5) | Receive stock | `/products`, `/deliveries` |
 | F5 | New sale and receipt | New sale, Receipt | `/products`, `/sales` |
-| F6 | Receive stock | Receive stock | `/products`, `/deliveries` |
 | F7 | Store balance and adjust stock | Store balance, Adjust stock | `/stock`, `/stock/low`, `/stock-entries`, `/products/{id}/adjustments` |
-| F8 | Items and prices, add or edit item, price change confirm, price history | Items and prices, Add or edit item | `/groups`, `/products`, the `/price` endpoints |
+| F8 | Items and prices, add or edit item, price change confirm, price history (built first of the screens) | Items and prices, Add or edit item | `/groups`, `/products`, the `/price` endpoints |
 | F9 | Sales records, restock history and corrections | Sales records, Restock history | `/sales`, `/deliveries`, `/deliveries/{id}/corrections` |
 | F10 | Users: list, unlock, add, deactivate | Users | `/users`, `/users/{id}/unlock`, `PATCH /users/{id}` |
 

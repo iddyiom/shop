@@ -27,6 +27,9 @@
   --badge-text: #1e2b26;
   --error-bg: #fbe3de;
   --error-text: #8a2416;
+  --hi-card: #1e2b26;
+  --hi-text: #ffffff;
+  --hi-label: #f2e14c;
 }
 
 [data-theme='dark'] {
@@ -54,6 +57,9 @@
   --badge-text: #1e1206;
   --error-bg: #2a1830;
   --error-text: #ffb4a8;
+  --hi-card: #5bc0f8;
+  --hi-text: #071a3a;
+  --hi-label: #071a3a;
 }
 
 /* ---------- Base ---------- */
@@ -99,7 +105,9 @@ a {
   min-height: 100vh;
   display: flex;
   flex-wrap: wrap; /* at phone width the menu stacks above the page */
-  overflow-x: hidden;
+  /* clip, not hidden: "hidden" still lets the browser scroll this box (it did, by 200px,
+     when a button near the right edge got focus), pushing the menu off screen. */
+  overflow-x: clip;
 }
 
 /* The soft rounded shape behind the page, from the design. */
@@ -379,6 +387,694 @@ a {
 .big-button-hint {
   font-size: 14px;
   font-weight: 600;
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+/* ---------- Home: number cards ---------- */
+
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.stat-card {
+  padding: 22px 24px;
+  border-radius: 32px;
+  background: var(--card);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.stat-card.strong {
+  background: var(--hi-card);
+  color: var(--hi-text);
+}
+
+.stat-label,
+.stat-note {
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.stat-label {
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.stat-card.strong .stat-label,
+.stat-card.strong .stat-note {
+  color: var(--hi-label);
+}
+
+.stat-value {
+  font-family: Montserrat, sans-serif;
+  font-weight: 800;
+  font-size: 40px;
+  line-height: 1;
+}
+
+/* ---------- Panels (Panel.tsx) ---------- */
+
+.panels {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  align-items: stretch;
+}
+
+.panel {
+  flex: 1 1 320px;
+  min-width: 0;
+  padding: 26px;
+  border-radius: 36px 36px 36px 8px;
+  background: var(--card);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.panel + .panel {
+  flex: 1.7 1 440px;
+  border-radius: 36px 36px 8px 36px;
+}
+
+.panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.panel-head h2 {
+  font-size: 22px;
+}
+
+.panel-state {
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  color: var(--muted);
+}
+
+.panel-state p {
+  margin: 0;
+}
+
+.panel-state p[role='alert'] {
+  color: var(--error-text);
+  font-weight: 600;
+}
+
+.empty-text {
+  margin: 0;
+  color: var(--muted);
+}
+
+/* ---------- Badges, lists, tables ---------- */
+
+.badge {
+  display: inline-block;
+  min-width: 52px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  color: var(--badge-text);
+}
+
+.badge-out {
+  background: var(--out);
+}
+
+.badge-low {
+  background: var(--low);
+}
+
+.badge-ok {
+  background: var(--ok);
+  color: var(--text);
+}
+
+.low-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.low-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 14px;
+  border-radius: 20px;
+  background: var(--inner);
+}
+
+.low-name {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.low-name span {
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.low-left {
+  font-size: 15px;
+  text-align: right;
+}
+
+.table-scroll {
+  overflow-x: auto; /* wide tables scroll inside their box, never the whole page */
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 16px;
+}
+
+.data-table th {
+  white-space: nowrap;
+  padding: 8px 10px;
+  font-size: 14px;
+  font-weight: 700;
+  text-align: left;
+  color: var(--muted);
+}
+
+.data-table td {
+  padding: 12px 10px;
+  border-top: 1px solid var(--line);
+  white-space: nowrap; /* names and amounts stay on one line */
+}
+
+.data-table .number {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.data-table .strong-number {
+  font-weight: 800;
+}
+
+/* The long text column takes the space that is left and is cut with "…" (full text in
+   the tooltip), so the Total column always fits. max-width: 0 + width: 100% is the trick
+   that lets a table cell shrink below its text. */
+.data-table .cut {
+  width: 100%;
+  max-width: 0;
+  min-width: 90px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.chip {
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--ok);
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+/* ---------- Buttons and links (shared) ---------- */
+
+.primary-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 52px;
+  padding: 0 24px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: var(--on-accent);
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.ghost-button {
+  min-height: 52px;
+  padding: 0 22px;
+  border-radius: 999px;
+  border: 2px solid var(--field-border);
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.dark-button {
+  min-height: 44px;
+  padding: 0 16px;
+  border-radius: 999px;
+  border: none;
+  background: var(--text);
+  color: var(--card);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.ghost-button:disabled,
+.dark-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.text-button {
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--eyebrow);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.text-link,
+.back-link {
+  font-size: 14px;
+}
+
+.back-link {
+  align-self: flex-start;
+  font-size: 15px;
+}
+
+.check-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  font-size: 15px;
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.check-label input {
+  width: 18px;
+  height: 18px;
+}
+
+.notice-ok {
+  margin: 0;
+  padding: 14px 18px;
+  border-radius: 20px;
+  background: var(--card);
+  border-left: 0;
+  font-weight: 700;
+}
+
+.empty-card {
+  padding: 32px;
+  border-radius: 36px;
+  background: var(--card);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.empty-card h2 {
+  font-size: 26px;
+}
+
+.empty-card p {
+  margin: 0;
+  color: var(--muted);
+}
+
+/* ---------- Items and prices ---------- */
+
+.items-layout {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+.item-grid {
+  flex: 1.7 1 540px;
+  min-width: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 18px;
+}
+
+.items-side {
+  flex: 1 1 300px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.item-card {
+  padding: 22px;
+  border-radius: 32px;
+  background: var(--card);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.item-card.selected {
+  outline: 3px solid var(--accent);
+}
+
+.item-card.stopped {
+  opacity: 0.75;
+}
+
+.item-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.item-head h2 {
+  font-size: 24px;
+}
+
+.item-price-label {
+  display: block;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.item-price {
+  display: block;
+  font-family: Montserrat, sans-serif;
+  font-weight: 800;
+  font-size: 28px;
+}
+
+.stopped-note {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--error-text);
+}
+
+.sub-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sub-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 8px 8px 14px;
+  border-radius: 18px;
+  background: var(--inner);
+}
+
+.sub-row.stopped {
+  opacity: 0.7;
+}
+
+.sub-name {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.sub-name span {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.state-tag {
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--ok);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+}
+
+.state-tag.off {
+  background: var(--out);
+  color: var(--badge-text);
+}
+
+.icon-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 14px;
+  border-radius: 999px;
+  background: var(--card);
+  font-size: 14px;
+  text-decoration: none;
+}
+
+.item-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px;
+}
+
+.dashed-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 16px;
+  border-radius: 999px;
+  border: 2px dashed var(--muted);
+  color: var(--text);
+  font-size: 14px;
+  text-decoration: none;
+}
+
+.history-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.history-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 16px;
+  background: var(--inner);
+}
+
+.history-what {
+  display: flex;
+  flex-direction: column;
+}
+
+.history-what span {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.history-price {
+  font-family: Montserrat, sans-serif;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+/* ---------- Forms (cards) ---------- */
+
+.form-card {
+  padding: 28px;
+  border-radius: 36px 36px 36px 8px;
+  background: var(--card);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-card h2 {
+  font-size: 22px;
+}
+
+.narrow {
+  width: 100%;
+  max-width: 620px;
+}
+
+.form-lead,
+.field-hint {
+  margin: 0;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.price-choice {
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+.price-choice legend {
+  margin-bottom: 10px;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.choice-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+}
+
+.choice {
+  min-height: 78px;
+  padding: 12px 18px;
+  border-radius: 24px;
+  border: 3px solid transparent;
+  background: var(--inner);
+  color: var(--text);
+  font: inherit;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+  cursor: pointer;
+}
+
+.choice span {
+  font-size: 14px;
+}
+
+.choice[aria-pressed='true'] {
+  border-color: var(--text);
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+/* ---------- Price confirm (PriceConfirm.tsx) ---------- */
+
+.confirm-panel {
+  padding: 26px;
+  border-radius: 40px 40px 10px 40px;
+  background: var(--strong);
+  color: var(--on-strong);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.confirm-panel h2 {
+  font-size: 24px;
+}
+
+.confirm-eyebrow {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: var(--accent);
+}
+
+.confirm-prices {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px;
+  font-size: 22px;
+}
+
+.confirm-old,
+.confirm-new {
+  display: flex;
+  flex-direction: column;
+  padding: 12px 16px;
+  border-radius: 18px;
+}
+
+.confirm-old {
+  background: rgb(255 255 255 / 0.08);
+}
+
+.confirm-old strong {
+  text-decoration: line-through;
+}
+
+.confirm-new {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+.confirm-old span,
+.confirm-new span {
+  font-size: 13px;
+}
+
+.confirm-old strong,
+.confirm-new strong {
+  font-family: Montserrat, sans-serif;
+  font-weight: 800;
+  font-size: 22px;
+}
+
+.confirm-note {
+  margin: 0;
+  font-size: 14px;
+  color: var(--strong-muted);
+}
+
+.confirm-error {
+  margin: 0;
+  padding: 10px 14px;
+  border-radius: 14px;
+  background: var(--error-bg);
+  color: var(--error-text);
+  font-weight: 700;
+}
+
+.confirm-buttons {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.confirm-panel .ghost-button {
+  border-color: var(--strong-muted);
+  color: var(--on-strong);
 }
 
 /* ---------- Log in (no menu) ---------- */
