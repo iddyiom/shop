@@ -39,7 +39,7 @@ Unit B1: backend `PATCH /users/{id}` (rename, deactivate), then F10 Users. Write
 | F6 | Receive stock (moved before F5) | Done | a75b0bf |
 | F5 | New sale and receipt | Done | 6c77b75 |
 | F7 | Store balance and adjust stock | Done | 087a479 |
-| F9 | Sales records, restock history and corrections | Done (not committed yet) | |
+| F9 | Sales records, restock history and corrections | Done | 12c961e |
 | B1 | Backend: `PATCH /users/{id}` (rename, deactivate) | Next (before F10) | |
 | B2 | Backend: `GET /sales?from=&to=` date range | Parked (Version 2, with reports) | |
 | F10 | Users: list, unlock, add, deactivate | Planned | |
