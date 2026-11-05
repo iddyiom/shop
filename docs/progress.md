@@ -38,7 +38,7 @@ Unit F9: Sales records, restock history and corrections. First decide B2 (`GET /
 | F8 | Items and prices, add or edit item, price change (moved first) | Done | 0ead0a8 |
 | F6 | Receive stock (moved before F5) | Done | a75b0bf |
 | F5 | New sale and receipt | Done | 6c77b75 |
-| F7 | Store balance and adjust stock | Done (not committed yet) | |
+| F7 | Store balance and adjust stock | Done | 087a479 |
 | F9 | Sales records, restock history and corrections | Next | |
 | B1 | Backend: `PATCH /users/{id}` (rename, deactivate) | Planned (before F10) | |
 | B2 | Backend: `GET /sales?from=&to=` date range | Planned (before F9, or drop "This week") | |
