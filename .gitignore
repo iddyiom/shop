@@ -9,3 +9,6 @@ __pycache__/
 # Local database and secrets (never commit these)
 *.db
 .env
+
+# Login token secret (made automatically on a laptop)
+.secret_key
