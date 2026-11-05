@@ -1,9 +1,6 @@
-// Tests for F1. Spec: docs/specs/f01-setup.md, section 7.
-// fetch is replaced by a fake, so these tests never need the real API.
-import { cleanup, render, screen } from '@testing-library/react';
+// Tests for src/api.ts (kept from F1). fetch is replaced by a fake.
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import App from '../src/App';
 import { ApiError, apiGet } from '../src/api';
 
 function fakeFetch(answer: Promise<Response>) {
@@ -13,36 +10,11 @@ function fakeFetch(answer: Promise<Response>) {
 }
 
 function jsonResponse(body: unknown, status = 200): Response {
-  return new Response(JSON.stringify(body), {
-    status,
-    headers: { 'Content-Type': 'application/json' },
-  });
+  return new Response(JSON.stringify(body), { status, headers: { 'Content-Type': 'application/json' } });
 }
 
 afterEach(() => {
-  cleanup(); // remove what render() drew
-  vi.unstubAllGlobals(); // give back the real fetch
-});
-
-describe('App (the API status card)', () => {
-  it('shows "The API is running" when /api/health answers ok', async () => {
-    fakeFetch(Promise.resolve(jsonResponse({ status: 'ok' })));
-    render(<App />);
-    expect(await screen.findByText('The API is running')).toBeTruthy();
-  });
-
-  it('shows "Cannot reach the API" when the request fails', async () => {
-    fakeFetch(Promise.reject(new TypeError('Failed to fetch'))); // like the API being off
-    render(<App />);
-    expect(await screen.findByText('Cannot reach the API')).toBeTruthy();
-    expect(screen.getByText('uvicorn app.main:app --reload')).toBeTruthy();
-  });
-
-  it('shows "Checking the API…" before the answer arrives', () => {
-    fakeFetch(new Promise<Response>(() => {})); // an answer that never comes
-    render(<App />);
-    expect(screen.getByText('Checking the API…')).toBeTruthy();
-  });
+  vi.unstubAllGlobals();
 });
 
 describe('apiGet', () => {

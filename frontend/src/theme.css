@@ -81,25 +81,73 @@ h3 {
   margin: 0;
 }
 
-/* ---------- F1: the API status card ---------- */
-
-.status-page {
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 16px;
+a {
+  color: var(--eyebrow);
+  font-weight: 700;
 }
 
-.status-card {
-  width: 100%;
-  max-width: 520px;
-  padding: 40px 36px;
-  border-radius: 40px 40px 40px 10px;
-  background: var(--card);
+/* Keyboard users always see where they are. */
+:focus-visible {
+  outline: 3px solid var(--text);
+  outline-offset: 3px;
+}
+
+/* ---------- Shell: menu + workspace (Layout.tsx) ---------- */
+
+.shell {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-wrap: wrap; /* at phone width the menu stacks above the page */
+  overflow-x: hidden;
+}
+
+/* The soft rounded shape behind the page, from the design. */
+.shell::before {
+  content: '';
+  position: absolute;
+  z-index: 0;
+  width: 760px;
+  height: 560px;
+  right: -200px;
+  top: -220px;
+  border-radius: 0 0 0 300px;
+  background: var(--shape);
+  pointer-events: none;
+}
+
+.skip-link {
+  position: absolute;
+  z-index: 10;
+  left: 16px;
+  top: -60px;
+  padding: 10px 18px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+.skip-link:focus {
+  top: 16px;
+}
+
+.menu {
+  position: relative;
+  z-index: 1;
+  flex: 1 1 230px;
+  max-width: 100%;
+  margin: 18px 0 18px 18px;
+  padding: 26px 16px;
+  border-radius: 36px;
+  background: var(--nav);
+  color: var(--nav-text);
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 6px;
+}
+
+.menu .logo {
+  padding: 0 10px 22px;
 }
 
 .logo {
@@ -112,8 +160,8 @@ h3 {
 }
 
 .logo-mark {
-  width: 44px;
-  height: 44px;
+  width: 42px;
+  height: 42px;
   border-radius: 50%;
   background: var(--accent);
   color: var(--on-accent);
@@ -122,41 +170,260 @@ h3 {
   justify-content: center;
 }
 
-.status-card h1 {
-  font-size: 36px;
+.menu-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
 }
 
-.status-card p {
+.menu-link {
+  display: flex;
+  align-items: center;
+  min-height: 46px;
+  padding: 0 18px;
+  border-radius: 999px;
+  color: var(--nav-text);
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.menu-link:hover {
+  background: rgb(255 255 255 / 0.1);
+}
+
+.menu-link[aria-current='page'] {
+  background: var(--accent);
+  color: var(--on-accent);
+  font-weight: 800;
+}
+
+.user-card {
+  margin-top: 18px;
+  padding: 14px 16px;
+  border-radius: 24px;
+  background: rgb(0 0 0 / 0.15);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.user-name {
+  font-weight: 600;
+}
+
+.user-role {
+  font-size: 14px;
+  opacity: 0.85;
+}
+
+.user-logout {
+  margin-top: 6px;
+  font-size: 14px;
+  color: var(--nav-text);
+}
+
+.workspace {
+  position: relative;
+  z-index: 1;
+  flex: 999 1 560px;
+  min-width: 0;
+  padding: 24px 40px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.topbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.page:focus {
+  outline: none; /* focus lands here from the skip link; no ring around the whole page */
+}
+
+/* ---------- Small shared pieces ---------- */
+
+.pill-button {
+  min-height: 44px;
+  padding: 0 18px;
+  border-radius: 999px;
+  border: 2px solid var(--field-border);
+  background: var(--card);
+  color: var(--text);
+  font: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.api-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 16px;
+  border-radius: 999px;
+  background: var(--card);
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.api-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--muted);
+}
+
+.api-pill.running .api-dot {
+  background: var(--eyebrow);
+}
+
+.api-pill.unreachable .api-dot {
+  background: var(--out);
+}
+
+.page-header {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.eyebrow {
   margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: var(--eyebrow);
+}
+
+.page-header h1 {
+  font-size: clamp(36px, 5vw, 56px);
+}
+
+.coming-soon {
+  margin: 0;
+  padding: 22px 24px;
+  border-radius: 28px;
+  background: var(--card);
   color: var(--muted);
 }
 
-.status-card code {
-  padding: 2px 8px;
-  border-radius: 8px;
-  background: var(--inner);
-  color: var(--text);
+/* ---------- Home ---------- */
+
+.home-top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
 }
 
-.status-pill {
-  align-self: flex-start;
-  padding: 4px 14px;
+.big-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 16px;
+  min-height: 76px;
+  padding: 10px 30px 10px 12px;
   border-radius: 999px;
-  font-size: 13px;
+  background: var(--accent);
+  color: var(--on-accent);
+  text-decoration: none;
+}
+
+.big-button-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--on-accent);
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.big-button-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.big-button-title {
+  font-family: Montserrat, sans-serif;
   font-weight: 800;
-  letter-spacing: 0.5px;
-  color: var(--badge-text);
+  font-size: 22px;
 }
 
-.status-pill.running {
-  background: var(--ok);
-  color: var(--text);
+.big-button-hint {
+  font-size: 14px;
+  font-weight: 600;
 }
 
-.status-pill.checking {
-  background: var(--low);
+/* ---------- Log in (no menu) ---------- */
+
+.login-page {
+  position: relative;
+  min-height: 100vh;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.status-pill.unreachable {
-  background: var(--out);
+.login-theme {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 440px;
+  padding: 40px 36px;
+  border-radius: 40px 40px 40px 10px;
+  background: var(--card);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.login-card h1 {
+  font-size: 40px;
+}
+
+/* ---------- Phone width ---------- */
+
+@media (max-width: 700px) {
+  .menu {
+    margin: 12px 12px 0;
+    padding: 18px 12px;
+    border-radius: 28px;
+  }
+
+  .menu-list {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .workspace {
+    padding: 16px;
+  }
+
+  .topbar {
+    justify-content: space-between;
+  }
 }
