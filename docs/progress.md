@@ -34,8 +34,8 @@ Unit F6: Receive stock (write `docs/specs/f06-receive.md` first; include the dat
 | F2 | App shell: menu, top bar, light/dark switch, routes | Done | 01837e9 |
 | F3 | Log in and auth: api.ts, login, locked account, log out, menu by role | Done | 8f30727 |
 | D1 | Demo accounts and one-click log in (development only) | Done | 0e6bb2c |
-| F4 | Home for owner and shopkeeper | Done | |
-| F8 | Items and prices, add or edit item, price change (moved first) | Done | |
+| F4 | Home for owner and shopkeeper | Done | 0ead0a8 |
+| F8 | Items and prices, add or edit item, price change (moved first) | Done | 0ead0a8 |
 | F6 | Receive stock (moved before F5) | Next | |
 | F5 | New sale and receipt | Planned | |
 | F7 | Store balance and adjust stock | Planned | |
