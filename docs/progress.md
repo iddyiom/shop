@@ -31,7 +31,7 @@ Unit F3: Log in and auth (write `docs/specs/f03-auth.md` first).
 | # | Unit | Status | Commit |
 |---|---|---|---|
 | F1 | Setup: Vite + React + TypeScript in `frontend/`, dev proxy, theme colors, first test | Done | 4c93a08 |
-| F2 | App shell: menu, top bar, light/dark switch, routes | Done | |
+| F2 | App shell: menu, top bar, light/dark switch, routes | Done | 01837e9 |
 | F3 | Log in and auth: api.ts, login, locked account, log out, menu by role | Next | |
 | F4 | Home for owner and shopkeeper | Planned | |
 | F5 | New sale and receipt | Planned | |
