@@ -4,13 +4,13 @@ The project's memory. Read this at the start of every session.
 Update it at the end of every unit: move the unit, add decisions, set "Next".
 
 ## Current phase
-Phase 3: Coding (building the API, one unit at a time).
+Phase 4: React front end (plan: docs/frontend-plan.md). Phase 3, the API, is complete (units 1-9 below).
 
 ## In progress
 (nothing)
 
 ## Next
-Phase 3 (the API) is complete. Plan the next phase with Iddy: the React front end, or deployment (PostgreSQL, Docker).
+Unit F1: Front-end setup (write `docs/specs/f01-setup.md` first).
 
 ## Units
 
@@ -26,11 +26,30 @@ Phase 3 (the API) is complete. Plan the next phase with Iddy: the React front en
 | 8 | Home summary: GET /summary/today | Done | 75e2514 |
 | 9 | Alembic migrations (must be done before switching to PostgreSQL) | Done | cb2e49d |
 
+### Phase 4: front end (details in docs/frontend-plan.md)
+
+| # | Unit | Status | Commit |
+|---|---|---|---|
+| F1 | Setup: Vite + React + TypeScript in `frontend/`, dev proxy, theme colors, first test | Next | |
+| F2 | App shell: menu, top bar, light/dark switch, routes | Planned | |
+| F3 | Log in and auth: api.ts, login, locked account, log out, menu by role | Planned | |
+| F4 | Home for owner and shopkeeper | Planned | |
+| F5 | New sale and receipt | Planned | |
+| F6 | Receive stock | Planned | |
+| F7 | Store balance and adjust stock | Planned | |
+| F8 | Items and prices, add or edit item, price change | Planned | |
+| F9 | Sales records, restock history and corrections | Planned | |
+| B1 | Backend: `PATCH /users/{id}` (rename, deactivate) | Planned (before F10) | |
+| B2 | Backend: `GET /sales?from=&to=` date range | Planned (before F9, or drop "This week") | |
+| F10 | Users: list, unlock, add, deactivate | Planned | |
+
 Statuses: Planned, Next, In progress, Done.
 
 ## Decisions made (newest first)
 Short notes on choices that are not obvious from the docs, so nobody undoes them by accident.
 
+- 2026-11-05: Phase 4 plan agreed: TypeScript, plain CSS with theme variables (light = Sage, dark = Deep Blue), login token in sessionStorage, code in `frontend/` in this repo. Vite, React Router, plain fetch in one `api.ts`, Vitest. In development Vite forwards `/api` to FastAPI, so no CORS yet. The designs found two backend gaps: B1 (`PATCH /users/{id}`) and B2 (sales date range).
+- 2026-11-05: Laptop redesign done as a design canvas (13 screens, light and dark). "New sale" is a big button on the home screens, not a menu item.
 - 2026-11-05: Unit 9: tables are created and changed only by Alembic (`migrations/`, first revision bdc11083e66f). The server does not migrate on start; run `alembic upgrade head` deliberately. The database address comes from app/config.py, never alembic.ini. Unnamed constraints get names from NAMING_CONVENTION (no "ck" pattern: our CHECKs are named by hand). Migrations run with SQLite foreign-key checks off and batch mode on. The practice depot.db was rebuilt from the migration.
 - 2026-11-05: Unit 8: home summary is today only (depot time). Items sold = units; low-stock count reuses `list_low_stock` (LOW + OUT, active), so it always matches /stock/low; last restock = latest `delivered_at`. Totals are summed by the database. `sales_total` is owner-only via a separate schema.
 - 2026-11-05: Unit 7: corrections and adjustments share `change_stock` in `app/services/stock.py` (database-side add, guarded removal). Sales keep their own update because their errors differ.

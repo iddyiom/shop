@@ -20,14 +20,16 @@ Read these first, they are the source of truth:
 - docs/architecture.md (stack and why, the layers, how a request flows, invariants with where each is enforced and tested)
 - docs/code-standards.md (how code is written: where it goes, routers, services, errors, tests)
 - docs/ai-workflow.md (how the agent works: one unit at a time, spec first, stay in scope, when to ask, definition of done)
+- docs/frontend-plan.md (Phase 4: React front end decisions, rules and units)
 Wireframes (Phase 2) are published as a design artifact: https://claude.ai/artifact/LmiixK7Lj3BtMVbTrsCgcK (private to Iddy).
+Laptop redesign (Phase 4 screens, light = Sage, dark = Deep Blue): https://claude.ai/artifact/WkSjbsigXCS5q2WFJhr7tk (private to Iddy).
 
 ## Tech track
 - Python, FastAPI, SQLAlchemy.
 - Database: SQLite for now. Switch to PostgreSQL before deployment (code must not depend on SQLite only).
 - Git/GitHub from the first commit.
 - No Docker yet (added in the deployment phase).
-- React front end later.
+- React front end (Phase 4): TypeScript, Vite, plain CSS theme variables, in `frontend/`. See docs/frontend-plan.md.
 - Tests with pytest.
 
 ## Rules that must never break
@@ -38,7 +40,7 @@ Wireframes (Phase 2) are published as a design artifact: https://claude.ai/artif
 - Passwords are stored hashed.
 
 ## Current phase
-Phase 3: Coding. Units, status and decisions are in docs/progress.md (the single place for this, so it never goes out of date here). Tables are made and changed only by Alembic migrations (`migrations/`); a model change always comes with a migration.
+Phase 4: React front end (Phase 3, the API, is complete). Units, status and decisions are in docs/progress.md (the single place for this, so it never goes out of date here). Tables are made and changed only by Alembic migrations (`migrations/`); a model change always comes with a migration.
 
 ## How we build (spec-driven)
 One unit at a time. Before coding a unit, write its spec in docs/specs/ (copy docs/specs/_template.md) with a "done" checklist. Build only what the spec says. When the checklist passes: tests green, commit, update docs/progress.md.
