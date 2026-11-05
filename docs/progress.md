@@ -20,7 +20,7 @@ Unit 6: Deliveries (write `docs/specs/06-deliveries.md` first).
 | 2 | Database models (all 9 tables), test setup, password hashing | Done | 083e258 |
 | 3 | Auth: login, lockout after 3 tries, roles, owner manages users | Done | d663588 |
 | 4 | Sales: POST/GET /sales, receipts, list by day, `create-owner` command | Done | 1ef37df |
-| 5 | Items and sub-items: /groups, /products, prices, price history, stop / bring back | Done | |
+| 5 | Items and sub-items: /groups, /products, prices, price history, stop / bring back | Done | 55654f4 |
 | 6 | Deliveries: POST/GET /deliveries, owner-only buying price, corrections | Planned | |
 | 7 | Store balance and adjustments: /stock, /stock/low, adjustments, /stock-entries | Planned | |
 | 8 | Home summary: GET /summary/today | Planned | |
