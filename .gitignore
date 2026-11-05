@@ -1,0 +1,11 @@
+# Virtual environment (each computer makes its own)
+.venv/
+
+# Python cache files
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Local database and secrets (never commit these)
+*.db
+.env
