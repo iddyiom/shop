@@ -21,7 +21,7 @@ Unit 7: Store balance and adjustments (write `docs/specs/07-stock.md` first).
 | 3 | Auth: login, lockout after 3 tries, roles, owner manages users | Done | d663588 |
 | 4 | Sales: POST/GET /sales, receipts, list by day, `create-owner` command | Done | 1ef37df |
 | 5 | Items and sub-items: /groups, /products, prices, price history, stop / bring back | Done | 55654f4 |
-| 6 | Deliveries: POST/GET /deliveries, owner-only buying price, corrections | Done | |
+| 6 | Deliveries: POST/GET /deliveries, owner-only buying price, corrections | Done | 4f20e56 |
 | 7 | Store balance and adjustments: /stock, /stock/low, adjustments, /stock-entries | Next | |
 | 8 | Home summary: GET /summary/today | Planned | |
 | 9 | Alembic migrations (must be done before switching to PostgreSQL) | Planned | |
