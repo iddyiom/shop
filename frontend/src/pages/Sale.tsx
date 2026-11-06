@@ -1,7 +1,6 @@
 // New sale: pick sub-items, see totals instantly, choose how the customer paid, confirm.
 // Spec: docs/specs/f05-sale.md. The screen PREVIEWS totals; the server decides every price
 // and total and re-checks the stock. The request carries only product ids and quantities.
-import { Banknote, Check, Smartphone } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 
@@ -10,6 +9,7 @@ import {
   addProduct, checkLine, clearBill, loadBill, previewTotal, removeLine, saveBill, setQuantity, stepQuantity,
   type BillLine,
 } from '../bill';
+import Icon from '../components/Icon';
 import PageHeader from '../components/PageHeader';
 import StatusBadge from '../components/StatusBadge';
 import { formatTsh } from '../format';
@@ -201,7 +201,7 @@ export default function Sale() {
                     {/* R3a rule 4: the card says how many are already in the bill. */}
                     {inBill && (
                       <span className="in-bill-tag">
-                        <Check size={13} strokeWidth={3} aria-hidden="true" />
+                        <Icon name="checkCircle" size={15} />
                         {billLine.quantity} in bill
                       </span>
                     )}
@@ -309,9 +309,9 @@ export default function Sale() {
                     onChange={() => setPayment(method)}
                   />
                   {method === 'cash' ? (
-                    <Banknote size={20} strokeWidth={1.8} aria-hidden="true" />
+                    <Icon name="banknote" size={22} />
                   ) : (
-                    <Smartphone size={20} strokeWidth={1.8} aria-hidden="true" />
+                    <Icon name="smartphone" size={22} />
                   )}
                   {method === 'cash' ? 'Cash' : 'Mobile money'}
                 </label>

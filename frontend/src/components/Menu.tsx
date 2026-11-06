@@ -6,6 +6,7 @@ import { NavLink } from 'react-router';
 
 import { MENU_GROUPS, menuFor } from '../menu';
 import type { Role } from '../user';
+import Icon from './Icon';
 
 type Props = {
   role: Role;
@@ -26,7 +27,6 @@ export default function Menu({ role, onNavigate }: Props) {
             </p>
             <ul className="menu-list">
               {inGroup.map((entry) => {
-                const Icon = entry.icon;
                 return (
                   <li key={entry.to}>
                     {/* end: "Home" (/) is only current on exactly /, not on every page */}
@@ -37,7 +37,7 @@ export default function Menu({ role, onNavigate }: Props) {
                       title={entry.label}
                       onClick={onNavigate}
                     >
-                      <Icon className="menu-icon" size={18} strokeWidth={1.8} aria-hidden="true" />
+                      <Icon name={entry.icon} className="menu-icon" size={20} />
                       <span className="menu-label">{entry.label}</span>
                     </NavLink>
                   </li>

@@ -2,6 +2,7 @@
 // so a refresh shows it again. Every number here is the server's. Spec: docs/specs/f05-sale.md.
 import { Link, useLocation, useParams } from 'react-router';
 
+import Icon from '../components/Icon';
 import PageHeader from '../components/PageHeader';
 import { formatTsh, PAYMENT_LABEL, shortDate, timeOf } from '../format';
 import type { Receipt as ReceiptData } from '../types';
@@ -42,7 +43,7 @@ export default function Receipt() {
         <section className="receipt-done" aria-labelledby="done-title">
           <div className="done-head">
             <span className="done-mark" aria-hidden="true">
-              ✓
+              <Icon name="checkCircle" size={30} />
             </span>
             <div>
               <h2 id="done-title">Asante! Sale done.</h2>
@@ -60,7 +61,7 @@ export default function Receipt() {
           <div className="receipt-actions">
             <Link to="/sale" className="big-button">
               <span className="big-button-icon" aria-hidden="true">
-                +
+                <Icon name="addCircle" size={22} />
               </span>
               <span className="big-button-title">Next customer</span>
             </Link>

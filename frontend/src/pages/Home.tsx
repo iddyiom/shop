@@ -1,9 +1,9 @@
 // Home: a dashboard of today. Greeting, the main actions, today's numbers, the latest
 // sales and what needs restocking. The owner also sees the money taken today.
 // Specs: docs/specs/f04-home.md (what it shows), docs/specs/r01-redesign.md section 11 (the look).
-import { ArrowUpRight, Plus, RefreshCw } from 'lucide-react';
 import { Link } from 'react-router';
 
+import Icon from '../components/Icon';
 import PageHeader from '../components/PageHeader';
 import Panel from '../components/Panel';
 import StatCard from '../components/StatCard';
@@ -47,7 +47,7 @@ export default function Home() {
         tabTitle="Home"
         actions={
           <button type="button" className="icon-button" aria-label="Refresh" title="Refresh" onClick={refreshAll}>
-            <RefreshCw size={17} strokeWidth={1.8} aria-hidden="true" />
+            <Icon name="refresh" size={20} />
           </button>
         }
       />
@@ -55,7 +55,7 @@ export default function Home() {
       {/* The main actions. "New sale" lives here, not in the menu. */}
       <nav className="pill-row" aria-label="Quick actions">
         <Link to="/sale" className="action-pill main">
-          <Plus size={18} strokeWidth={2.4} aria-hidden="true" />
+          <Icon name="addCircle" size={20} />
           New sale
         </Link>
         <Link to="/receive" className="action-pill">
@@ -93,7 +93,7 @@ export default function Home() {
 
         <Panel
           title={isOwner ? 'Needs restocking' : 'Tell the owner: running low'}
-          link={{ to: '/stock', label: 'Store balance', icon: <ArrowUpRight size={16} aria-hidden="true" /> }}
+          link={{ to: '/stock', label: 'Store balance', icon: <Icon name="arrowRightUp" size={18} /> }}
           loading={low.loading}
           error={low.error}
           onRetry={low.reload}

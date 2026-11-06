@@ -2,7 +2,6 @@
 // There is no top bar (R1 spec, section 11): each page's header row (PageHeader.tsx) has
 // the menu button, so the frame shares its menu state through FrameContext.
 // The menu collapses to an icon rail on a laptop, and pops up as a drawer on a phone.
-import { LogOut, X } from 'lucide-react';
 import { useEffect, useMemo, useState, type KeyboardEvent } from 'react';
 import { Outlet, useLocation } from 'react-router';
 
@@ -10,6 +9,7 @@ import { useAuth } from '../auth';
 import { FrameContext, type Frame } from '../frame';
 import { useCurrentUser } from '../user';
 import Menu from './Menu';
+import Icon from './Icon';
 
 const MENU_KEY = 'depot-menu'; // remembered like the theme: a screen preference, never data
 
@@ -99,7 +99,7 @@ export default function Layout() {
               aria-label="Close menu"
               onClick={() => setDrawerOpen(false)}
             >
-              <X size={18} aria-hidden="true" />
+              <Icon name="closeCircle" size={22} />
             </button>
           </div>
 
@@ -107,7 +107,7 @@ export default function Layout() {
 
           {/* After logOut() there is no user, so RequireAuth sends us to /login. */}
           <button type="button" className="menu-link menu-logout" title="Log out" onClick={logOut}>
-            <LogOut className="menu-icon" size={18} strokeWidth={1.8} aria-hidden="true" />
+            <Icon name="logout" className="menu-icon" size={20} />
             <span className="menu-label">Log out</span>
           </button>
         </nav>

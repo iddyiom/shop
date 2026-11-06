@@ -1,7 +1,6 @@
 // The header row at the top of every page (there is no top bar, R1 spec section 11):
 // the menu button, the page title and its short line, the page's own round buttons,
 // the theme button, and who is logged in. It also names the browser tab.
-import { Menu as MenuIcon, PanelLeftClose, PanelLeftOpen } from 'lucide-react';
 import { useEffect, type ReactNode } from 'react';
 
 import { useFrame } from '../frame';
@@ -9,6 +8,7 @@ import { ROLE_LABEL, useCurrentUser } from '../user';
 import { initials } from '../users';
 import ApiStatus from './ApiStatus';
 import ThemeSwitch from './ThemeSwitch';
+import Icon from './Icon';
 
 type Props = {
   // The page's name, the same words as its menu entry (R2b): "Store balance".
@@ -41,7 +41,7 @@ export default function PageHeader({ title, subtitle, tabTitle, actions }: Props
         aria-controls="main-menu"
         onClick={toggleCollapsed}
       >
-        {collapsed ? <PanelLeftOpen size={18} aria-hidden="true" /> : <PanelLeftClose size={18} aria-hidden="true" />}
+        <Icon name="sidebar" size={20} flip={collapsed} />
       </button>
       {/* Phone (CSS): pop the menu up as a drawer. */}
       <button
@@ -52,7 +52,7 @@ export default function PageHeader({ title, subtitle, tabTitle, actions }: Props
         aria-controls="main-menu"
         onClick={openDrawer}
       >
-        <MenuIcon size={18} aria-hidden="true" />
+        <Icon name="hamburger" size={22} />
       </button>
 
       <div className="page-title">

@@ -7,7 +7,7 @@ Update it at the end of every unit: move the unit, add decisions, set "Next".
 Redesign (R0-R3): a new look for the finished front end (spec: docs/specs/r01-redesign.md). Phase 4 (React front end) and Phase 3 (the API) are complete.
 
 ## In progress
-(nothing)
+Icons: every icon is now from the Solar Linear set (svgrepo.com, CC0), built and checked, waiting for Iddy's "commit".
 
 ## Next
 Iddy chooses the next step. Waiting: a sharper copy of the dark-mode tree photo (the one in the app is 643 x 360) and permission to use both photos before launch; the warning icons (W1, r01 section 10); the small things noticed along the way (owner resets a forgotten password; "1 tries remaining" wording; fixing a wrong buying price; a backup command for depot.db); the deployment phase (PostgreSQL, Docker, logout that ends the token on the server).
@@ -54,6 +54,7 @@ Iddy chooses the next step. Waiting: a sharper copy of the dark-mode tree photo 
 | R2b | Shared components: header title = menu name, loading and empty states, tables become cards on a phone | Done | 572d4e0 |
 | R2c-L | Light pass, step 1: Kilimanjaro photo behind every page, every block frosted glass; contrast measured on the photo's pixels (text on the photo uses dark text; below the header no text sits on the photo) | Done | 22c0d60 |
 | R2c-D | Dark pass: the tree photo behind every page, dark glass; old R1 dark rules removed (solid menu, white-glow money card, capital titles); every page checked in dark | Done | 22c0d60 |
+| I1 | Icons: the Solar Linear set from svgrepo.com (CC0) replaces lucide-react, one `Icon` component | Built, checked (not committed) | |
 | R3a | New sale (bill bar on a phone, payment tiles, Confirm with its reason underneath, "N in bill" on cards) and the Receipt in the shared frame | Done | 22c0d60 |
 | R3b–R3f | Sales records number cards; Receive lines as cards at every width; old dark cards become glass (Receive, Adjust, confirmations); Restock stacks on a tablet; tables become cards below 960 px; Items price-history timeline; Home stock-health ring | Done | 22c0d60 |
 | W1 | Warning icons for LOW / OUT (solid, OUT pulses) | Planned | |
@@ -62,6 +63,7 @@ Statuses: Planned, Next, In progress, Done, Parked.
 
 ## Decisions made (newest first)
 Short notes on choices that are not obvious from the docs, so nobody undoes them by accident.
+- 2026-11-06 Icons (Iddy: from svgrepo.com, all in one go): one set only, **Solar Linear** (CC0, public domain, licence checked on every icon page), so every icon matches. 21 icons live in `components/Icon.tsx` as shapes only (the downloaded SVG files are never used, so no outside code runs); they draw in `currentColor`. `lucide-react` was removed. The typed ✓, × and + became icons; the − / + inside the bill stepper stay as text (Solar has no plain plus or minus).
 - 2026-11-06 After Iddy's look in Brave: the photos did not show and the light theme turned brown, because the browser's "dark mode for web pages" repainted the app. Fix: the app declares its own themes (`color-scheme: only light` / `dark`, and a meta tag), and the photo is a real `<img>` in Layout.tsx (one per theme), not a CSS `body::before` layer.
 - 2026-11-06 Iddy: in dark mode the TEXT is red (from the moon): `--text` #ff5c5c, small text `--muted` #d99a97. The main color stays white (buttons, chosen chip, avatar, "you are here"), so fills use `--primary`, never `--text`. A darker veil at the top (0.7) keeps the red title readable over the moon's glow (measured 4.35:1 or better; the subtitle uses the soft red, 5.65:1).
 - 2026-11-06 Dark pass: the glass rules are shared by both themes; each theme only sets its own colors and photo (light: Kilimanjaro under a cream veil; dark: the tree under a black veil, placed 70% across so the black side holds the header). In dark the money card has no glow (the accent is white). Contrast on the tree photo's worst pixels: header text 7.9:1, grey on glass 6.7:1.

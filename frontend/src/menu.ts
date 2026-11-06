@@ -2,16 +2,7 @@
 // The one place to change the menu. Hiding an entry is only for a tidy screen:
 // the server is what refuses owner-only calls (403).
 // "New sale" is not here on purpose: it is the first button on Home.
-import {
-  History,
-  House,
-  Package,
-  ReceiptText,
-  Tag,
-  Truck,
-  Users,
-  type LucideIcon,
-} from 'lucide-react';
+import type { IconName } from './components/Icon';
 
 import type { Role } from './user';
 
@@ -22,7 +13,7 @@ export type MenuEntry = {
   to: string;
   roles: Role[];
   group: MenuGroup;
-  icon: LucideIcon; // decoration only: the label is what screen readers read
+  icon: IconName; // Solar icon (components/Icon.tsx); decoration only: the label is what screen readers read
 };
 
 const EVERYONE: Role[] = ['owner', 'shopkeeper'];
@@ -34,13 +25,13 @@ export const MENU_GROUPS: { id: MenuGroup; label: string }[] = [
 ];
 
 export const MENU: MenuEntry[] = [
-  { label: 'Home', to: '/', roles: EVERYONE, group: 'work', icon: House },
-  { label: 'Receive stock', to: '/receive', roles: EVERYONE, group: 'work', icon: Truck },
-  { label: 'Store balance', to: '/stock', roles: EVERYONE, group: 'work', icon: Package },
-  { label: 'Sales records', to: '/sales', roles: EVERYONE, group: 'work', icon: ReceiptText },
-  { label: 'Restock history', to: '/restock', roles: EVERYONE, group: 'work', icon: History },
-  { label: 'Items and prices', to: '/items', roles: OWNER_ONLY, group: 'owner', icon: Tag },
-  { label: 'Users', to: '/users', roles: OWNER_ONLY, group: 'owner', icon: Users },
+  { label: 'Home', to: '/', roles: EVERYONE, group: 'work', icon: 'home' },
+  { label: 'Receive stock', to: '/receive', roles: EVERYONE, group: 'work', icon: 'delivery' },
+  { label: 'Store balance', to: '/stock', roles: EVERYONE, group: 'work', icon: 'box' },
+  { label: 'Sales records', to: '/sales', roles: EVERYONE, group: 'work', icon: 'billList' },
+  { label: 'Restock history', to: '/restock', roles: EVERYONE, group: 'work', icon: 'history' },
+  { label: 'Items and prices', to: '/items', roles: OWNER_ONLY, group: 'owner', icon: 'tagPrice' },
+  { label: 'Users', to: '/users', roles: OWNER_ONLY, group: 'owner', icon: 'users' },
 ];
 
 export function menuFor(role: Role): MenuEntry[] {

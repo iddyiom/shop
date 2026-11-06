@@ -1951,7 +1951,7 @@ a {
   height: 48px;
   border-radius: 50%;
   background: var(--ok);
-  color: var(--ok-text);
+  color: var(--ok-text); /* the Solar check-circle icon sits in a soft green disc */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -3871,4 +3871,10 @@ h3 {
 .health-out {
   background: var(--out);
   color: var(--badge-text);
+}
+
+/* ---------- Icons (components/Icon.tsx: the Solar Linear set, CC0) ---------- */
+.icon {
+  display: block;
+  flex-shrink: 0;
 }

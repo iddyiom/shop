@@ -1,9 +1,9 @@
 // Store balance: what is in the store, for everyone. The owner also gets Adjust buttons and
 // the latest fixes to stock. Spec: docs/specs/f07-stock.md. No money on this page (rule 1).
 import { useEffect, useState } from 'react';
-import { Search } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router';
 
+import Icon from '../components/Icon';
 import PageHeader from '../components/PageHeader';
 import Panel from '../components/Panel';
 import StatusBadge from '../components/StatusBadge';
@@ -96,7 +96,7 @@ export default function Stock() {
               Search stock
             </label>
             <span className="search-box">
-              <Search size={16} aria-hidden="true" />
+              <Icon name="magnifer" size={18} />
               <input
                 id="stock-search"
                 type="search"

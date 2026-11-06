@@ -4,6 +4,7 @@ import { useState, type FormEvent } from 'react';
 import { Link } from 'react-router';
 
 import { apiPost } from '../api';
+import Icon from '../components/Icon';
 import PageHeader from '../components/PageHeader';
 import Panel from '../components/Panel';
 import { shortDate } from '../format';
@@ -290,7 +291,7 @@ export default function Receive() {
                           disabled={lines.length === 1}
                           onClick={() => setLines((current) => current.filter((l) => l.key !== line.key))}
                         >
-                          ×
+                          <Icon name="closeCircle" size={22} />
                         </button>
                       </td>
                     </tr>
