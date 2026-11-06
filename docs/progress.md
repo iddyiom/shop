@@ -7,10 +7,10 @@ Update it at the end of every unit: move the unit, add decisions, set "Next".
 Redesign (R0-R3): a new look for the finished front end (spec: docs/specs/r01-redesign.md). Phase 4 (React front end) and Phase 3 (the API) are complete.
 
 ## In progress
-R2b (shared components) built and checked, waiting for Iddy's "commit". Spec: docs/specs/r02-shared-pieces.md section 11.
+(nothing)
 
 ## Next
-R2b (header title = menu name, loading and empty states, tables become cards on a phone; spec section 8 lists what R2a carried over), then R2c (photo behind every page, glass blocks; spec section 10; needs a larger tree photo first), then R3 (each page, and Home as a dashboard), then the warning icons (spec section 10). Still waiting after that: the small things noticed along the way (owner resets a forgotten password; "1 tries remaining" wording; fixing a wrong buying price; a backup command for depot.db) and the deployment phase (PostgreSQL, Docker, logout that ends the token on the server).
+R2c (photo behind every page, glass blocks; spec section 10; needs a larger tree photo first), then R3 (each page, and Home as a dashboard), then the warning icons (spec section 10). Still waiting after that: the small things noticed along the way (owner resets a forgotten password; "1 tries remaining" wording; fixing a wrong buying price; a backup command for depot.db) and the deployment phase (PostgreSQL, Docker, logout that ends the token on the server).
 
 ## Units
 
@@ -51,7 +51,7 @@ R2b (header title = menu name, loading and empty states, tables become cards on 
 | R0 | Mock-up (design artifact, no code) | Done | |
 | R1 | Shell and colors, reworked to the mock-up PDF: no top bar, header row on every page, menu groups, login, Home dashboard, Store balance | Done | 9c75089 |
 | R2a | Shared pieces, looks only: buttons (3 levels), badges and tags, fields, no capital labels, 44 px targets, heading font | Done | cf62b01 |
-| R2b | Shared components: header title = menu name, loading and empty states, tables become cards on a phone | In progress | |
+| R2b | Shared components: header title = menu name, loading and empty states, tables become cards on a phone | Done | 572d4e0 |
 | R2c | Photo behind every page (Kilimanjaro light, tree dark), every block frosted glass | Planned | |
 | R3 | The other pages in the PDF style (Home and Store balance done in R1) | Planned | |
 | W1 | Warning icons for LOW / OUT (solid, OUT pulses) | Planned | |

@@ -1,6 +1,6 @@
 # Redesign R2: shared pieces (split into R2a and R2b)
 
-Status: Agreed 2026-11-06 (all 3 recommendations accepted). R2a Done (cf62b01). R2b agreed, in progress.
+Status: Agreed 2026-11-06 (all 3 recommendations accepted). R2a Done (cf62b01). R2b Done (572d4e0). R2c planned (section 10).
 Depends on: R1 (Done, 9c75089). Design reference: the mock-up page "R2–R3 · Every page" (https://claude.ai/artifact/TfiWo6bhLsAiQEvjNVD5MZ), mainly the "Design system" board. Problems and fixes: docs/specs/r01-redesign.md section 12.
 
 ## 1. Goal
@@ -86,7 +86,7 @@ Planned after R2b; its own spec section gets the full detail and checklist befor
 - Phones: the blur is costly on cheap phones, so under 700 px the glass is more solid and the blur smaller. People who choose "reduce transparency" get solid cards.
 - Before coding: a larger tree photo (at least 1600 px wide; the given one is 643 x 360) and confirmation both photos may be used. Contrast measured on the real photos in both themes.
 
-## 11. R2b in detail (Agreed 2026-11-06; built and checked, not committed yet)
+## 11. R2b in detail (Done, 572d4e0)
 
 ### 11.1 Rules and decisions
 1. **Header: the h1 is the page's name, the browser tab the same.** `PageHeader` takes `title` (the name) and `subtitle` (the friendly sentence); the tab uses the title, so `tabTitle` is only passed by Home (its title is the greeting). Names:
