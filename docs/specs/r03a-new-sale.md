@@ -1,6 +1,6 @@
 # Redesign R3a: New sale in the mock-up's layout
 
-Status: Done in the light and dark passes (2026-11-06, not committed).
+Status: Done in the light and dark passes (2026-11-06, 22c0d60).
 Depends on: R2a (cf62b01), R2b (572d4e0). Design reference: mock-up boards "New sale" and "New sale on a phone" (https://claude.ai/artifact/TfiWo6bhLsAiQEvjNVD5MZ, page "R2–R3 · Every page").
 
 ## 0. How R3 is split
