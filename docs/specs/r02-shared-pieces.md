@@ -1,6 +1,6 @@
 # Redesign R2: shared pieces (split into R2a and R2b)
 
-Status: Agreed 2026-11-06 (all 3 recommendations accepted). R2a built and checked 2026-11-06, not committed yet.
+Status: Agreed 2026-11-06 (all 3 recommendations accepted). R2a Done (cf62b01). R2b next.
 Depends on: R1 (Done, 9c75089). Design reference: the mock-up page "R2–R3 · Every page" (https://claude.ai/artifact/TfiWo6bhLsAiQEvjNVD5MZ), mainly the "Design system" board. Problems and fixes: docs/specs/r01-redesign.md section 12.
 
 ## 1. Goal
