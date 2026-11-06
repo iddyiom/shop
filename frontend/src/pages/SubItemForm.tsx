@@ -10,6 +10,7 @@ import { formatTsh } from '../format';
 import { parseLevel, parseTsh } from '../money';
 import type { Group, Product } from '../types';
 import { errorMessage, useApi } from '../useApi';
+import Skeleton from '../components/Skeleton';
 
 type PriceMode = 'item' | 'own';
 type Changes = { name?: string; min_level?: number }; // only what the owner changed
@@ -133,9 +134,7 @@ export default function SubItemForm() {
 
   if (groups.loading || (!isNew && products.loading)) {
     return (
-      <p className="panel-state" role="status">
-        Loading…
-      </p>
+      <Skeleton />
     );
   }
   if (!group || (!isNew && !product)) {

@@ -59,14 +59,14 @@ describe('the list', () => {
     expect(screen.getAllByRole('link', { name: '+ Add item' })[0].getAttribute('href')).toBe('/items/new');
   });
 
-  it('list shows each item with its price and sub-items, SELLING and own price or "uses item price"', async () => {
+  it('list shows each item with its price and sub-items, Selling and own price or "uses item price"', async () => {
     loggedInAs(OWNER, catalog());
     openAt('/items');
     const soda = await screen.findByRole('article', { name: 'Soda' });
     expect(within(soda).getByText('TSh 1,000')).toBeTruthy();
     expect(within(soda).getByText('Fanta')).toBeTruthy();
     expect(within(soda).getByText('Uses item price TSh 1,000 · 5 in store')).toBeTruthy();
-    expect(within(soda).getAllByText('SELLING')).toHaveLength(2);
+    expect(within(soda).getAllByText('Selling')).toHaveLength(2);
     const water = screen.getByRole('article', { name: 'Water kubwa' });
     expect(within(water).getByText('Own price TSh 1,500 · 4 in store')).toBeTruthy();
   });

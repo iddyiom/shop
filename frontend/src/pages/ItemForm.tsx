@@ -9,6 +9,7 @@ import { formatTsh } from '../format';
 import { parseTsh } from '../money';
 import type { Group } from '../types';
 import { errorMessage, useApi } from '../useApi';
+import Skeleton from '../components/Skeleton';
 
 export default function ItemForm() {
   const { groupId } = useParams();
@@ -79,9 +80,7 @@ export default function ItemForm() {
 
   if (!isNew && all.loading) {
     return (
-      <p className="panel-state" role="status">
-        Loading…
-      </p>
+      <Skeleton />
     );
   }
   if (!isNew && !group) {

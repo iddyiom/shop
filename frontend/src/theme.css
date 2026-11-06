@@ -850,34 +850,16 @@ a {
 
 /* ---------- Badges, lists, tables ---------- */
 
-.badge {
-  display: inline-block;
-  min-width: 52px;
-  padding: 5px 10px;
-  border-radius: 999px;
-  text-align: center;
-  font-size: 13px;
-  font-weight: 800;
-  letter-spacing: 0.5px;
-  color: var(--badge-text);
-}
 
 .badge-out {
   background: var(--out);
+  color: var(--badge-text);
 }
 
 .badge-low {
   background: var(--low);
+  color: var(--badge-text);
 }
-
-.badge-ok {
-  background: var(--ok);
-  color: var(--text);
-}
-
-
-
-
 
 
 .table-scroll {
@@ -1151,19 +1133,6 @@ a {
   color: var(--muted);
 }
 
-.state-tag {
-  padding: 4px 10px;
-  border-radius: 999px;
-  background: var(--ok);
-  font-size: 12px;
-  font-weight: 800;
-  letter-spacing: 0.5px;
-}
-
-.state-tag.off {
-  background: var(--out);
-  color: var(--badge-text);
-}
 
 .icon-link {
   display: inline-flex;
@@ -2271,7 +2240,6 @@ a {
 /* A count is also a filter button (question 4). */
 
 
-
 .stopped-row td {
   opacity: 0.6;
 }
@@ -2581,28 +2549,6 @@ a {
   gap: 6px;
 }
 
-.user-badge {
-  padding: 4px 10px;
-  border-radius: 999px;
-  font-size: 12px;
-  font-weight: 800;
-  letter-spacing: 0.5px;
-}
-
-.user-badge-active {
-  background: var(--ok);
-  color: var(--text);
-}
-
-.user-badge-locked {
-  background: var(--out);
-  color: var(--badge-text);
-}
-
-.user-badge-deactivated {
-  border: 2px dashed var(--muted);
-  color: var(--muted);
-}
 
 .account-row .ghost-button {
   min-height: 44px;
@@ -3004,7 +2950,8 @@ h3 {
 /* ---------- Status badges: filled, a dot + the word ---------- */
 
 .badge,
-.state-tag {
+.state-tag,
+.user-badge {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -3019,7 +2966,8 @@ h3 {
 }
 
 .badge::before,
-.state-tag::before {
+.state-tag::before,
+.user-badge::before {
   content: '';
   width: 7px;
   height: 7px;
@@ -3028,22 +2976,24 @@ h3 {
 }
 
 .badge-ok,
-.state-tag {
+.state-tag,
+.user-badge-active {
   background: var(--ok);
   color: var(--ok-text);
 }
 
-/* "Stopped" is not a warning: grey, not red. */
-.state-tag.off {
+.user-badge-locked {
+  background: var(--out);
+  color: var(--badge-text);
+}
+
+/* "Stopped" and "Deactivated" are not warnings: grey, not red. */
+.state-tag.off,
+.user-badge-deactivated {
   background: var(--inner);
   color: var(--muted);
 }
 
-/* Words written in capitals in the markup ("NEVER EDITED") show in small letters for now.
-   CSS cannot do "lowercase, then capital first letter" on this box, so R2b fixes the words. */
-.state-tag {
-  text-transform: lowercase;
-}
 
 /* ---------- Info tags ("Owner only"): outlined, never filled ---------- */
 
@@ -3151,4 +3101,194 @@ h3 {
   align-self: stretch; /* the whole box height is the tap target */
   min-height: 44px;
   font-size: 15px;
+}
+
+/* ======================================================================
+   R2b: shared components (docs/specs/r02-shared-pieces.md, section 11)
+   ====================================================================== */
+
+/* ---------- Danger: takes away access (Deactivate). Red outline, never filled. ---------- */
+
+.danger-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0 18px;
+  border: 1.5px solid var(--error-text);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--error-text);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.danger-button:hover:not(:disabled) {
+  background: var(--error-bg);
+}
+
+.danger-button:disabled {
+  border-style: dashed;
+  border-color: var(--muted);
+  color: var(--on-disabled);
+  cursor: not-allowed;
+}
+
+/* ---------- Skeleton.tsx: grey lines while loading ---------- */
+
+.skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 8px 0;
+}
+
+.skeleton-line {
+  display: block;
+  height: 14px;
+  border-radius: 8px;
+  background: var(--inner);
+  animation: skeleton-pulse 1.4s ease-in-out infinite;
+}
+
+.skeleton-line:nth-child(2) {
+  width: 70%;
+}
+
+.skeleton-line:nth-child(3) {
+  width: 90%;
+}
+
+.skeleton-line:nth-child(4) {
+  width: 55%;
+}
+
+@keyframes skeleton-pulse {
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* People who turn off motion get still lines. */
+@media (prefers-reduced-motion: reduce) {
+  .skeleton-line {
+    animation: none;
+  }
+}
+
+/* ---------- EmptyState.tsx: icon, sentence, next step ---------- */
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 20px 12px;
+  text-align: center;
+}
+
+.empty-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--inner);
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.empty-state .empty-text {
+  font-size: 15px;
+}
+
+/* ---------- Store balance: the table card keeps its full height (audit problem 3) ---------- */
+/* Panels have flex: 1 1 320px, meant as "about 320 px wide" in a row. Inside .stock-main,
+   which is a column, the same 320 px became a HEIGHT, and with overflow: hidden the rows
+   below were cut off. In this column the card takes the height of its rows. */
+
+.stock-main > .table-card {
+  flex: 0 0 auto;
+}
+
+/* ---------- Tables become cards on a phone (data-label on every cell) ---------- */
+/* The Receipt stays a table: its 4 short columns fit. */
+
+@media (max-width: 699px) {
+  .table-scroll {
+    overflow-x: visible; /* no sideways box on a phone: rows are cards that fit */
+  }
+
+  .data-table:not(.receipt-table),
+  .data-table:not(.receipt-table) tbody,
+  .data-table:not(.receipt-table) tr,
+  .data-table:not(.receipt-table) td {
+    display: block;
+    width: auto;
+    max-width: none;
+  }
+
+  /* The column names move into each card (data-label), so the header row is only for
+     screen readers. */
+  .data-table:not(.receipt-table) thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+  }
+
+  .data-table:not(.receipt-table) tr {
+    margin: 0 0 10px;
+    padding: 12px 14px;
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    background: var(--card);
+  }
+
+  .data-table:not(.receipt-table) td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    min-height: 32px;
+    padding: 4px 0;
+    border: none;
+    text-align: right;
+    white-space: normal;
+  }
+
+  .data-table:not(.receipt-table) td:first-child {
+    text-align: left;
+    font-size: 16px;
+  }
+
+  .data-table:not(.receipt-table) td[data-label]::before {
+    content: attr(data-label);
+    color: var(--muted);
+    font-size: 13px;
+    font-weight: 600;
+    text-align: left;
+  }
+
+  /* The last cell holding a button (Adjust, Remove) gets the full card width. */
+  .data-table:not(.receipt-table) td:not([data-label]):last-child {
+    justify-content: flex-end;
+    padding-top: 8px;
+  }
+
+  /* Receive stock: each line's fields stack, label above, full width. */
+  .lines-table td[data-label] {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: left;
+  }
+
+  .lines-table select,
+  .lines-table .small-input {
+    width: 100%;
+  }
 }

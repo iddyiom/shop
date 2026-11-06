@@ -3,15 +3,15 @@
 import type { Role } from './user';
 import type { User } from './types';
 
-export type Badge = 'ACTIVE' | 'LOCKED' | 'DEACTIVATED';
+export type Badge = 'Active' | 'Locked' | 'Deactivated'; // sentence case (R2b)
 
 /**
- * Rule 2: LOCKED wins over ACTIVE. A deactivated account also shows LOCKED if it is locked,
+ * Rule 2: Locked wins over Active. A deactivated account also shows Locked if it is locked,
  * so the owner knows Unlock is still needed after bringing it back (B1: reactivating keeps a lock).
  */
 export function userBadges(user: User): Badge[] {
-  if (!user.is_active) return user.is_locked ? ['DEACTIVATED', 'LOCKED'] : ['DEACTIVATED'];
-  return user.is_locked ? ['LOCKED'] : ['ACTIVE'];
+  if (!user.is_active) return user.is_locked ? ['Deactivated', 'Locked'] : ['Deactivated'];
+  return user.is_locked ? ['Locked'] : ['Active'];
 }
 
 /** "Asha Juma" → "AJ", "Neema" → "N". */

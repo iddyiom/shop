@@ -193,14 +193,14 @@ describe('menu collapse and pop-up (R1)', () => {
     fireEvent.click(within(nav).getByRole('link', { name: 'Store balance' }));
     expect(shell()?.classList.contains('drawer-open')).toBe(false);
     expect(open.getAttribute('aria-expanded')).toBe('false');
-    expect(await screen.findByRole('heading', { name: 'What is in the store' })).toBeTruthy();
+    expect(await screen.findByRole('heading', { name: 'Store balance' })).toBeTruthy();
   });
 
   it('every page starts with the header row: menu button, title, theme button, the user', async () => {
     await openLoggedIn('/stock');
     const header = screen.getByRole('main').querySelector('.page-header') as HTMLElement;
     expect(within(header).getByRole('button', { name: 'Collapse menu' })).toBeTruthy();
-    expect(within(header).getByRole('heading', { level: 1, name: 'What is in the store' })).toBeTruthy();
+    expect(within(header).getByRole('heading', { level: 1, name: 'Store balance' })).toBeTruthy();
     expect(within(header).getByRole('button', { name: 'Dark mode' })).toBeTruthy();
     expect(within(header).getByText('Depot Owner')).toBeTruthy();
     expect(document.querySelector('.topbar')).toBeNull(); // no top bar (Iddy's choice)

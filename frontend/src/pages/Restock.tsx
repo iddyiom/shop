@@ -11,6 +11,8 @@ import { parseQuantity } from '../money';
 import type { Correction, Delivery } from '../types';
 import { errorMessage, useApi } from '../useApi';
 import { useCurrentUser } from '../user';
+import Skeleton from '../components/Skeleton';
+import EmptyState from '../components/EmptyState';
 
 /** One sub-item on a delivery. The same sub-item twice on the paperwork is added together here. */
 type Row = {
@@ -53,7 +55,7 @@ export default function Restock() {
   // The note after a correction belongs to the delivery it was made on.
   const [notice, setNotice] = useState<{ deliveryId: number; text: string } | null>(null);
 
-  const header = <PageHeader title="Past deliveries" tabTitle="Restock history" />;
+  const header = <PageHeader title="Restock history" subtitle="Past deliveries, newest first. Lines are never edited." />;
 
   // Only the FIRST load blanks the page; a reload after a correction keeps the old list on screen.
   if (!list.data && (list.loading || list.error)) {
@@ -61,9 +63,7 @@ export default function Restock() {
       <>
         {header}
         {list.loading ? (
-          <p className="panel-state" role="status">
-            Loading…
-          </p>
+          <Skeleton />
         ) : (
           <div className="panel-state">
             <p role="alert">{list.error}</p>
@@ -103,9 +103,7 @@ export default function Restock() {
   } else if (!detail.data || String(detail.data.id) !== selectedId) {
     // First load, or another delivery was clicked and is still on its way.
     right = (
-      <p className="panel-state" role="status">
-        Loading…
-      </p>
+      <Skeleton />
     );
   } else {
     const delivery = detail.data;
@@ -179,7 +177,7 @@ function DeliveryCard({ delivery, isOwner, notice, onCorrected, onStale }: CardP
               {delivery.note ? `${delivery.note} · ` : ''}received by {delivery.received_by}
             </span>
           </div>
-          <span className="state-tag">NEVER EDITED</span>
+          <span className="state-tag">Never edited</span>
         </div>
         {notice && (
           <p className="notice-ok" role="status">
@@ -215,13 +213,18 @@ function DeliveryCard({ delivery, isOwner, notice, onCorrected, onStale }: CardP
                   <td>
                     <strong>{row.product}</strong>
                   </td>
-                  <td className="number">{row.delivered}</td>
-                  <td className={row.corrections < 0 ? 'number phone-hide change-down' : 'number phone-hide'}>
+                  <td className="number" data-label="Delivered">{row.delivered}</td>
+                  <td
+                    className={row.corrections < 0 ? 'number phone-hide change-down' : 'number phone-hide'}
+                    data-label="Corrections"
+                  >
                     {row.corrections === 0 ? '—' : signed(row.corrections)}
                   </td>
-                  <td className="number strong-number">{row.delivered + row.corrections}</td>
+                  <td className="number strong-number" data-label="Recorded now">
+                    {row.delivered + row.corrections}
+                  </td>
                   {isOwner && (
-                    <td className="number">
+                    <td className="number" data-label="Buying price">
                       {row.buyingPrices.map((p) => (p === null ? '—' : formatTsh(p))).join(' / ') || '—'}
                     </td>
                   )}
@@ -233,7 +236,7 @@ function DeliveryCard({ delivery, isOwner, notice, onCorrected, onStale }: CardP
 
         <h3 className="section-label">Corrections on this delivery</h3>
         {delivery.corrections.length === 0 ? (
-          <p className="empty-text">No corrections.</p>
+          <EmptyState message="No corrections." />
         ) : (
           <ul className="history-list" aria-label="Corrections on this delivery">
             {delivery.corrections.map((fix) => (

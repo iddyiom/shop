@@ -133,7 +133,7 @@ describe('protected pages', () => {
     const router = openAt('/stock');
     expect(await screen.findByRole('heading', { name: 'Welcome back' })).toBeTruthy();
     fillAndSubmit('owner', 'right-password');
-    expect(await screen.findByRole('heading', { name: 'What is in the store' })).toBeTruthy();
+    expect(await screen.findByRole('heading', { name: 'Store balance' })).toBeTruthy();
     expect(router.state.location.pathname).toBe('/stock');
   });
 

@@ -11,19 +11,22 @@ import ApiStatus from './ApiStatus';
 import ThemeSwitch from './ThemeSwitch';
 
 type Props = {
-  title: ReactNode; // e.g. "What is in the store"
-  subtitle?: ReactNode; // the muted line under it
-  tabTitle: string; // e.g. "Store balance" (the browser tab)
-  actions?: ReactNode; // round buttons before the theme button, e.g. Refresh on Home
+  // The page's name, the same words as its menu entry (R2b): "Store balance".
+  // A string, except Home's greeting ("Habari, Asha"), which then passes tabTitle.
+  title: ReactNode;
+  subtitle?: ReactNode; // the friendly sentence under it: "What is in the store. …"
+  tabTitle?: string; // the browser tab; only needed when the title is not plain text
+  actions?: ReactNode; // the page's own buttons before the theme button, e.g. Refresh on Home
 };
 
 export default function PageHeader({ title, subtitle, tabTitle, actions }: Props) {
   const { collapsed, drawerOpen, toggleCollapsed, openDrawer } = useFrame();
   const user = useCurrentUser();
+  const tab = tabTitle ?? (typeof title === 'string' ? title : 'Depot');
 
   useEffect(() => {
-    document.title = `${tabTitle} · Depot`;
-  }, [tabTitle]);
+    document.title = `${tab} · Depot`;
+  }, [tab]);
 
   const collapseLabel = collapsed ? 'Expand menu' : 'Collapse menu';
   return (

@@ -12,6 +12,8 @@ import { daysAgo, formatTsh, itemsSummary, longDate, PAYMENT_LABEL, shortDate, t
 import type { Receipt, StockLine, Summary } from '../types';
 import { useApi } from '../useApi';
 import { useCurrentUser } from '../user';
+import Skeleton from '../components/Skeleton';
+import EmptyState from '../components/EmptyState';
 
 const LATEST_SALES = 5;
 
@@ -107,11 +109,7 @@ type CardsProps = {
 
 function TodayCards({ summary, loading, error, onRetry, receipts, low }: CardsProps) {
   if (loading) {
-    return (
-      <p className="panel-state" role="status">
-        Loading today&apos;s numbers…
-      </p>
-    );
+    return <Skeleton label="Loading today's numbers…" />;
   }
   if (error || !summary) {
     return (
@@ -155,7 +153,7 @@ function TodayCards({ summary, loading, error, onRetry, receipts, low }: CardsPr
 }
 
 function LowStockTiles({ lines }: { lines: StockLine[] }) {
-  if (lines.length === 0) return <p className="empty-text">Nothing is low or out.</p>;
+  if (lines.length === 0) return <EmptyState message="Nothing is low or out." />;
   return (
     <ul className="low-tiles">
       {lines.map((line) => (
@@ -172,7 +170,7 @@ function LowStockTiles({ lines }: { lines: StockLine[] }) {
 }
 
 function LatestSales({ receipts }: { receipts: Receipt[] }) {
-  if (receipts.length === 0) return <p className="empty-text">No sales yet today.</p>;
+  if (receipts.length === 0) return <EmptyState message="No sales yet today." action={{ to: '/sale', label: 'New sale' }} />;
   return (
     <ul className="sale-list">
       {receipts.map((receipt) => {

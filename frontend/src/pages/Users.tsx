@@ -9,6 +9,7 @@ import type { User } from '../types';
 import { useApi, errorMessage } from '../useApi';
 import { ROLE_LABEL, type Role } from '../user';
 import { checkNewUser, firstName, initials, userBadges, type NewUserForm, type NewUserProblems } from '../users';
+import Skeleton from '../components/Skeleton';
 
 const EMPTY_FORM: NewUserForm = { fullName: '', username: '', password: '', role: null };
 
@@ -50,7 +51,7 @@ export default function Users() {
     }
   }
 
-  const header = <PageHeader title="Who can log in" tabTitle="Users" />;
+  const header = <PageHeader title="Users" subtitle="Who can log in. Accounts are never deleted." />;
 
   // Only the FIRST load blanks the page; a reload after a change keeps the list on screen.
   if (!users.data && (users.loading || users.error)) {
@@ -58,9 +59,7 @@ export default function Users() {
       <>
         {header}
         {users.loading ? (
-          <p className="panel-state" role="status">
-            Loading…
-          </p>
+          <Skeleton />
         ) : (
           <div className="panel-state">
             <p role="alert">{users.error}</p>
@@ -143,7 +142,7 @@ export default function Users() {
                     (u.is_active ? (
                       <button
                         type="button"
-                        className="ghost-button"
+                        className="danger-button" // takes away access: red outline (R2b)
                         disabled={busyKey !== null}
                         onClick={() => {
                           setConfirming(u);

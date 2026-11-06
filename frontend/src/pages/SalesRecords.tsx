@@ -7,6 +7,8 @@ import { dayBefore, formatTsh, itemsSummary, longDate, PAYMENT_LABEL, timeOf } f
 import type { Receipt, Summary } from '../types';
 import { useApi } from '../useApi';
 import { useCurrentUser } from '../user';
+import Skeleton from '../components/Skeleton';
+import EmptyState from '../components/EmptyState';
 
 const DAY_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
 
@@ -35,16 +37,16 @@ export default function SalesRecords() {
   // Question 2: adds up the totals the SERVER put on its own receipts; owner only (rule 3).
   const dayTotal = receipts.reduce((sum, receipt) => sum + receipt.total, 0);
 
-  const header = <PageHeader title="Every receipt" tabTitle="Sales records" />;
+  const header = (
+    <PageHeader title="Sales records" subtitle="Every receipt, by day. Receipts are never changed or deleted." />
+  );
 
   if (summary.loading || summary.error) {
     return (
       <>
         {header}
         {summary.loading ? (
-          <p className="panel-state" role="status">
-            Loading…
-          </p>
+          <Skeleton />
         ) : (
           <div className="panel-state">
             <p role="alert">{summary.error}</p>
@@ -117,9 +119,7 @@ export default function SalesRecords() {
           </div>
 
           {sales.loading ? (
-            <p className="panel-state" role="status">
-              Loading…
-            </p>
+            <Skeleton />
           ) : sales.error ? (
             <div className="panel-state">
               <p role="alert">{sales.error}</p>
@@ -128,7 +128,7 @@ export default function SalesRecords() {
               </button>
             </div>
           ) : receipts.length === 0 ? (
-            <p className="empty-text">No sales on this day.</p>
+            <EmptyState message="No sales on this day." action={{ to: '/sale', label: 'New sale' }} />
           ) : (
             <div className="table-scroll">
               <table className="data-table">
@@ -151,18 +151,24 @@ export default function SalesRecords() {
                 <tbody>
                   {receipts.map((receipt) => (
                     <tr key={receipt.id}>
-                      <td>
+                      <td data-label="Receipt">
                         <Link to={`/receipt/${receipt.id}`} aria-label={`Receipt #${receipt.id}`}>
                           #{receipt.id}
                         </Link>
                       </td>
-                      <td>{timeOf(receipt.sold_at)}</td>
-                      <td className="cut" title={itemsSummary(receipt.items)}>
+                      <td data-label="Time">{timeOf(receipt.sold_at)}</td>
+                      <td className="cut" title={itemsSummary(receipt.items)} data-label="Items">
                         {itemsSummary(receipt.items)}
                       </td>
-                      <td className="phone-hide">{receipt.sold_by}</td>
-                      <td className="phone-hide">{PAYMENT_LABEL[receipt.payment_method]}</td>
-                      <td className="number strong-number">{formatTsh(receipt.total)}</td>
+                      <td className="phone-hide" data-label="Sold by">
+                        {receipt.sold_by}
+                      </td>
+                      <td className="phone-hide" data-label="Paid with">
+                        {PAYMENT_LABEL[receipt.payment_method]}
+                      </td>
+                      <td className="number strong-number" data-label="Total (TSh)">
+                        {formatTsh(receipt.total)}
+                      </td>
                     </tr>
                   ))}
                 </tbody>

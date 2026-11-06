@@ -8,6 +8,7 @@ import PageHeader from '../components/PageHeader';
 import { parseQuantity } from '../money';
 import type { Adjustment, StockLine } from '../types';
 import { errorMessage, useApi } from '../useApi';
+import Skeleton from '../components/Skeleton';
 
 type Direction = 'add' | 'remove';
 const REASONS = ['Damaged', 'Expired', 'Lost or missing', 'Counted differently'] as const;
@@ -66,7 +67,7 @@ export default function Adjust() {
     }
   }
 
-  const header = <PageHeader title="Fix the count" tabTitle="Adjust stock" />;
+  const header = <PageHeader title="Adjust stock" subtitle="Fix the count. Never edited, only added." />;
   const back = (
     <Link to="/stock" className="back-link">
       ← Back to store balance
@@ -78,9 +79,7 @@ export default function Adjust() {
       <>
         {back}
         {header}
-        <p className="panel-state" role="status">
-          Loading…
-        </p>
+        <Skeleton />
       </>
     );
   }
@@ -119,7 +118,7 @@ export default function Adjust() {
         <section className="form-card adjust-main" aria-label={`Adjust ${line.product}`}>
           <h2>
             {line.product} <span className="muted-text">({line.group})</span>
-            {!line.is_active && <span className="state-tag off">STOPPED</span>}
+            {!line.is_active && <span className="state-tag off">Stopped</span>}
           </h2>
 
           <fieldset className="adjust-step">

@@ -6,6 +6,7 @@ import PageHeader from '../components/PageHeader';
 import { formatTsh, PAYMENT_LABEL, shortDate, timeOf } from '../format';
 import type { Receipt as ReceiptData } from '../types';
 import { useApi } from '../useApi';
+import Skeleton from '../components/Skeleton';
 
 export default function Receipt() {
   const { saleId } = useParams();
@@ -16,11 +17,7 @@ export default function Receipt() {
   const preview = (location.state as { previewTotal?: number } | null)?.previewTotal;
 
   if (receipt.loading) {
-    return (
-      <p className="panel-state" role="status">
-        Loading the receipt…
-      </p>
-    );
+    return <Skeleton lines={5} label="Loading the receipt…" />;
   }
   if (receipt.error || !receipt.data) {
     return (

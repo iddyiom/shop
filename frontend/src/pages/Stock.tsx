@@ -11,6 +11,8 @@ import { shortDate, signed, timeOf } from '../format';
 import type { StockEntry, StockLine, StockStatus } from '../types';
 import { useApi } from '../useApi';
 import { useCurrentUser } from '../user';
+import Skeleton from '../components/Skeleton';
+import EmptyState from '../components/EmptyState';
 
 const STATUSES: StockStatus[] = ['OK', 'LOW', 'OUT']; // the mock-up's order
 const STATUS_WORD: Record<StockStatus, string> = { OK: 'OK', LOW: 'Low', OUT: 'Out' };
@@ -56,18 +58,17 @@ export default function Stock() {
 
   const groups = [...new Set(all.filter((l) => showStopped || l.is_active).map((l) => l.group))];
 
-  const header = <PageHeader
-      title="What is in the store"
-      subtitle="Every sub-item and how many are left. Counts change only through sales, deliveries and fixes."
-      tabTitle="Store balance"
-    />;
+  const header = (
+    <PageHeader
+      title="Store balance"
+      subtitle="What is in the store. Counts change only through sales, deliveries and fixes."
+    />
+  );
 
   let body;
   if (stock.loading) {
     body = (
-      <p className="panel-state" role="status">
-        Loading…
-      </p>
+      <Skeleton />
     );
   } else if (stock.error) {
     body = (
@@ -158,7 +159,7 @@ export default function Stock() {
           </div>
 
           {shown.length === 0 ? (
-            <p className="empty-text">Nothing matches these filters.</p>
+            <EmptyState message="Nothing matches these filters." />
           ) : (
             <div className="table-scroll">
               <table className="data-table stock-table">
@@ -188,14 +189,14 @@ export default function Stock() {
                       <td className="cut" title={line.product}>
                         <strong>{line.product}</strong>
                       </td>
-                      <td className="phone-hide">{line.group}</td>
-                      <td className="number strong-number">{line.quantity_in_store}</td>
-                      <td className="number">{line.min_level}</td>
-                      <td>
+                      <td className="phone-hide" data-label="Item">{line.group}</td>
+                      <td className="number strong-number" data-label="In store">{line.quantity_in_store}</td>
+                      <td className="number" data-label="Low at">{line.min_level}</td>
+                      <td data-label="Status">
                         {line.is_active ? (
                           <StatusBadge status={line.stock_status} />
                         ) : (
-                          <span className="state-tag off">STOPPED</span>
+                          <span className="state-tag off">Stopped</span>
                         )}
                       </td>
                       {isOwner && (
@@ -249,7 +250,7 @@ function FixesList({ entries }: { entries: StockEntry[] }) {
   return (
     <>
       {entries.length === 0 ? (
-        <p className="empty-text">No fixes yet.</p>
+        <EmptyState message="No fixes yet." />
       ) : (
         <ul className="history-list" aria-label="Latest fixes">
           {entries.slice(0, LATEST_FIXES).map((entry) => (

@@ -11,6 +11,8 @@ import { parseQuantity, parseTsh } from '../money';
 import type { Delivery, Product, Summary } from '../types';
 import { errorMessage, useApi } from '../useApi';
 import { useCurrentUser } from '../user';
+import Skeleton from '../components/Skeleton';
+import EmptyState from '../components/EmptyState';
 
 const LAST_DELIVERIES = 5;
 
@@ -124,15 +126,13 @@ export default function Receive() {
     byGroup.set(product.group, [...(byGroup.get(product.group) ?? []), product]);
   }
 
-  const header = <PageHeader title="The truck came" tabTitle="Receive stock" />;
+  const header = <PageHeader title="Receive stock" subtitle="The truck came. Write down what arrived." />;
 
   if (products.loading || summary.loading) {
     return (
       <>
         {header}
-        <p className="panel-state" role="status">
-          Loading…
-        </p>
+        <Skeleton />
       </>
     );
   }
@@ -232,7 +232,7 @@ export default function Receive() {
                   const invalid = error?.line === index;
                   return (
                     <tr key={line.key} className={invalid ? 'line-error' : undefined}>
-                      <td>
+                      <td data-label="Sub-item">
                         <label className="sr-only" htmlFor={`product-${line.key}`}>
                           Sub-item, line {index + 1}
                         </label>
@@ -254,7 +254,7 @@ export default function Receive() {
                           ))}
                         </select>
                       </td>
-                      <td>
+                      <td data-label="Quantity">
                         <label className="sr-only" htmlFor={`quantity-${line.key}`}>
                           Quantity, line {index + 1}
                         </label>
@@ -268,7 +268,7 @@ export default function Receive() {
                         />
                       </td>
                       {isOwner && (
-                        <td>
+                        <td data-label="Buying price each (TSh)">
                           <label className="sr-only" htmlFor={`buying-${line.key}`}>
                             Buying price, line {index + 1}
                           </label>
@@ -353,7 +353,7 @@ export default function Receive() {
             onRetry={deliveries.reload}
           >
             {(deliveries.data ?? []).length === 0 ? (
-              <p className="empty-text">No deliveries yet.</p>
+              <EmptyState message="No deliveries yet." />
             ) : (
               <ul className="history-list">
                 {(deliveries.data ?? []).slice(0, LAST_DELIVERIES).map((delivery) => (

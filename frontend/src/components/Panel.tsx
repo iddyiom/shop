@@ -2,6 +2,7 @@
 // never blanks the whole page.
 import { useId, type ReactNode } from 'react';
 import { Link } from 'react-router';
+import Skeleton from './Skeleton';
 
 type Props = {
   title: string;
@@ -32,9 +33,7 @@ export default function Panel({ title, link, loading, error, onRetry, children }
           ))}
       </div>
       {loading ? (
-        <p className="panel-state" role="status">
-          Loading…
-        </p>
+        <Skeleton />
       ) : error ? (
         <div className="panel-state">
           <p role="alert">{error}</p>

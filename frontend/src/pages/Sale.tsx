@@ -2,7 +2,7 @@
 // Spec: docs/specs/f05-sale.md. The screen PREVIEWS totals; the server decides every price
 // and total and re-checks the stock. The request carries only product ids and quantities.
 import { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router';
+import { useNavigate } from 'react-router';
 
 import { ApiError, apiPost } from '../api';
 import {
@@ -14,6 +14,8 @@ import StatusBadge from '../components/StatusBadge';
 import { formatTsh } from '../format';
 import type { Product, Receipt } from '../types';
 import { errorMessage, useApi } from '../useApi';
+import Skeleton from '../components/Skeleton';
+import EmptyState from '../components/EmptyState';
 
 type Payment = 'cash' | 'mobile_money';
 
@@ -102,15 +104,15 @@ export default function Sale() {
       (term === '' || p.name.toLowerCase().includes(term) || p.group.toLowerCase().includes(term)),
   );
 
-  const header = <PageHeader title="Pick the items" tabTitle="New sale" />;
+  const header = (
+    <PageHeader title="New sale" subtitle="Tap an item to add it. The server checks prices and stock again." />
+  );
 
   if (products.loading) {
     return (
       <>
         {header}
-        <p className="panel-state" role="status">
-          Loading…
-        </p>
+        <Skeleton />
       </>
     );
   }
@@ -128,184 +130,184 @@ export default function Sale() {
     );
   }
 
+  // The header sits above both columns (R2b), so its buttons never wrap under the title.
   return (
-    <div className="sale-layout">
-      <section className="sale-pick" aria-labelledby="pick-heading">
-        <Link to="/" className="back-link">
-          ← Back to home
-        </Link>
-        {header}
-        <span id="pick-heading" className="sr-only">
-          Sub-items
-        </span>
-        <div className="filter-row">
-          <label className="sr-only" htmlFor="sale-search">
-            Search items
-          </label>
-          <input
-            id="sale-search"
-            type="search"
-            className="search-input"
-            placeholder="Search, e.g. Fanta"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
-          <div className="chips" role="group" aria-label="Filter by item">
-            <button type="button" className="chip-button" aria-pressed={groupFilter === null} onClick={() => setGroupFilter(null)}>
-              All
-            </button>
-            {groups.map((group) => (
-              <button
-                key={group}
-                type="button"
-                className="chip-button"
-                aria-pressed={groupFilter === group}
-                onClick={() => setGroupFilter(group)}
-              >
-                {group}
+    <>
+      {header}
+      <div className="sale-layout">
+        <section className="sale-pick" aria-labelledby="pick-heading">
+          <span id="pick-heading" className="sr-only">
+            Sub-items
+          </span>
+          <div className="filter-row">
+            <label className="sr-only" htmlFor="sale-search">
+              Search items
+            </label>
+            <input
+              id="sale-search"
+              type="search"
+              className="search-input"
+              placeholder="Search, e.g. Fanta"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+            <div className="chips" role="group" aria-label="Filter by item">
+              <button type="button" className="chip-button" aria-pressed={groupFilter === null} onClick={() => setGroupFilter(null)}>
+                All
               </button>
-            ))}
-          </div>
-        </div>
-
-        {productList.length === 0 ? (
-          <p className="empty-text">No items on sale yet.</p>
-        ) : shown.length === 0 ? (
-          <p className="empty-text">Nothing matches “{search}”.</p>
-        ) : (
-          <div className="product-grid">
-            {shown.map((product) => {
-              const out = product.quantity_in_store === 0;
-              const inBill = bill.some((line) => line.productId === product.id);
-              return (
+              {groups.map((group) => (
                 <button
-                  key={product.id}
+                  key={group}
                   type="button"
-                  className={['product-card', inBill ? 'in-bill' : '', out ? 'out' : ''].join(' ').trim()}
-                  disabled={out} // rule 3: OUT cannot be picked
-                  onClick={() => changeBill((b) => addProduct(b, product.id), product.id)}
+                  className="chip-button"
+                  aria-pressed={groupFilter === group}
+                  onClick={() => setGroupFilter(group)}
                 >
-                  <span className="product-top">
-                    <span className="product-group">{product.group}</span>
-                    <StatusBadge status={product.stock_status} />
-                  </span>
-                  <span className="product-name">{product.name}</span>
-                  <span className="product-bottom">
-                    <strong>TSh {formatTsh(product.effective_price)}</strong>
-                    <span>{product.quantity_in_store} in store</span>
-                  </span>
+                  {group}
                 </button>
-              );
-            })}
+              ))}
+            </div>
           </div>
-        )}
-      </section>
 
-      <aside className="strong-card bill" aria-labelledby="bill-title">
-        <div className="bill-head">
-          <h2 id="bill-title">The bill</h2>
-          <button
-            type="button"
-            className="ghost-button small"
-            onClick={() => changeBill(() => [])}
-            disabled={bill.length === 0 || busy}
-          >
-            Clear
-          </button>
-        </div>
+          {productList.length === 0 ? (
+            <EmptyState message="No items on sale yet." />
+          ) : shown.length === 0 ? (
+            <EmptyState message={`Nothing matches “${search}”.`} />
+          ) : (
+            <div className="product-grid">
+              {shown.map((product) => {
+                const out = product.quantity_in_store === 0;
+                const inBill = bill.some((line) => line.productId === product.id);
+                return (
+                  <button
+                    key={product.id}
+                    type="button"
+                    className={['product-card', inBill ? 'in-bill' : '', out ? 'out' : ''].join(' ').trim()}
+                    disabled={out} // rule 3: OUT cannot be picked
+                    onClick={() => changeBill((b) => addProduct(b, product.id), product.id)}
+                  >
+                    <span className="product-top">
+                      <span className="product-group">{product.group}</span>
+                      <StatusBadge status={product.stock_status} />
+                    </span>
+                    <span className="product-name">{product.name}</span>
+                    <span className="product-bottom">
+                      <strong>TSh {formatTsh(product.effective_price)}</strong>
+                      <span>{product.quantity_in_store} in store</span>
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          )}
+        </section>
 
-        {bill.length === 0 ? (
-          <p className="strong-muted">Tap an item to add it.</p>
-        ) : (
-          <ul className="bill-lines">
-            {checked.map((c) => {
-              const name = c.product?.name ?? 'Item no longer on sale';
-              const id = c.line.productId;
-              return (
-                <li key={id} className={c.problem ? 'bill-line problem' : 'bill-line'}>
-                  <div className="bill-line-main">
-                    <span className="bill-name">
-                      <strong>{name}</strong>
-                      {c.product && <span>TSh {formatTsh(c.product.effective_price)} each</span>}
-                    </span>
-                    <span className="stepper">
-                      <button
-                        type="button"
-                        aria-label={`One less ${name}`}
-                        onClick={() => changeBill((b) => stepQuantity(b, id, -1), id)}
-                      >
-                        −
-                      </button>
-                      <label className="sr-only" htmlFor={`qty-${id}`}>
-                        Quantity of {name}
-                      </label>
-                      <input
-                        id={`qty-${id}`}
-                        inputMode="numeric"
-                        value={c.line.quantity}
-                        aria-invalid={c.problem !== null}
-                        onChange={(e) => {
-                          const text = e.target.value;
-                          changeBill((b) => setQuantity(b, id, text), id);
-                        }}
-                      />
-                      <button
-                        type="button"
-                        aria-label={`One more ${name}`}
-                        onClick={() => changeBill((b) => stepQuantity(b, id, 1), id)}
-                      >
-                        +
-                      </button>
-                    </span>
-                    <span className="bill-line-total">{c.lineTotal === null ? '–' : formatTsh(c.lineTotal)}</span>
-                  </div>
-                  {c.problem && (
-                    <div className="bill-problem">
-                      <span>{c.problem}</span>
-                      <button type="button" className="text-button" onClick={() => changeBill((b) => removeLine(b, id), id)}>
-                        Remove
-                      </button>
+        <aside className="strong-card bill" aria-labelledby="bill-title">
+          <div className="bill-head">
+            <h2 id="bill-title">The bill</h2>
+            <button
+              type="button"
+              className="ghost-button small"
+              onClick={() => changeBill(() => [])}
+              disabled={bill.length === 0 || busy}
+            >
+              Clear
+            </button>
+          </div>
+
+          {bill.length === 0 ? (
+            <p className="strong-muted">Tap an item to add it.</p>
+          ) : (
+            <ul className="bill-lines">
+              {checked.map((c) => {
+                const name = c.product?.name ?? 'Item no longer on sale';
+                const id = c.line.productId;
+                return (
+                  <li key={id} className={c.problem ? 'bill-line problem' : 'bill-line'}>
+                    <div className="bill-line-main">
+                      <span className="bill-name">
+                        <strong>{name}</strong>
+                        {c.product && <span>TSh {formatTsh(c.product.effective_price)} each</span>}
+                      </span>
+                      <span className="stepper">
+                        <button
+                          type="button"
+                          aria-label={`One less ${name}`}
+                          onClick={() => changeBill((b) => stepQuantity(b, id, -1), id)}
+                        >
+                          −
+                        </button>
+                        <label className="sr-only" htmlFor={`qty-${id}`}>
+                          Quantity of {name}
+                        </label>
+                        <input
+                          id={`qty-${id}`}
+                          inputMode="numeric"
+                          value={c.line.quantity}
+                          aria-invalid={c.problem !== null}
+                          onChange={(e) => {
+                            const text = e.target.value;
+                            changeBill((b) => setQuantity(b, id, text), id);
+                          }}
+                        />
+                        <button
+                          type="button"
+                          aria-label={`One more ${name}`}
+                          onClick={() => changeBill((b) => stepQuantity(b, id, 1), id)}
+                        >
+                          +
+                        </button>
+                      </span>
+                      <span className="bill-line-total">{c.lineTotal === null ? '–' : formatTsh(c.lineTotal)}</span>
                     </div>
-                  )}
-                </li>
-              );
-            })}
-          </ul>
-        )}
+                    {c.problem && (
+                      <div className="bill-problem">
+                        <span>{c.problem}</span>
+                        <button type="button" className="text-button" onClick={() => changeBill((b) => removeLine(b, id), id)}>
+                          Remove
+                        </button>
+                      </div>
+                    )}
+                  </li>
+                );
+              })}
+            </ul>
+          )}
 
-        <div className="preview-total">
-          <span className="strong-muted">Total</span>
-          <strong>TSh {formatTsh(total)}</strong>
-        </div>
-
-        <fieldset className="pay-choice">
-          <legend>Paid with</legend>
-          <div className="pay-options">
-            {(['cash', 'mobile_money'] as const).map((method) => (
-              <label key={method} className={payment === method ? 'pay-option chosen' : 'pay-option'}>
-                <input
-                  type="radio"
-                  name="payment"
-                  value={method}
-                  checked={payment === method}
-                  onChange={() => setPayment(method)}
-                />
-                {method === 'cash' ? 'Cash' : 'Mobile money'}
-              </label>
-            ))}
+          <div className="preview-total">
+            <span className="strong-muted">Total</span>
+            <strong>TSh {formatTsh(total)}</strong>
           </div>
-        </fieldset>
 
-        {error && (
-          <p className="confirm-error" role="alert">
-            {error}
-          </p>
-        )}
-        <button type="button" className="primary-button" disabled={blocker !== null || busy} onClick={confirm}>
-          {busy ? 'Saving…' : blocker ?? 'Confirm sale'}
-        </button>
-        <p className="strong-muted small-center">Totals here are a preview. The server checks prices and stock again.</p>
-      </aside>
-    </div>
+          <fieldset className="pay-choice">
+            <legend>Paid with</legend>
+            <div className="pay-options">
+              {(['cash', 'mobile_money'] as const).map((method) => (
+                <label key={method} className={payment === method ? 'pay-option chosen' : 'pay-option'}>
+                  <input
+                    type="radio"
+                    name="payment"
+                    value={method}
+                    checked={payment === method}
+                    onChange={() => setPayment(method)}
+                  />
+                  {method === 'cash' ? 'Cash' : 'Mobile money'}
+                </label>
+              ))}
+            </div>
+          </fieldset>
+
+          {error && (
+            <p className="confirm-error" role="alert">
+              {error}
+            </p>
+          )}
+          <button type="button" className="primary-button" disabled={blocker !== null || busy} onClick={confirm}>
+            {busy ? 'Saving…' : blocker ?? 'Confirm sale'}
+          </button>
+          <p className="strong-muted small-center">Totals here are a preview. The server checks prices and stock again.</p>
+        </aside>
+      </div>
+    </>
   );
 }

@@ -114,7 +114,7 @@ describe('store balance', () => {
     expect(within(table()).queryByText('Old juice')).toBeNull();
     fireEvent.click(screen.getByLabelText('Show stopped'));
     const row = within(table()).getByText('Old juice').closest('tr')!;
-    expect(within(row).getByText('STOPPED')).toBeTruthy();
+    expect(within(row).getByText('Stopped')).toBeTruthy();
     expect(within(row).getByRole('link', { name: 'Adjust Old juice' })).toBeTruthy(); // still adjustable
   });
 

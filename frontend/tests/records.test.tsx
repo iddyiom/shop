@@ -166,7 +166,7 @@ describe('restock history', () => {
     const fixes = screen.getByRole('list', { name: 'Corrections on this delivery' });
     expect(fixes.textContent).toContain('Counted again, truck brought 46');
     expect(fixes.textContent).toContain('1 Nov 10:40 · Depot Owner');
-    expect(screen.getByText('NEVER EDITED')).toBeTruthy();
+    expect(screen.getByText('Never edited')).toBeTruthy();
   });
 
   it('owner sees buying prices and the correction form; shopkeeper sees neither', async () => {

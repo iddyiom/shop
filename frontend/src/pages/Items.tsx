@@ -11,6 +11,8 @@ import { formatTsh, shortDate, timeOf } from '../format';
 import { parseTsh } from '../money';
 import type { Group, PriceChange, PriceHistoryEntry, Product } from '../types';
 import { errorMessage, useApi } from '../useApi';
+import Skeleton from '../components/Skeleton';
+import EmptyState from '../components/EmptyState';
 
 type PriceDraft = {
   group: Group;
@@ -104,7 +106,10 @@ export default function Items() {
   return (
     <>
       <div className="home-top">
-        <PageHeader title="What you sell" tabTitle="Items and prices" />
+        <PageHeader
+          title="Items and prices"
+          subtitle="What you sell. A sub-item uses its item's price unless it has its own."
+        />
         <Link to="/items/new" className="primary-link">
           + Add item
         </Link>
@@ -124,9 +129,7 @@ export default function Items() {
       )}
 
       {loading ? (
-        <p className="panel-state" role="status">
-          Loading…
-        </p>
+        <Skeleton />
       ) : loadError ? (
         <div className="panel-state">
           <p role="alert">{loadError}</p>
@@ -255,10 +258,10 @@ function ItemCard({ group, subItems, selected, busy, onChangePrice, onShowHistor
         )}
       </div>
 
-      {!group.is_active && <p className="stopped-note">STOPPED: none of its sub-items can be sold.</p>}
+      {!group.is_active && <p className="stopped-note">Stopped: none of its sub-items can be sold.</p>}
 
       {subItems.length === 0 ? (
-        <p className="empty-text">No sub-items yet.</p>
+        <EmptyState message="No sub-items yet." />
       ) : (
         <ul className="sub-list">
           {subItems.map((product) => (
@@ -273,7 +276,7 @@ function ItemCard({ group, subItems, selected, busy, onChangePrice, onShowHistor
                 </span>
               </span>
               <span className={product.is_active ? 'state-tag' : 'state-tag off'}>
-                {product.is_active ? 'SELLING' : 'STOPPED'}
+                {product.is_active ? 'Selling' : 'Stopped'}
               </span>
               <Link
                 to={`/items/sub-items/${product.id}/edit`}
@@ -305,7 +308,7 @@ function ItemCard({ group, subItems, selected, busy, onChangePrice, onShowHistor
 }
 
 function PriceHistoryList({ entries }: { entries: PriceHistoryEntry[] }) {
-  if (entries.length === 0) return <p className="empty-text">No price changes yet.</p>;
+  if (entries.length === 0) return <EmptyState message="No price changes yet." />;
   return (
     <ul className="history-list">
       {entries.map((entry, index) => (

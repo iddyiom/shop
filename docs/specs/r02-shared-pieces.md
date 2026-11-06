@@ -1,6 +1,6 @@
 # Redesign R2: shared pieces (split into R2a and R2b)
 
-Status: Agreed 2026-11-06 (all 3 recommendations accepted). R2a Done (cf62b01). R2b next.
+Status: Agreed 2026-11-06 (all 3 recommendations accepted). R2a Done (cf62b01). R2b agreed, in progress.
 Depends on: R1 (Done, 9c75089). Design reference: the mock-up page "R2–R3 · Every page" (https://claude.ai/artifact/TfiWo6bhLsAiQEvjNVD5MZ), mainly the "Design system" board. Problems and fixes: docs/specs/r01-redesign.md section 12.
 
 ## 1. Goal
@@ -48,14 +48,7 @@ None. Front end only.
 | `frontend/src/main.tsx` | import the font (one line) |
 | `frontend/src/theme.css` | Base (h1–h3 font), Buttons, Badges, Forms, uppercase rules, 44 px targets, disabled look |
 
-**R2b** (written in detail after R2a is committed)
-| File | Change |
-|---|---|
-| `components/PageHeader.tsx`, `menu.ts` | h1 = page name; `subtitle` holds the sentence |
-| `components/Panel.tsx`, new `components/EmptyState.tsx`, new `components/Skeleton.tsx` | designed loading and empty states |
-| each page `.tsx` | pass the new header props; `data-label` on table cells; empty states |
-| `theme.css` | table-to-cards on a phone, skeleton, empty state |
-| tests | the title tests (`shell`, `home`, `items`, …) look for the menu name |
+**R2b**: see section 11.
 
 ## 6. Invariants touched
 None of the business rules. Owner-only parts are decided in `.tsx`; R2a changes no `.tsx` except `main.tsx`. Browser check: a shopkeeper still sees no owner-only parts.
@@ -85,3 +78,74 @@ None of the business rules. Owner-only parts are decided in `.tsx`; R2a changes 
 1. **Split R2 into R2a (looks only) and R2b (components)?** Recommendation: yes. R2a cannot break any test, and it is small enough to finish and check in one session.
 2. **Add the npm package `@fontsource-variable/plus-jakarta-sans` 5.3.0?** Recommendation: yes. It is the font you chose, served from our own app (no Google call), same as Inter today.
 3. **R2b changes the page titles to the menu names** (for example "Every receipt" becomes "Sales records", and "Every receipt" moves to the line under it). Some tests change on purpose. Recommendation: yes; it fixes problem 2 (people lose track of where they are).
+
+## 10. R2c: photo behind every page, glass blocks (added 2026-11-06, Iddy's choice)
+Planned after R2b; its own spec section gets the full detail and checklist before coding.
+- The frame (`Layout.tsx`) shows one photo behind every page, `position: fixed`, under a soft veil. Light: Kilimanjaro (`public/login-kilimanjaro.jpg`). Dark: the lone tree under a red moon. Log in keeps its own photo.
+- Cards, panels, the menu and the header chips become frosted glass: see-through `--card` colors plus `backdrop-filter: blur()`. Thin glass for number cards, thick glass for lists and forms. Mostly new token values, like R1.
+- Phones: the blur is costly on cheap phones, so under 700 px the glass is more solid and the blur smaller. People who choose "reduce transparency" get solid cards.
+- Before coding: a larger tree photo (at least 1600 px wide; the given one is 643 x 360) and confirmation both photos may be used. Contrast measured on the real photos in both themes.
+
+## 11. R2b in detail (Agreed 2026-11-06; built and checked, not committed yet)
+
+### 11.1 Rules and decisions
+1. **Header: the h1 is the page's name, the browser tab the same.** `PageHeader` takes `title` (the name) and `subtitle` (the friendly sentence); the tab uses the title, so `tabTitle` is only passed by Home (its title is the greeting). Names:
+
+| Page | h1 (and tab) | Line under it (was the h1) |
+|---|---|---|
+| Home | Habari, <name> (unchanged: a greeting, tab "Home") | the date |
+| Receive stock | Receive stock | The truck came. Write down what arrived. |
+| Store balance | Store balance | What is in the store. Counts change only through sales, deliveries and fixes. |
+| Sales records | Sales records | Every receipt, by day. Receipts are never changed or deleted. |
+| Restock history | Restock history | Past deliveries, newest first. Lines are never edited. |
+| Items and prices | Items and prices | What you sell. A sub-item uses its item's price unless it has its own. |
+| Users | Users | Who can log in. Accounts are never deleted. |
+| New sale | New sale | Tap an item to add it. The server checks prices and stock again. |
+| Adjust stock | Adjust stock | Fix the count. Never edited, only added. |
+| Receipt, item and sub-item forms, Not found, Owner only | keep their names (they are not in the menu) | unchanged |
+
+2. **New sale header sits above both columns** (it was inside the left column, so the theme button and user wrapped under the title). The "← Back to home" link goes: Home is in the menu.
+3. **Words in sentence case:** "NEVER EDITED" becomes "Never edited", "SELLING" / "STOPPED" become "Selling" / "Stopped", account badges ACTIVE / LOCKED / DEACTIVATED become Active / Locked / Deactivated. OK / LOW / OUT stay as they are (the warning-icons unit W1 changes them). The R2a "lowercase" CSS for tags is removed.
+4. **"Deactivate" gets the red outline** (new class `danger-button`): it takes away access, like the design sheet says.
+5. **Loading:** a new `Skeleton` shows 3 grey lines where the content will be. It keeps `role="status"` and a hidden "Loading…" text, so screen readers (and tests) still hear "Loading…".
+6. **Empty:** a new `EmptyState` shows an icon, the same sentence as today, and an optional next step (Home "No sales yet today" offers **New sale**; Restock "No deliveries yet" offers **Receive stock**; Sales records "No sales on this day" offers **New sale**). The sentence does not change, so tests still find it.
+7. **Tables become cards on a phone (under 700 px):** every `td` gets `data-label` ("In store", "Delivered"…). CSS turns each row into a card and writes the label before the value. The `table-scroll` sideways box only works on a laptop. Tables: Store balance, Restock history, Sales records, Receive stock (lines). The Receipt stays a table: its 4 short columns fit a 375 px phone, and a receipt reads best as one.
+8. **Clean-up:** where R2b touches a CSS section, the old rule that R2a overrides is deleted, so `theme.css` keeps no dead lines for those sections.
+
+### 11.2 Out of scope (R2b)
+- The start-up check screen (full-screen "Loading…" while the app asks who is logged in): it is the app starting, not a page. Noted for R3.
+- Page layouts from the mock-up (bill bar, dashboard cards, line cards for Receive): R3. R2b only makes the existing tables fit.
+- Photo and glass: R2c.
+
+### 11.3 Files
+| File | Change |
+|---|---|
+| `components/PageHeader.tsx` | `title` + `subtitle`; tab = title |
+| new `components/Skeleton.tsx`, new `components/EmptyState.tsx` | loading and empty pieces |
+| `components/Panel.tsx` | uses `Skeleton` |
+| `pages/*.tsx` (all with a header, a table, a "Loading…" or an empty sentence) | new header props; `data-label`; `Skeleton`; `EmptyState`; New sale header above the columns |
+| `users.ts` | badge words in sentence case |
+| `theme.css` | tables-to-cards, skeleton, empty state, `danger-button`; delete superseded old rules in those sections |
+| tests: `auth`, `shell`, `home`, `items`, `records`, `stock`, `users`, `users-rules` | titles are menu names; new badge words |
+
+### 11.4 Tests (new ones)
+- `every menu page's h1 and browser tab are its menu name` (owner, each menu entry)
+- `the old friendly title is now the line under the h1` (Store balance)
+- `new sale: the header is outside both columns and there is no back link`
+- `loading shows the skeleton and still says Loading to screen readers`
+- `an empty list shows its sentence and its next step` (Home: New sale link)
+- `every store balance cell has a data-label matching its column header`
+- `account badges read Active, Locked, Deactivated`
+- `deactivate is a danger button`
+
+### 11.5 Done checklist (R2b)
+- [x] Every row in 11.1 is true; all tests in 11.4 exist (13 in `tests/r2b.test.tsx`; the header test runs once per menu page), and each of the 8 features was broken on purpose and caught.
+- [x] Full `npm test` green (171), `npm run build` green, backend `pytest` still 117 (no backend change).
+- [x] Browser, 375 and 1280 px, light and dark: no page scrolls sideways (Receive was 681 px, now fits); 0 tap targets under 44 px; tables read as cards on a phone.
+- [x] Found in the browser and fixed: Store balance cut its rows off. Panels have `flex: 1 1 320px` ("about 320 px wide" in a row); inside the Store balance column that 320 px became a height. Fix: `.stock-main > .table-card { flex: 0 0 auto }`. A script now checks every page for any box hiding content it cut off: none.
+- [x] Shopkeeper (throwaway API): no Owner group, no buying price, no Adjust, no correction form, no day total.
+- [x] No file outside 11.3 changed. docs/progress.md updated.
+
+### 11.6 Open questions (answer before coding)
+1. **Home keeps "Habari, <name>" as its h1** instead of "Home"? Recommendation: yes. It is the dashboard's greeting from your PDF; the menu and the tab still say Home, so nobody is lost.
+2. **Remove "← Back to home" from New sale?** Recommendation: yes. Home is in the menu, and the bill is easier to reach with one less line at the top. After a sale, the Receipt offers "Next sale" and "Back to home".

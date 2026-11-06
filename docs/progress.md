@@ -7,10 +7,10 @@ Update it at the end of every unit: move the unit, add decisions, set "Next".
 Redesign (R0-R3): a new look for the finished front end (spec: docs/specs/r01-redesign.md). Phase 4 (React front end) and Phase 3 (the API) are complete.
 
 ## In progress
-(nothing)
+R2b (shared components) built and checked, waiting for Iddy's "commit". Spec: docs/specs/r02-shared-pieces.md section 11.
 
 ## Next
-R2b (header title = menu name, loading and empty states, tables become cards on a phone; spec section 8 lists what R2a carried over), then R3 (each page, and Home as a dashboard), then the warning icons (spec section 10). Still waiting after that: the small things noticed along the way (owner resets a forgotten password; "1 tries remaining" wording; fixing a wrong buying price; a backup command for depot.db) and the deployment phase (PostgreSQL, Docker, logout that ends the token on the server).
+R2b (header title = menu name, loading and empty states, tables become cards on a phone; spec section 8 lists what R2a carried over), then R2c (photo behind every page, glass blocks; spec section 10; needs a larger tree photo first), then R3 (each page, and Home as a dashboard), then the warning icons (spec section 10). Still waiting after that: the small things noticed along the way (owner resets a forgotten password; "1 tries remaining" wording; fixing a wrong buying price; a backup command for depot.db) and the deployment phase (PostgreSQL, Docker, logout that ends the token on the server).
 
 ## Units
 
@@ -51,7 +51,8 @@ R2b (header title = menu name, loading and empty states, tables become cards on 
 | R0 | Mock-up (design artifact, no code) | Done | |
 | R1 | Shell and colors, reworked to the mock-up PDF: no top bar, header row on every page, menu groups, login, Home dashboard, Store balance | Done | 9c75089 |
 | R2a | Shared pieces, looks only: buttons (3 levels), badges and tags, fields, no capital labels, 44 px targets, heading font | Done | cf62b01 |
-| R2b | Shared components: header title = menu name, loading and empty states, tables become cards on a phone | Next | |
+| R2b | Shared components: header title = menu name, loading and empty states, tables become cards on a phone | In progress | |
+| R2c | Photo behind every page (Kilimanjaro light, tree dark), every block frosted glass | Planned | |
 | R3 | The other pages in the PDF style (Home and Store balance done in R1) | Planned | |
 | W1 | Warning icons for LOW / OUT (solid, OUT pulses) | Planned | |
 
@@ -59,6 +60,7 @@ Statuses: Planned, Next, In progress, Done, Parked.
 
 ## Decisions made (newest first)
 Short notes on choices that are not obvious from the docs, so nobody undoes them by accident.
+- 2026-11-06 R2b: every page's h1 is its menu name (Home keeps its greeting); the old friendly title is the line under it. Loading is `Skeleton` (screen readers still hear "Loading…"), empty lists are `EmptyState` with a next step. Tables become cards under 700 px through `data-label` on each cell; the Receipt stays a table. Words are sentence case (Active, Never edited); OK / LOW / OUT wait for W1.
 - 2026-11-06 R2a: the new looks live in ONE section at the end of theme.css ("R2a: shared pieces"), which overrides older rules by coming later. No markup changed, so every test stayed the same. Main button = `--primary` (espresso in light, white in dark); caramel is never a button. Turned-off buttons are dashed and flat, never just faded. Headings use Plus Jakarta Sans (npm `@fontsource-variable/plus-jakarta-sans` 5.3.0), text and numbers Inter.
 
 - 2026-11-06: R1 rework after Iddy's PDF review: the app did not match the agreed mock-up (I had added a top bar with the page name from the first shadcn draft and kept the old page shapes). The PDF is now the reference. Iddy chose Home's frame for every page: no top bar; each page's header row has the menu button, the title, round buttons, the theme button and the user (FrameContext shares the menu state with PageHeader). The capital eyebrow lines are gone; tests check the h1 and the browser tab instead. Menu in groups Work / Owner (the Owner group does not exist for a shopkeeper). The demo buttons show only "Demo owner / Demo shopkeeper", no password on screen (a test checks it). Home's card lines are counted from data already on the page (receipts, out and low, days since the restock with the server's date). LOW / OUT stay words until W1. Found in the browser: the Store balance table's scroll box shrank to 44px in its flex card (flex-shrink: 0), and the Adjust button stuck out on phones (tighter cells, 14px table text as in the PDF). The pane's screenshots crop the right side at laptop width, so laptop layouts were checked by measuring (nothing wider than the window).

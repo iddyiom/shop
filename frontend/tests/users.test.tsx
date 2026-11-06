@@ -52,11 +52,11 @@ describe('accounts', () => {
   it('lists every account with name, @username, role and badge', async () => {
     await openUsers();
     expect(within(row('Asha Juma')).getByText('@asha · Shopkeeper')).toBeTruthy();
-    expect(within(row('Asha Juma')).getByText('LOCKED')).toBeTruthy();
-    expect(within(row('Asha Juma')).queryByText('ACTIVE')).toBeNull(); // LOCKED wins
-    expect(within(row('Baraka Mushi')).getByText('DEACTIVATED')).toBeTruthy();
+    expect(within(row('Asha Juma')).getByText('Locked')).toBeTruthy();
+    expect(within(row('Asha Juma')).queryByText('Active')).toBeNull(); // Locked wins
+    expect(within(row('Baraka Mushi')).getByText('Deactivated')).toBeTruthy();
     expect(within(row('Second Owner')).getByText('@owner2 · Owner')).toBeTruthy();
-    expect(within(row('Second Owner')).getByText('ACTIVE')).toBeTruthy();
+    expect(within(row('Second Owner')).getByText('Active')).toBeTruthy();
   });
 
   it('locked account shows a banner; Unlock calls /users/{id}/unlock, reloads and shows a note', async () => {

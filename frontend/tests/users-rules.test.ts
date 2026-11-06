@@ -12,10 +12,10 @@ const good = { fullName: 'Neema Said', username: 'neema.s', password: 'strong-pa
 
 describe('users rules', () => {
   it('badges: active, locked, deactivated, deactivated and locked', () => {
-    expect(userBadges(user(true, false))).toEqual(['ACTIVE']);
-    expect(userBadges(user(true, true))).toEqual(['LOCKED']);
-    expect(userBadges(user(false, false))).toEqual(['DEACTIVATED']);
-    expect(userBadges(user(false, true))).toEqual(['DEACTIVATED', 'LOCKED']);
+    expect(userBadges(user(true, false))).toEqual(['Active']);
+    expect(userBadges(user(true, true))).toEqual(['Locked']);
+    expect(userBadges(user(false, false))).toEqual(['Deactivated']);
+    expect(userBadges(user(false, true))).toEqual(['Deactivated', 'Locked']);
   });
 
   it('initials and first name from a full name', () => {
