@@ -21,7 +21,7 @@
 |---|---|---|---|
 | POST | /users | owner | Create an account |
 | GET | /users | owner | List users (shows locked ones) |
-| PATCH | /users/{id} | owner | Edit or deactivate |
+| PATCH | /users/{id} | owner | Rename (`full_name`), deactivate or reactivate (`is_active`). Cannot deactivate yourself (409). Other fields refused (422) |
 | POST | /users/{id}/unlock | owner | Unlock a locked account |
 
 ### Items (product groups)

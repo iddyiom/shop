@@ -5,8 +5,9 @@ from sqlalchemy import select
 from app.deps import DbSession, OwnerUser
 from app.errors import AppError
 from app.models import User
-from app.schemas import UserCreate, UserOut
+from app.schemas import UserCreate, UserOut, UserUpdate
 from app.security import hash_password
+from app.services.users import update_user
 
 router = APIRouter(prefix="/users", tags=["users"])
 
@@ -30,6 +31,11 @@ def create_user(body: UserCreate, db: DbSession, _owner: OwnerUser):
 @router.get("", response_model=list[UserOut])
 def list_users(db: DbSession, _owner: OwnerUser):
     return db.scalars(select(User).order_by(User.id)).all()
+
+
+@router.patch("/{user_id}", response_model=UserOut)
+def edit_user(user_id: int, body: UserUpdate, db: DbSession, owner: OwnerUser):
+    return update_user(db, owner, user_id, body)
 
 
 @router.post("/{user_id}/unlock", response_model=UserOut)

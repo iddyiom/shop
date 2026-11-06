@@ -10,7 +10,7 @@ Phase 4: React front end (plan: docs/frontend-plan.md). Phase 3, the API, is com
 (nothing)
 
 ## Next
-Unit B1: backend `PATCH /users/{id}` (rename, deactivate), then F10 Users. Write `docs/specs/b01-users-patch.md` first.
+Unit F10: Users screen (list, unlock, add, deactivate / reactivate). Write `docs/specs/f10-users.md` first.
 
 ## Units
 
@@ -40,15 +40,17 @@ Unit B1: backend `PATCH /users/{id}` (rename, deactivate), then F10 Users. Write
 | F5 | New sale and receipt | Done | 6c77b75 |
 | F7 | Store balance and adjust stock | Done | 087a479 |
 | F9 | Sales records, restock history and corrections | Done | 12c961e |
-| B1 | Backend: `PATCH /users/{id}` (rename, deactivate) | Next (before F10) | |
+| B1 | Backend: `PATCH /users/{id}` (rename, deactivate) | Done | (not committed yet) |
 | B2 | Backend: `GET /sales?from=&to=` date range | Parked (Version 2, with reports) | |
-| F10 | Users: list, unlock, add, deactivate | Planned | |
+| F10 | Users: list, unlock, add, deactivate | Next | |
 
 Statuses: Planned, Next, In progress, Done, Parked.
 
 ## Decisions made (newest first)
 Short notes on choices that are not obvious from the docs, so nobody undoes them by accident.
 
+- 2026-11-06: Unit B1: `PATCH /users/{id}` changes only `full_name` and `is_active`; any other field (role, username, password) is refused with 422 (`extra="forbid"`), so the owner never thinks a role changed when it did not. The owner cannot deactivate their own account (409 `cannot_deactivate_self`); another owner can. Reactivating does not unlock (Unlock stays its own action). No new code was needed to make deactivation work at once: `CurrentUser` and login already refuse inactive users, and tests now prove it. Rules live in the new `app/services/users.py`; create, list and unlock stay in the router (not moved in this unit). `Name` moved to the top of app/schemas.py so the users section can use it.
+- 2026-11-06: Noticed (not built): the owner cannot reset a forgotten password from the app; only the terminal can help. Worth its own small unit.
 - 2026-11-05: Unit F9: "This week" dropped and B2 parked with the reports (Version 2); Sales records shows one day: Today, Yesterday (worked out from the server's date with `dayBefore`, in UTC so no time zone can shift it) or the date picker. The day is in the address (`/sales?day=`); a future or broken day is never sent to the API. The owner's day total adds up the server's own receipt totals; shopkeepers see receipts and their totals but not the day total. A test fakes the laptop clock to a different day to prove the server's date wins (the first version of the tests could not tell, because the laptop and the fake server had the same date). Restock history: each delivery has its own address (`/restock/:id`); the delivery's lines are never changed on screen, corrections show as a column and a list; the owner corrects with Add / Remove + a number + a required reason (the screen sends one signed number). Same sub-item twice on the paperwork is added together in the table. The list keeps showing while it reloads after a correction (found in the browser: the whole page had blanked and rebuilt the form). On phones the Corrections column hides so Recorded now fits. `signed` moved to format.ts.
 - 2026-11-05: Unit F7: Store balance loads `/stock?include_stopped=true` once and filters on the screen (search, item chips, Show stopped, and the OUT / LOW / OK counts, which are also filters). The counts are counted after search, chip and stopped but before the status filter, so they always match what the table can show. Shopkeepers never ask `/stock-entries`. Adjust (`/stock/:id/adjust`, owner only, stopped sub-items too): direction and reason must both be chosen; choosing Add locks Damaged / Expired / Lost and drops one already chosen; "Only N in store" is checked on screen and again by the server (409 → message + reload). After saving, back to Store balance with a note built from the server's before / after (a test makes the server answer different numbers from the preview to prove it). On phones the Item column hides so the Adjust button fits. Checked on a throwaway API: remove 2 Damaged, add 1 Counted differently, a real 409 race, shopkeeper view, dark mode, phone width.
 - 2026-11-05: Unit F5: the sale request carries only product_id, quantity and payment_method (checked in the real browser); totals on screen are a preview and the receipt shows the server's numbers, with a note when a price changed while the page was open. Stock is checked on screen and again by the server; a server 409 is shown on its line (ApiError now keeps the error's extra fields, e.g. product_id) and the cards reload. Payment must be chosen each time. The unfinished bill (ids and quantities only) is kept in sessionStorage for the tab and cleared after the sale, by Clear, or at log out. Receipt has its own address (/receipt/:id). Bill logic lives in bill.ts as plain functions.
@@ -85,4 +87,4 @@ Short notes on choices that are not obvious from the docs, so nobody undoes them
 - 2026-11-05: Business rules live in `app/services/`, not in routers, so they are easy to read and test.
 
 ## Test status
-Backend: 106 tests passing. Front end: 135 tests passing (last run 2026-11-05).
+Backend: 117 tests passing (last run 2026-11-06). Front end: 135 tests passing (last run 2026-11-05).

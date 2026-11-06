@@ -8,6 +8,8 @@ from pydantic import BaseModel, ConfigDict, Field, StringConstraints, field_vali
 from app.security import MAX_PASSWORD_BYTES
 
 MAX_PRICE = 10_000_000  # TSh. Stops typing mistakes like an extra few zeros.
+# A name: spaces at both ends are removed, then it must be 1 to 100 characters.
+Name = Annotated[str, StringConstraints(strip_whitespace=True, min_length=1, max_length=100)]
 
 # ---------- Auth and users ----------
 
@@ -48,6 +50,17 @@ class UserCreate(BaseModel):
         return password
 
 
+class UserUpdate(BaseModel):
+    """Only what is sent changes. Role, username and password cannot be sent here."""
+
+    # "forbid": an extra field like "role" is refused with 422, not silently ignored,
+    # so the owner never thinks a role was changed when it was not.
+    model_config = ConfigDict(extra="forbid")
+
+    full_name: Name | None = None
+    is_active: bool | None = None
+
+
 # ---------- Sales ----------
 
 
@@ -82,8 +95,6 @@ class Receipt(BaseModel):
 
 # ---------- Items and sub-items ----------
 
-# A name: spaces at both ends are removed, then it must be 1 to 100 characters.
-Name = Annotated[str, StringConstraints(strip_whitespace=True, min_length=1, max_length=100)]
 # A price in whole TSh.
 Price = Annotated[int, Field(ge=0, le=MAX_PRICE)]
 
