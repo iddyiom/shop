@@ -65,6 +65,12 @@ export default function Layout() {
 
   return (
     <FrameContext.Provider value={frame}>
+      {/* The photo behind every page (R2c): a real image, fixed to the screen. CSS shows the one
+          for the current theme (Kilimanjaro in light, the tree under the red moon in dark). */}
+      <div className="page-photo" aria-hidden="true">
+        <img className="photo-light" src="/login-kilimanjaro.jpg" alt="" />
+        <img className="photo-dark" src="/home-dark-tree.jpg" alt="" />
+      </div>
       <div className={classes}>
         {/* First thing Tab reaches: jump past the menu straight to the page. */}
         <a className="skip-link" href="#main">

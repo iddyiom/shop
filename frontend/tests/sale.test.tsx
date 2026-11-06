@@ -103,14 +103,19 @@ describe('the bill', () => {
     fireEvent.click(card('Fanta'));
     fireEvent.change(within(bill()).getByLabelText('Quantity of Fanta'), { target: { value: '6' } });
     expect(within(bill()).getByText('Item over: only 5 in store')).toBeTruthy();
-    const button = within(bill()).getByRole('button', { name: 'Fix the red line to confirm' }) as HTMLButtonElement;
+    // R3a: the button keeps its name; the reason is the line under it (its description).
+    const button = within(bill()).getByRole('button', {
+      name: 'Confirm sale',
+      description: 'Fix the red line to confirm',
+    }) as HTMLButtonElement;
     expect(button.disabled).toBe(true);
   });
 
   it('Confirm needs a payment method', async () => {
     await openSale();
     fireEvent.click(card('Fanta'));
-    expect((within(bill()).getByRole('button', { name: 'Choose how the customer paid' }) as HTMLButtonElement).disabled).toBe(true);
+    const off = within(bill()).getByRole('button', { name: 'Confirm sale', description: 'Choose how the customer paid' });
+    expect((off as HTMLButtonElement).disabled).toBe(true);
     fireEvent.click(within(bill()).getByLabelText('Mobile money'));
     expect((within(bill()).getByRole('button', { name: 'Confirm sale' }) as HTMLButtonElement).disabled).toBe(false);
   });
@@ -182,7 +187,7 @@ describe('confirming', () => {
     });
     expect(await within(bill()).findByText('Item over: only 1 in store')).toBeTruthy();
     await waitFor(() => expect(productCalls).toBe(2)); // the reload happens just after the message
-    expect(within(bill()).getByRole('button', { name: 'Fix the red line to confirm' })).toBeTruthy();
+    expect(within(bill()).getByRole('button', { name: 'Confirm sale', description: 'Fix the red line to confirm' })).toBeTruthy();
   });
 
   it('the button says Saving… and is disabled while waiting', async () => {
@@ -198,5 +203,54 @@ describe('the receipt page', () => {
     expect(await screen.findByText('Receipt #42')).toBeTruthy();
     expect(screen.getByRole('link', { name: /Next customer/ }).getAttribute('href')).toBe('/sale');
     expect(screen.getByRole('link', { name: 'Done' }).getAttribute('href')).toBe('/');
+  });
+});
+
+// R3a: New sale in the mock-up's layout. Spec: docs/specs/r03a-new-sale.md, section 7.
+describe('new sale layout (R3a)', () => {
+  it('a turned-off Confirm keeps its name and is described by the reason under it', async () => {
+    await openSale();
+    const button = within(bill()).getByRole('button', { name: 'Confirm sale' }) as HTMLButtonElement;
+    expect(button.disabled).toBe(true);
+    const reason = document.getElementById(button.getAttribute('aria-describedby') ?? '');
+    expect(reason?.textContent).toBe('Pick items to start');
+  });
+
+  it('the bill head counts lines and units', async () => {
+    await openSale();
+    fireEvent.click(card('Fanta'));
+    fireEvent.click(card('Fanta'));
+    fireEvent.click(card('Chocolate'));
+    expect(within(bill()).getByText('2 lines · 3 units')).toBeTruthy();
+  });
+
+  it('an item already in the bill says how many on its card', async () => {
+    await openSale();
+    expect(within(card('Fanta')).queryByText(/in bill/)).toBeNull();
+    fireEvent.click(card('Fanta'));
+    fireEvent.click(card('Fanta'));
+    expect(within(card('Fanta')).getByText('2 in bill')).toBeTruthy();
+  });
+
+  it('the phone bill bar shows units and total and links to the bill; it is hidden when the bill is empty', async () => {
+    await openSale();
+    expect(document.querySelector('.bill-bar')).toBeNull();
+    fireEvent.click(card('Fanta'));
+    const bar = document.querySelector('.bill-bar') as HTMLElement;
+    expect(within(bar).getByText('1 unit · 1 line')).toBeTruthy();
+    expect(within(bar).getByText('TSh 1,000')).toBeTruthy();
+    expect(within(bar).getByRole('link', { name: 'View bill' }).getAttribute('href')).toBe('#bill');
+    expect(document.getElementById('bill')).toBe(bill());
+  });
+});
+
+describe('receipt in the shared frame (R3a rule 7)', () => {
+  it('the receipt has the shared header row titled Receipt and a success card', async () => {
+    loggedInAs(OWNER, answers({ 'GET /api/sales/42': () => json(receipt(1000)) }));
+    openAt('/receipt/42');
+    const h1 = await screen.findByRole('heading', { level: 1, name: 'Receipt' });
+    expect(within(h1.closest('header') as HTMLElement).getByRole('button', { name: /mode/ })).toBeTruthy();
+    const done = screen.getByRole('region', { name: 'Asante! Sale done.' });
+    expect(within(done).getByText(/Receipt #42 is saved/)).toBeTruthy();
   });
 });

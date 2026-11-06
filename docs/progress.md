@@ -7,10 +7,10 @@ Update it at the end of every unit: move the unit, add decisions, set "Next".
 Redesign (R0-R3): a new look for the finished front end (spec: docs/specs/r01-redesign.md). Phase 4 (React front end) and Phase 3 (the API) are complete.
 
 ## In progress
-(nothing)
+(nothing) The light pass and the dark pass are both finished, built and checked, waiting for Iddy's "commit".
 
 ## Next
-R2c (photo behind every page, glass blocks; spec section 10; needs a larger tree photo first), then R3 (each page, and Home as a dashboard), then the warning icons (spec section 10). Still waiting after that: the small things noticed along the way (owner resets a forgotten password; "1 tries remaining" wording; fixing a wrong buying price; a backup command for depot.db) and the deployment phase (PostgreSQL, Docker, logout that ends the token on the server).
+Iddy chooses the next step. Waiting: a sharper copy of the dark-mode tree photo (the one in the app is 643 x 360) and permission to use both photos before launch; the warning icons (W1, r01 section 10); the small things noticed along the way (owner resets a forgotten password; "1 tries remaining" wording; fixing a wrong buying price; a backup command for depot.db); the deployment phase (PostgreSQL, Docker, logout that ends the token on the server).
 
 ## Units
 
@@ -52,14 +52,21 @@ R2c (photo behind every page, glass blocks; spec section 10; needs a larger tree
 | R1 | Shell and colors, reworked to the mock-up PDF: no top bar, header row on every page, menu groups, login, Home dashboard, Store balance | Done | 9c75089 |
 | R2a | Shared pieces, looks only: buttons (3 levels), badges and tags, fields, no capital labels, 44 px targets, heading font | Done | cf62b01 |
 | R2b | Shared components: header title = menu name, loading and empty states, tables become cards on a phone | Done | 572d4e0 |
-| R2c | Photo behind every page (Kilimanjaro light, tree dark), every block frosted glass | Planned | |
-| R3 | The other pages in the PDF style (Home and Store balance done in R1) | Planned | |
+| R2c-L | Light pass, step 1: Kilimanjaro photo behind every page, every block frosted glass; contrast measured on the photo's pixels (text on the photo uses dark text; below the header no text sits on the photo) | Done (light pass, not committed) | |
+| R2c-D | Dark pass: the tree photo behind every page, dark glass; old R1 dark rules removed (solid menu, white-glow money card, capital titles); every page checked in dark | Done (dark pass, not committed) | |
+| R3a | New sale (bill bar on a phone, payment tiles, Confirm with its reason underneath, "N in bill" on cards) and the Receipt in the shared frame | Done (light pass, not committed) | |
+| R3b–R3f | Sales records number cards; Receive lines as cards at every width; old dark cards become glass (Receive, Adjust, confirmations); Restock stacks on a tablet; tables become cards below 960 px; Items price-history timeline; Home stock-health ring | Done (light pass, not committed) | |
 | W1 | Warning icons for LOW / OUT (solid, OUT pulses) | Planned | |
 
 Statuses: Planned, Next, In progress, Done, Parked.
 
 ## Decisions made (newest first)
 Short notes on choices that are not obvious from the docs, so nobody undoes them by accident.
+- 2026-11-06 After Iddy's look in Brave: the photos did not show and the light theme turned brown, because the browser's "dark mode for web pages" repainted the app. Fix: the app declares its own themes (`color-scheme: only light` / `dark`, and a meta tag), and the photo is a real `<img>` in Layout.tsx (one per theme), not a CSS `body::before` layer.
+- 2026-11-06 Iddy: in dark mode the TEXT is red (from the moon): `--text` #ff5c5c, small text `--muted` #d99a97. The main color stays white (buttons, chosen chip, avatar, "you are here"), so fills use `--primary`, never `--text`. A darker veil at the top (0.7) keeps the red title readable over the moon's glow (measured 4.35:1 or better; the subtitle uses the soft red, 5.65:1).
+- 2026-11-06 Dark pass: the glass rules are shared by both themes; each theme only sets its own colors and photo (light: Kilimanjaro under a cream veil; dark: the tree under a black veil, placed 70% across so the black side holds the header). In dark the money card has no glow (the accent is white). Contrast on the tree photo's worst pixels: header text 7.9:1, grey on glass 6.7:1.
+- 2026-11-06 Light pass (glass on a photo): text sitting straight on the photo must use the dark text color, and only inside the header row (contrast measured on the photo's real pixels: grey 2.1:1, dark text 7.9:1 there; below the header even dark text fell to 3.4:1). Everything else sits on glass: list and form glass 86% (92% on a phone), where grey text still measures 5.1:1. People who ask for less transparency get solid cards.
+- 2026-11-06 Light pass: the old dark cards (`--strong`) take the glass card colors in light mode, so every page has one kind of card. Tables become cards below 960 px (not 700): on a 768 px tablet the menu leaves about 470 px. Receive's lines are cards at every width.
 - 2026-11-06 R2b: every page's h1 is its menu name (Home keeps its greeting); the old friendly title is the line under it. Loading is `Skeleton` (screen readers still hear "Loading…"), empty lists are `EmptyState` with a next step. Tables become cards under 700 px through `data-label` on each cell; the Receipt stays a table. Words are sentence case (Active, Never edited); OK / LOW / OUT wait for W1.
 - 2026-11-06 R2a: the new looks live in ONE section at the end of theme.css ("R2a: shared pieces"), which overrides older rules by coming later. No markup changed, so every test stayed the same. Main button = `--primary` (espresso in light, white in dark); caramel is never a button. Turned-off buttons are dashed and flat, never just faded. Headings use Plus Jakarta Sans (npm `@fontsource-variable/plus-jakarta-sans` 5.3.0), text and numbers Inter.
 

@@ -271,9 +271,6 @@ a {
 }
 
 /* Dark mode: the menu is a black panel and the current page a white pill (the mock-up). */
-[data-theme='dark'] .menu {
-  background: #0c0c0c;
-}
 
 .menu-icon {
   flex: 0 0 18px;
@@ -552,12 +549,17 @@ a {
   align-items: stretch;
 }
 
-.home-panels > .panel:first-child {
-  flex: 2 1 460px;
+/* Stock health (narrow), Latest sales (wide), Needs restocking (narrow). */
+.home-panels > .panel:nth-child(1) {
+  flex: 1 1 240px;
 }
 
-.home-panels > .panel:last-child {
-  flex: 1 1 280px;
+.home-panels > .panel:nth-child(2) {
+  flex: 2 1 420px;
+}
+
+.home-panels > .panel:nth-child(3) {
+  flex: 1 1 260px;
 }
 
 /* Latest sales: a list, each row a time tile, what was sold, and the total. */
@@ -674,9 +676,11 @@ a {
   background: radial-gradient(420px 220px at 85% 0%, var(--accent) 0%, var(--card) 70%);
 }
 
+/* Dark mode: the accent is white, so the glow made a bright white card. Plain glass instead. */
 [data-theme='dark'] .stat-card.strong {
-  background: radial-gradient(380px 260px at 70% 0%, #4a4a4a 0%, #1a1a1a 60%, var(--card) 100%);
+  background: var(--card);
 }
+
 
 .stat-top {
   display: flex;
@@ -745,12 +749,6 @@ a {
   font-weight: 700;
 }
 
-/* Dark mode: bold capital headings, like the mock-up. */
-[data-theme='dark'] .panel-head h2 {
-  text-transform: uppercase;
-  font-weight: 800;
-  letter-spacing: 0.02em;
-}
 
 /* "See all": a small outlined pill. */
 .link-pill {
@@ -1574,9 +1572,9 @@ a {
 }
 
 .chip-button[aria-pressed='true'] {
-  border-color: var(--text);
-  background: var(--text);
-  color: var(--card);
+  border-color: var(--primary);
+  background: var(--primary); /* the main color (white in dark), never the red text color */
+  color: var(--on-primary);
   font-weight: 800;
 }
 
@@ -1644,18 +1642,37 @@ a {
   min-width: 0;
 }
 
+/* R3a: the bill is a normal (light) card, sticky beside the items on a laptop. */
+.bill-card {
+  align-self: flex-start;
+  position: sticky;
+  top: 16px;
+  padding: 22px;
+  border: 1px solid var(--line);
+  border-radius: 28px;
+  background: var(--card);
+  color: var(--text);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
 .bill-head {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
+  gap: 10px;
 }
 
-.ghost-button.small {
-  min-height: 44px;
-  padding: 0 16px;
-  border-color: var(--strong-muted);
-  color: var(--on-strong);
-  font-size: 15px;
+.bill-head h2 {
+  font-size: 22px;
+}
+
+.bill-count,
+.bill-note {
+  margin: 0;
+  font-size: 14px;
+  color: var(--muted);
 }
 
 .bill-lines {
@@ -1664,17 +1681,18 @@ a {
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
 }
 
 .bill-line {
-  padding: 12px 14px;
-  border-radius: 22px;
-  background: rgb(255 255 255 / 0.08);
+  padding: 10px 12px;
+  border-radius: 18px;
+  background: var(--inner);
 }
 
 .bill-line.problem {
-  outline: 2px solid var(--out);
+  background: var(--error-bg);
+  outline: 2px solid var(--error-text);
 }
 
 .bill-line-main {
@@ -1693,13 +1711,16 @@ a {
 
 .bill-name span {
   font-size: 13px;
-  color: var(--strong-muted);
+  color: var(--muted);
 }
 
 .stepper {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 2px;
+  padding: 2px;
+  border-radius: 999px;
+  background: var(--card);
 }
 
 .stepper button {
@@ -1707,17 +1728,21 @@ a {
   height: 44px;
   border-radius: 50%;
   border: none;
-  background: rgb(255 255 255 / 0.16);
-  color: var(--on-strong);
+  background: transparent;
+  color: var(--text);
   font-size: 22px;
   cursor: pointer;
 }
 
+.stepper button:hover {
+  background: var(--inner);
+}
+
 .stepper input {
-  width: 56px;
+  width: 48px;
   height: 44px;
-  border-radius: 14px;
-  border: none;
+  border-radius: 12px;
+  border: 1.5px solid var(--field-border);
   background: var(--field);
   color: var(--text);
   font: inherit;
@@ -1726,7 +1751,7 @@ a {
 }
 
 .bill-line-total {
-  min-width: 80px;
+  min-width: 70px;
   text-align: right;
   font-weight: 800;
   font-variant-numeric: tabular-nums;
@@ -1736,14 +1761,15 @@ a {
   margin-top: 8px;
   display: flex;
   justify-content: space-between;
+  align-items: center;
   gap: 10px;
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 700;
-  color: var(--out);
+  color: var(--error-text);
 }
 
 .bill-problem .text-button {
-  color: var(--on-strong);
+  color: var(--error-text);
 }
 
 .pay-choice {
@@ -1753,37 +1779,133 @@ a {
 }
 
 .pay-choice legend {
-  margin-bottom: 10px;
-  font-size: 14px;
-  font-weight: 700;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  color: var(--strong-muted);
+  margin-bottom: 8px;
 }
 
 .pay-options {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px;
+  gap: 8px;
 }
 
+/* Payment tiles: big, with an icon; still real radio buttons inside. */
 .pay-option {
-  min-height: 52px;
-  border-radius: 999px;
-  border: 1px solid var(--strong-muted);
+  min-height: 64px;
+  padding: 8px;
+  border-radius: 18px;
+  border: 2px solid var(--line);
+  background: transparent;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  font-weight: 600;
+  gap: 4px;
+  font-weight: 700;
   cursor: pointer;
 }
 
+.pay-option input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.pay-option:focus-within {
+  outline: 3px solid var(--text);
+  outline-offset: 2px;
+}
+
 .pay-option.chosen {
-  border-color: var(--accent);
-  background: var(--accent);
-  color: var(--on-accent);
-  font-weight: 800;
+  border-color: var(--text);
+  background: var(--inner);
+}
+
+.confirm-reason {
+  margin: -8px 0 0;
+  text-align: center;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+/* "2 in bill" on an item card, and "None left" on an OUT card. */
+.in-bill-tag {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 28px;
+  padding: 0 12px;
+  border-radius: 999px;
+  background: var(--primary);
+  color: var(--on-primary);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.none-left {
+  align-self: flex-start;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+/* The phone bill bar: hidden on a laptop, where the bill is always beside the items. */
+.bill-bar {
+  display: none;
+}
+
+@media (max-width: 699px) {
+  .bill-card {
+    position: static;
+    scroll-margin-top: 16px;
+  }
+
+  .bill-bar {
+    position: fixed;
+    left: 12px;
+    right: 12px;
+    bottom: 12px;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 10px 10px 18px;
+    border-radius: 24px;
+    background: var(--primary);
+    color: var(--on-primary);
+    box-shadow: 0 8px 24px rgb(0 0 0 / 0.25);
+  }
+
+  .bill-bar-text {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    line-height: 1.25;
+    font-size: 13px;
+  }
+
+  .bill-bar-text strong {
+    font-size: 20px;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .bill-bar-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 52px;
+    padding: 0 22px;
+    border-radius: 999px;
+    background: var(--on-primary);
+    color: var(--primary);
+    font-weight: 800;
+    text-decoration: none;
+  }
+
+  /* Room at the bottom so the bar never covers the last item card. */
+  .sale-layout {
+    padding-bottom: 96px;
+  }
 }
 
 /* ---------- Receipt ---------- */
@@ -1795,28 +1917,45 @@ a {
   align-items: flex-start;
 }
 
+/* R3a: the success message is a glass card (it used to sit on the page, now the photo). */
 .receipt-done {
   flex: 1 1 360px;
   min-width: 0;
+  padding: 22px;
+  border: 1px solid var(--line);
+  border-radius: 28px;
+  background: var(--card);
   display: flex;
   flex-direction: column;
   gap: 16px;
 }
 
-.receipt-done h1 {
-  font-size: clamp(40px, 5vw, 56px);
+.done-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.done-head h2 {
+  font-size: 24px;
+}
+
+.done-note {
+  margin: 4px 0 0;
+  color: var(--muted);
 }
 
 .done-mark {
-  width: 72px;
-  height: 72px;
+  flex: 0 0 48px;
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
-  background: var(--accent);
-  color: var(--on-accent);
+  background: var(--ok);
+  color: var(--ok-text);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 34px;
+  font-size: 24px;
   font-weight: 800;
 }
 
@@ -2321,9 +2460,9 @@ a {
 }
 
 .choice-tile.chosen {
-  border-color: var(--text);
-  background: var(--text);
-  color: var(--card);
+  border-color: var(--primary);
+  background: var(--primary);
+  color: var(--on-primary);
   font-weight: 800;
 }
 
@@ -2524,8 +2663,8 @@ a {
   height: 44px;
   flex: none;
   border-radius: 50%;
-  background: var(--text);
-  color: var(--card);
+  background: var(--primary); /* the main color, not the (red, in dark) text color */
+  color: var(--on-primary);
   display: grid;
   place-items: center;
   font-weight: 800;
@@ -2881,13 +3020,11 @@ h3 {
 }
 
 /* Outlined buttons on a dark card keep light lines. */
-.ghost-button.small,
 .ghost-button.on-strong {
   border-color: var(--strong-muted);
   color: var(--on-strong);
 }
 
-.ghost-button.small:hover:not(:disabled),
 .ghost-button.on-strong:hover:not(:disabled) {
   background: transparent;
   opacity: 0.85;
@@ -2932,7 +3069,6 @@ h3 {
 }
 
 .strong-card .primary-button:disabled,
-.ghost-button.small:disabled,
 .ghost-button.on-strong:disabled {
   border-color: var(--strong-muted);
   background: transparent;
@@ -3215,9 +3351,10 @@ h3 {
 }
 
 /* ---------- Tables become cards on a phone (data-label on every cell) ---------- */
-/* The Receipt stays a table: its 4 short columns fit. */
+/* The Receipt stays a table: its 4 short columns fit. Cards below 960 px, not 700 px:
+   on a 768 px tablet the menu leaves only about 470 px, and tables scrolled sideways there. */
 
-@media (max-width: 699px) {
+@media (max-width: 960px) {
   .table-scroll {
     overflow-x: visible; /* no sideways box on a phone: rows are cards that fit */
   }
@@ -3291,4 +3428,447 @@ h3 {
   .lines-table .small-input {
     width: 100%;
   }
+}
+
+/* ======================================================================
+   R2c-L: the Kilimanjaro photo behind every page, frosted glass (light mode)
+   docs/specs/r02-shared-pieces.md section 10. Dark mode stays solid until R2c-D.
+   ====================================================================== */
+
+/* See-through colors: the photo shows through every card, menu and inner box. */
+[data-theme='light'] {
+  --card: rgba(255, 253, 248, 0.86);
+  --nav: rgba(255, 251, 243, 0.8);
+  --inner: rgba(246, 238, 223, 0.85);
+}
+
+/* Light pass, step 4: the old dark cards (Stock after saving, Adjust preview, price and
+   deactivate confirmations, Home's money card) become glass cards like every other card.
+   Their colors come from these three names, so changing them changes every one at once. */
+[data-theme] {
+  --strong: var(--card);
+  --on-strong: var(--text);
+  --strong-muted: var(--muted);
+}
+
+:is(.strong-card, .confirm-panel, .stat-card.strong) {
+  border: 1px solid var(--line);
+  border-radius: 28px;
+  backdrop-filter: blur(18px) saturate(1.15);
+  -webkit-backdrop-filter: blur(18px) saturate(1.15);
+}
+
+.preview-row {
+  background: var(--inner);
+}
+
+/* Dark pass (R2c-D): the same glass on black. */
+[data-theme='dark'] {
+  --card: rgba(18, 18, 18, 0.72);
+  --nav: rgba(14, 14, 14, 0.66);
+  --inner: rgba(44, 44, 44, 0.78);
+  /* Iddy: in dark mode the TEXT is red, taken from the moon; the main buttons stay white.
+     Measured on the photo's worst pixels: vivid red 4.35:1 or better beside the title
+     (big text needs 3:1) and 5.3:1 or better on glass; the soft red 5.65:1 or better. */
+  --text: #ff5c5c;
+  --nav-text: #ff5c5c;
+  --muted: #d99a97;
+  --eyebrow: #ff5c5c;
+}
+
+/* The small line under the title uses the soft red: the vivid red measured only 4.35:1
+   there on a wide screen, where the moon's glow reaches the header. */
+[data-theme='dark'] .page-subtitle {
+  color: var(--muted);
+}
+
+/* The photo (Layout.tsx): one real image fixed to the screen, so it stays still while the
+   page scrolls; the page sits above it. A veil on top keeps text readable.
+   Light: Kilimanjaro under a cream veil. Dark: the tree under a black veil, placed 70% across
+   so the tree and moon sit on the right and the black side holds the header. */
+.page-photo {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: var(--page);
+}
+
+.page-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.page-photo::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+}
+
+.photo-light {
+  object-position: 50% 35%;
+}
+
+.photo-dark {
+  display: none;
+  object-position: 70% 45%;
+}
+
+[data-theme='light'] .page-photo::after {
+  background: linear-gradient(rgba(241, 232, 216, 0.7) 0, rgba(241, 232, 216, 0.5) 40%);
+}
+
+[data-theme='dark'] .photo-light {
+  display: none;
+}
+
+[data-theme='dark'] .photo-dark {
+  display: block;
+}
+
+[data-theme='dark'] .page-photo::after {
+  /* 0.7 at the top: the red title text needs a darker sky behind it (measured). */
+  background: linear-gradient(rgba(0, 0, 0, 0.7) 0, rgba(0, 0, 0, 0.3) 40%);
+}
+
+/* The page is above the photo. */
+.shell {
+  position: relative;
+  z-index: 1;
+}
+
+/* Tell the browser each theme is ours, so "dark mode for web pages" never repaints it.
+   "only light" forbids the browser from darkening the light theme. */
+[data-theme='light'] {
+  color-scheme: only light;
+}
+
+[data-theme='dark'] {
+  color-scheme: dark;
+}
+
+/* Text that sits straight on the photo (not on a card) uses the dark text color: grey
+   measured 2.1:1 on the photo's darkest spots, dark text 7.9:1 or better (R2c-L check). */
+.page-subtitle {
+  color: var(--text);
+}
+
+/* Below the header, no text sits straight on the photo: there even dark text measured only
+   3.4:1 over the dark trees. Outlined buttons and loose labels get a glass background. */
+:is(.chip-button, .action-pill:not(.main), .delivery-list > .muted-text, .check-label, .back-link) {
+  background-color: var(--card);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.chip-button[aria-pressed='true'] {
+  background-color: var(--primary);
+}
+
+:is(.delivery-list > .muted-text, .check-label, .back-link) {
+  align-self: flex-start;
+  padding: 4px 14px;
+  border-radius: 999px;
+}
+
+/* The caramel name in "Habari, <name>" measured 3.0:1 on the photo: a darker caramel. */
+[data-theme='light'] .page-header .accent-text {
+  color: #6b4220;
+}
+
+/* The user chip in the header is a glass pill, so its small text never sits on the photo. */
+.user-chip {
+  padding: 4px 14px 4px 4px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--card);
+}
+
+/* On a phone only the initials show, so the pill hugs them. */
+@media (max-width: 699px) {
+  .user-chip {
+    padding: 3px;
+  }
+}
+
+/* Frosted glass: blur what is behind each block. Only blocks, not every small button. */
+:is(
+    .menu,
+    .panel,
+    .stat-card,
+    .empty-card,
+    .item-card,
+    .form-card,
+    .product-card,
+    .receipt-card,
+    .delivery-card,
+    .receipt-done,
+    .notice-ok,
+    .coming-soon,
+    .user-chip,
+    .icon-button,
+    .tab-bar
+  ) {
+  backdrop-filter: blur(18px) saturate(1.15);
+  -webkit-backdrop-filter: blur(18px) saturate(1.15);
+}
+
+/* Phones: blur is slow on cheap phones, so the glass is more solid and the blur smaller. */
+@media (max-width: 699px) {
+  [data-theme='light'] {
+    --card: rgba(255, 253, 248, 0.92);
+    --nav: rgba(255, 251, 243, 0.94);
+  }
+
+  [data-theme='dark'] {
+    --card: rgba(18, 18, 18, 0.86);
+    --nav: rgba(14, 14, 14, 0.9);
+  }
+
+  :is(.menu, .panel, .stat-card, .empty-card, .item-card, .form-card, .product-card, .receipt-card, .delivery-card, .notice-ok, .user-chip, .icon-button, .tab-bar, .data-table tr) {
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+}
+
+/* People who ask their device for less transparency get solid cards and no blur. */
+@media (prefers-reduced-transparency: reduce) {
+  [data-theme='light'] {
+    --card: #fffdf8;
+    --nav: #fffbf3;
+    --inner: #f6eedf;
+  }
+
+  [data-theme='dark'] {
+    --card: #151515;
+    --nav: #111111;
+    --inner: #1f1f1f;
+  }
+
+  * {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+}
+
+/* ======================================================================
+   Light pass, step 4: Receive stock lines as cards, tables that fit
+   ====================================================================== */
+
+/* Receive stock: every line is a card at every width (it scrolled sideways on a laptop). */
+.lines-table,
+.lines-table tbody,
+.lines-table tr,
+.lines-table td {
+  display: block;
+}
+
+.lines-table thead {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
+
+.lines-table tbody {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.lines-table tr {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 12px;
+  padding: 14px;
+  border: 1.5px solid var(--line);
+  border-radius: 18px;
+  background: var(--inner);
+}
+
+.lines-table tr.line-error {
+  border-color: var(--error-text);
+  background: var(--error-bg);
+}
+
+.lines-table td {
+  padding: 0;
+  border: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 0 1 150px;
+  min-width: 0;
+}
+
+.lines-table td:first-child {
+  flex: 1 1 200px;
+}
+
+.lines-table td[data-label]::before {
+  content: attr(data-label);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.lines-table td:not([data-label]) {
+  flex: 0 0 auto;
+  margin-left: auto;
+}
+
+.lines-table select,
+.lines-table .small-input {
+  width: 100%;
+}
+
+/* Column headers may wrap onto two lines, so a table fits its card (Restock was 18 px wide). */
+.data-table th {
+  white-space: normal;
+}
+
+/* A link inside a table (Receipt #42) gets the full 44 px tap height. */
+.data-table td > a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
+
+/* Restock history on a tablet: the delivery list goes above the chosen delivery, so the
+   table gets the full width (it scrolled sideways at 768 px). */
+@media (max-width: 960px) {
+  .restock-layout {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+/* Items and prices: price history as a timeline (a dot per change, a line joining them). */
+.history-list {
+  position: relative;
+}
+
+.history-row {
+  position: relative;
+  margin-left: 18px;
+}
+
+.history-row::before {
+  content: '';
+  position: absolute;
+  left: -18px;
+  top: 18px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--field-border);
+}
+
+.history-row:first-child::before {
+  background: var(--text); /* the newest change */
+}
+
+.history-row:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  left: -14px;
+  top: 32px;
+  bottom: -12px;
+  width: 2px;
+  background: var(--line);
+}
+
+/* Home: the stock-health ring (StockHealth.tsx). */
+.stock-health {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+
+.health-ring {
+  position: relative;
+  width: 160px;
+  height: 160px;
+}
+
+.health-ring svg {
+  width: 100%;
+  height: 100%;
+}
+
+.health-ring circle {
+  fill: none;
+  stroke-width: 12;
+}
+
+.health-track {
+  stroke: var(--inner);
+}
+
+.health-fill {
+  stroke: var(--primary);
+  stroke-linecap: round;
+}
+
+.health-words {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  line-height: 1.2;
+}
+
+.health-words strong {
+  font-size: 28px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.health-words span {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.health-counts {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.health-counts li {
+  padding: 8px 4px;
+  border-radius: 14px;
+}
+
+.health-counts strong {
+  display: block;
+  font-size: 18px;
+}
+
+.health-ok {
+  background: var(--ok);
+  color: var(--ok-text);
+}
+
+.health-low {
+  background: var(--low);
+  color: var(--badge-text);
+}
+
+.health-out {
+  background: var(--out);
+  color: var(--badge-text);
 }

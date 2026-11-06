@@ -3,6 +3,7 @@
 import { Link, useSearchParams } from 'react-router';
 
 import PageHeader from '../components/PageHeader';
+import StatCard from '../components/StatCard';
 import { dayBefore, formatTsh, itemsSummary, longDate, PAYMENT_LABEL, timeOf } from '../format';
 import type { Receipt, Summary } from '../types';
 import { useApi } from '../useApi';
@@ -36,6 +37,10 @@ export default function SalesRecords() {
   const receipts = sales.data ?? [];
   // Question 2: adds up the totals the SERVER put on its own receipts; owner only (rule 3).
   const dayTotal = receipts.reduce((sum, receipt) => sum + receipt.total, 0);
+  // R3b: the number cards count what is already on the receipts; nothing new is asked from the API.
+  const cash = receipts.filter((receipt) => receipt.payment_method === 'cash').length;
+  const units = receipts.reduce((sum, r) => sum + r.items.reduce((n, line) => n + line.quantity, 0), 0);
+  const lastTime = receipts.length > 0 ? timeOf(receipts[0].sold_at) : null; // newest first
 
   const header = (
     <PageHeader title="Sales records" subtitle="Every receipt, by day. Receipts are never changed or deleted." />
@@ -100,6 +105,31 @@ export default function SalesRecords() {
           Pick today or an earlier day.
         </p>
       ) : (
+        <>
+        {/* R3b: the day in numbers, like Home. The day total stays owner only (f09 rule 3). */}
+        {!sales.loading && !sales.error && (
+          <section className="stat-grid" aria-label="The day in numbers">
+            {isOwner && (
+              <StatCard
+                label="Day total"
+                value={`TSh ${formatTsh(dayTotal)}`}
+                valueLabel="Day total"
+                pill="Owner only"
+                note="Added up from the server's receipts"
+              />
+            )}
+            <StatCard
+              label="Receipts"
+              value={String(receipts.length)}
+              note={`${cash} cash · ${receipts.length - cash} mobile money`}
+            />
+            <StatCard
+              label="Units sold"
+              value={String(units)}
+              note={lastTime ? `Last sale at ${lastTime}` : 'No sales on this day'}
+            />
+          </section>
+        )}
         <section className="panel" aria-labelledby="day-title">
           <div className="day-card">
             <div>
@@ -110,12 +140,6 @@ export default function SalesRecords() {
                 </span>
               )}
             </div>
-            {isOwner && !sales.loading && !sales.error && (
-              <div className="day-total">
-                <span className="chip">Owner only</span>
-                <strong aria-label="Day total">TSh {formatTsh(dayTotal)}</strong>
-              </div>
-            )}
           </div>
 
           {sales.loading ? (
@@ -175,8 +199,8 @@ export default function SalesRecords() {
               </table>
             </div>
           )}
-          <p className="empty-text small-note">Receipts cannot be changed or deleted.</p>
         </section>
+        </>
       )}
     </>
   );

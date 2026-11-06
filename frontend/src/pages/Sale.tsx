@@ -1,6 +1,7 @@
 // New sale: pick sub-items, see totals instantly, choose how the customer paid, confirm.
 // Spec: docs/specs/f05-sale.md. The screen PREVIEWS totals; the server decides every price
 // and total and re-checks the stock. The request carries only product ids and quantities.
+import { Banknote, Check, Smartphone } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 
@@ -61,6 +62,7 @@ export default function Sale() {
     return fromServer ? { ...result, problem: fromServer } : result;
   });
   const total = previewTotal(checked);
+  const units = checked.reduce((sum, c) => sum + (c.quantity ?? 0), 0); // for the bill head and the phone bar
   const hasProblem = checked.some((c) => c.problem !== null);
 
   // Rule 7: say why Confirm is not possible yet.
@@ -177,7 +179,8 @@ export default function Sale() {
             <div className="product-grid">
               {shown.map((product) => {
                 const out = product.quantity_in_store === 0;
-                const inBill = bill.some((line) => line.productId === product.id);
+                const billLine = bill.find((line) => line.productId === product.id);
+                const inBill = billLine !== undefined;
                 return (
                   <button
                     key={product.id}
@@ -195,6 +198,14 @@ export default function Sale() {
                       <strong>TSh {formatTsh(product.effective_price)}</strong>
                       <span>{product.quantity_in_store} in store</span>
                     </span>
+                    {/* R3a rule 4: the card says how many are already in the bill. */}
+                    {inBill && (
+                      <span className="in-bill-tag">
+                        <Check size={13} strokeWidth={3} aria-hidden="true" />
+                        {billLine.quantity} in bill
+                      </span>
+                    )}
+                    {out && <span className="none-left">None left</span>}
                   </button>
                 );
               })}
@@ -202,12 +213,18 @@ export default function Sale() {
           )}
         </section>
 
-        <aside className="strong-card bill" aria-labelledby="bill-title">
+        {/* R3a rule 2: a normal (light) card, not the dark one. id="bill": the phone bar jumps here. */}
+        <aside className="bill-card bill" id="bill" aria-labelledby="bill-title">
           <div className="bill-head">
-            <h2 id="bill-title">The bill</h2>
+            <div>
+              <h2 id="bill-title">The bill</h2>
+              <p className="bill-count">
+                {checked.length} {checked.length === 1 ? 'line' : 'lines'} · {units} {units === 1 ? 'unit' : 'units'}
+              </p>
+            </div>
             <button
               type="button"
-              className="ghost-button small"
+              className="text-button"
               onClick={() => changeBill(() => [])}
               disabled={bill.length === 0 || busy}
             >
@@ -216,7 +233,7 @@ export default function Sale() {
           </div>
 
           {bill.length === 0 ? (
-            <p className="strong-muted">Tap an item to add it.</p>
+            <p className="bill-note">Tap an item to add it.</p>
           ) : (
             <ul className="bill-lines">
               {checked.map((c) => {
@@ -275,7 +292,7 @@ export default function Sale() {
           )}
 
           <div className="preview-total">
-            <span className="strong-muted">Total</span>
+            <span className="bill-note">Total</span>
             <strong>TSh {formatTsh(total)}</strong>
           </div>
 
@@ -291,6 +308,11 @@ export default function Sale() {
                     checked={payment === method}
                     onChange={() => setPayment(method)}
                   />
+                  {method === 'cash' ? (
+                    <Banknote size={20} strokeWidth={1.8} aria-hidden="true" />
+                  ) : (
+                    <Smartphone size={20} strokeWidth={1.8} aria-hidden="true" />
+                  )}
                   {method === 'cash' ? 'Cash' : 'Mobile money'}
                 </label>
               ))}
@@ -302,12 +324,40 @@ export default function Sale() {
               {error}
             </p>
           )}
-          <button type="button" className="primary-button" disabled={blocker !== null || busy} onClick={confirm}>
-            {busy ? 'Saving…' : blocker ?? 'Confirm sale'}
+          {/* R3a rule 1: the button keeps its name; when it is off, the reason is the line under it,
+              joined with aria-describedby so a screen reader hears both. */}
+          <button
+            type="button"
+            className="primary-button"
+            disabled={blocker !== null || busy}
+            aria-describedby={blocker && !busy ? 'confirm-reason' : undefined}
+            onClick={confirm}
+          >
+            {busy ? 'Saving…' : 'Confirm sale'}
           </button>
-          <p className="strong-muted small-center">Totals here are a preview. The server checks prices and stock again.</p>
+          {blocker && !busy && (
+            <p id="confirm-reason" className="confirm-reason">
+              {blocker}
+            </p>
+          )}
+          <p className="bill-note small-center">Totals here are a preview. The server checks prices and stock again.</p>
         </aside>
       </div>
+
+      {/* R3a rule 5: on a phone (CSS), the bill bar stays at the bottom while you pick items. */}
+      {bill.length > 0 && (
+        <div className="bill-bar">
+          <span className="bill-bar-text">
+            <span>
+              {units} {units === 1 ? 'unit' : 'units'} · {checked.length} {checked.length === 1 ? 'line' : 'lines'}
+            </span>
+            <strong>TSh {formatTsh(total)}</strong>
+          </span>
+          <a href="#bill" className="bill-bar-link">
+            View bill
+          </a>
+        </div>
+      )}
     </>
   );
 }

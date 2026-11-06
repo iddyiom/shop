@@ -28,10 +28,19 @@ const SALES: Receipt[] = [
   },
 ];
 
+// The whole stock list, for the stock-health ring: the 2 LOW / OUT lines above, 2 OK, 1 stopped.
+const STOCK: StockLine[] = [
+  ...LOW,
+  { product_id: 3, product: 'Chocolate', group_id: 2, group: 'Biscuit', quantity_in_store: 20, min_level: 5, stock_status: 'OK', is_active: true },
+  { product_id: 4, product: 'Vanilla', group_id: 2, group: 'Biscuit', quantity_in_store: 12, min_level: 5, stock_status: 'OK', is_active: true },
+  { product_id: 5, product: 'Old juice', group_id: 3, group: 'Juice', quantity_in_store: 0, min_level: 0, stock_status: 'OUT', is_active: false },
+];
+
 function homeAnswers(summary: Summary, overrides: Record<string, () => Response | Promise<Response>> = {}) {
   return {
     'GET /api/summary/today': () => json(summary),
     'GET /api/stock/low': () => json(LOW),
+    'GET /api/stock': () => json(STOCK),
     [`GET /api/sales?day=${DAY}`]: () => json(SALES),
     ...overrides,
   };
@@ -152,5 +161,17 @@ describe('Home', () => {
     expect(await within(cards).findByText('From 1 receipt')).toBeTruthy();
     expect(await within(cards).findByText('1 out, 1 running low')).toBeTruthy();
     expect(within(cards).getByText('4 days ago')).toBeTruthy(); // 1 Nov, and the server's today is 5 Nov
+  });
+});
+
+// Light pass: the stock-health ring on Home.
+describe('stock health (light pass)', () => {
+  it('the ring counts OK, LOW and OUT of the active sub-items only (stopped ones are left out)', async () => {
+    loggedInAs(OWNER, homeAnswers(OWNER_SUMMARY));
+    openAt('/');
+    const panel = await screen.findByRole('region', { name: 'Stock health' });
+    expect(await within(panel).findByText('2 of 4')).toBeTruthy(); // Chocolate and Vanilla OK; Old juice stopped
+    const counts = within(panel).getByRole('list');
+    expect(counts.textContent).toBe('2 OK1 LOW1 OUT');
   });
 });

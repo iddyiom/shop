@@ -7,6 +7,7 @@ import { Link } from 'react-router';
 import PageHeader from '../components/PageHeader';
 import Panel from '../components/Panel';
 import StatCard from '../components/StatCard';
+import StockHealth from '../components/StockHealth';
 import StatusBadge from '../components/StatusBadge';
 import { daysAgo, formatTsh, itemsSummary, longDate, PAYMENT_LABEL, shortDate, timeOf } from '../format';
 import type { Receipt, StockLine, Summary } from '../types';
@@ -23,11 +24,13 @@ export default function Home() {
 
   const summary = useApi<Summary>('/summary/today');
   const low = useApi<StockLine[]>('/stock/low');
+  const stock = useApi<StockLine[]>('/stock'); // for the stock-health ring (light pass)
   // Rule 1: "today" is the server's date, so wait for the summary before asking for sales.
   const sales = useApi<Receipt[]>(summary.data ? `/sales?day=${summary.data.date}` : null);
 
   function refreshAll() {
     summary.reload();
+    stock.reload();
     low.reload();
     sales.reload();
   }
@@ -73,6 +76,10 @@ export default function Home() {
       />
 
       <div className="home-panels">
+        <Panel title="Stock health" loading={stock.loading} error={stock.error} onRetry={stock.reload}>
+          <StockHealth lines={stock.data ?? []} />
+        </Panel>
+
         <Panel
           title="Latest sales"
           link={{ to: '/sales', label: 'See all' }}

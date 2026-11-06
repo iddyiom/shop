@@ -133,6 +133,15 @@ describe('sales records', () => {
     expect((await screen.findByRole('link', { name: 'Receipt #42' })).getAttribute('href')).toBe('/receipt/42');
   });
 
+  // R3b (light pass, step 3): the day in numbers, counted from the receipts already loaded.
+  it('number cards: receipts with cash / mobile split, units sold and the last sale time', async () => {
+    await openSales(OWNER);
+    const cards = await screen.findByRole('region', { name: 'The day in numbers' });
+    expect(within(cards).getByText('2 cash · 0 mobile money')).toBeTruthy();
+    expect(within(cards).getByText('5')).toBeTruthy(); // 3 + 2 Fanta
+    expect(within(cards).getByText('Last sale at 14:32')).toBeTruthy();
+  });
+
   it("owner sees the day's money total; shopkeeper sees the receipt count but no day total", async () => {
     await openSales(OWNER);
     expect((await screen.findByLabelText('Day total')).textContent).toBe('TSh 5,000'); // 3,000 + 2,000
