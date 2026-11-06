@@ -31,6 +31,12 @@
   --hi-card: #2b2118;
   --hi-text: #fffaf0;
   --hi-label: #f3d27f;
+  /* R2a: the one filled main button, and the turned-off look */
+  --primary: #2b2118;
+  --on-primary: #fffaf0;
+  --disabled: #ece0cb;
+  --on-disabled: #6e5f4f;
+  --ok-text: #2f4a26;
 }
 
 [data-theme='dark'] {
@@ -61,6 +67,12 @@
   --hi-card: #f5f5f5;
   --hi-text: #0a0a0a;
   --hi-label: #0a0a0a;
+  /* R2a: the one filled main button, and the turned-off look */
+  --primary: #f5f5f5;
+  --on-primary: #0a0a0a;
+  --disabled: #1f1f1f;
+  --on-disabled: #8f8f8f;
+  --ok-text: #e8e8e8;
 }
 
 /* ---------- Base ---------- */
@@ -2838,4 +2850,305 @@ a {
   .login-promises {
     padding: 18px 16px 22px;
   }
+}
+
+/* ======================================================================
+   R2a: shared pieces, looks only (docs/specs/r02-shared-pieces.md)
+   This section comes LAST on purpose: a later rule of the same strength
+   wins, so it restyles the existing class names without touching any
+   .tsx markup. It follows the "Design system" board of the mock-up.
+   ====================================================================== */
+
+/* ---------- Headings: Plus Jakarta Sans. Text and numbers stay Inter. ---------- */
+
+h1,
+h2,
+h3 {
+  font-family: 'Plus Jakarta Sans Variable', Inter, system-ui, sans-serif;
+}
+
+/* ---------- Level 1: the filled main button (one per screen) ---------- */
+
+.primary-button,
+.primary-link,
+.action-pill.main {
+  min-height: 48px;
+  padding: 0 24px;
+  border: 1.5px solid var(--primary);
+  border-radius: 999px;
+  background: var(--primary);
+  color: var(--on-primary);
+  font-weight: 800;
+  box-shadow: none;
+}
+
+.primary-button {
+  font-size: 16px;
+}
+
+.primary-button:hover:not(:disabled),
+.primary-link:hover,
+.action-pill.main:hover {
+  opacity: 0.9;
+}
+
+/* On a dark card (the bill, "Stock after saving") the main button turns around. */
+.strong-card .primary-button {
+  border-color: var(--on-strong);
+  background: var(--on-strong);
+  color: var(--strong);
+}
+
+/* ---------- Level 2: outlined buttons ---------- */
+
+.pill-button,
+.ghost-button,
+.dark-button,
+.link-pill,
+.icon-link,
+.action-pill:not(.main) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 18px;
+  border: 1.5px solid var(--field-border);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.pill-button:hover:not(:disabled),
+.ghost-button:hover:not(:disabled),
+.dark-button:hover:not(:disabled),
+.link-pill:hover,
+.icon-link:hover,
+.action-pill:not(.main):hover {
+  background: var(--inner);
+}
+
+/* Outlined buttons on a dark card keep light lines. */
+.ghost-button.small,
+.ghost-button.on-strong {
+  border-color: var(--strong-muted);
+  color: var(--on-strong);
+}
+
+.ghost-button.small:hover:not(:disabled),
+.ghost-button.on-strong:hover:not(:disabled) {
+  background: transparent;
+  opacity: 0.85;
+}
+
+/* Filter chips: outlined; the chosen one is filled. */
+.chip-button {
+  min-height: 44px;
+  border-width: 1.5px;
+  font-size: 14px;
+}
+
+/* ---------- Level 3: underlined small links (44 px tap area) ---------- */
+
+.text-button,
+.text-link,
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 4px;
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+/* ---------- Turned off: dashed and flat, so it never looks like a working button ---------- */
+
+.primary-button:disabled,
+.pill-button:disabled,
+.ghost-button:disabled,
+.dark-button:disabled,
+.chip-button:disabled {
+  border: 1.5px dashed var(--muted); /* 3:1 or better against the flat fill */
+  background: var(--disabled);
+  color: var(--on-disabled);
+  font-weight: 600;
+  opacity: 1;
+  cursor: not-allowed;
+}
+
+.strong-card .primary-button:disabled,
+.ghost-button.small:disabled,
+.ghost-button.on-strong:disabled {
+  border-color: var(--strong-muted);
+  background: transparent;
+  color: var(--strong-muted);
+}
+
+/* The photo login keeps its own button. */
+.login-card .primary-button:disabled {
+  border: none;
+  background: linear-gradient(90deg, #f6d7a8, #e8afd5);
+  color: #1c1019;
+  opacity: 0.6;
+}
+
+/* ---------- Status badges: filled, a dot + the word ---------- */
+
+.badge,
+.state-tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-width: 0;
+  padding: 3px 10px 3px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0;
+  white-space: nowrap;
+}
+
+.badge::before,
+.state-tag::before {
+  content: '';
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.badge-ok,
+.state-tag {
+  background: var(--ok);
+  color: var(--ok-text);
+}
+
+/* "Stopped" is not a warning: grey, not red. */
+.state-tag.off {
+  background: var(--inner);
+  color: var(--muted);
+}
+
+/* Words written in capitals in the markup ("NEVER EDITED") show in small letters for now.
+   CSS cannot do "lowercase, then capital first letter" on this box, so R2b fixes the words. */
+.state-tag {
+  text-transform: lowercase;
+}
+
+/* ---------- Info tags ("Owner only"): outlined, never filled ---------- */
+
+.stat-pill {
+  padding: 3px 10px;
+  border: 1px solid var(--field-border);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* ---------- Labels: sentence case, no capitals ---------- */
+
+.field label,
+.price-choice legend,
+.pay-choice legend,
+.receipt-facts dt,
+.adjust-step legend,
+.adjust-step .step-label,
+.section-label {
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.field label {
+  color: var(--text);
+}
+
+/* Card titles are titles, not labels (also in dark mode, which R1 made capitals). */
+.panel-head h2,
+[data-theme='dark'] .panel-head h2 {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  text-transform: none;
+}
+
+/* ---------- Fields: 48 px, softer corners, clear focus ---------- */
+
+.field input,
+.field select,
+.field textarea,
+.field-select,
+.small-input {
+  min-height: 48px;
+  border-width: 1.5px;
+  border-radius: 14px;
+  font-size: 15px;
+}
+
+.search-input {
+  min-height: 48px;
+  border-width: 1.5px;
+  font-size: 15px;
+}
+
+.field-hint {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.field-problem {
+  font-size: 13px;
+}
+
+.field input[aria-invalid='true'],
+.small-input[aria-invalid='true'] {
+  border-width: 2px;
+  border-color: var(--error-text);
+}
+
+/* ---------- Tap targets: at least 44 px (found by the R2a browser check) ---------- */
+
+.icon-button {
+  flex: 0 0 44px;
+  width: 44px;
+  height: 44px;
+}
+
+/* Store balance: All / OK / Low / Out tabs and the search box. */
+.tab-bar {
+  padding: 4px;
+  border-radius: 999px;
+}
+
+.tab {
+  min-height: 44px;
+  padding: 0 14px;
+  border-radius: 999px;
+  font-weight: 600;
+}
+
+.search-box {
+  min-height: 48px;
+  padding: 0 16px;
+  border-width: 1.5px;
+  border-radius: 999px;
+}
+
+.search-box input {
+  align-self: stretch; /* the whole box height is the tap target */
+  min-height: 44px;
+  font-size: 15px;
 }

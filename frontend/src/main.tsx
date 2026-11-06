@@ -9,6 +9,7 @@ import '@fontsource/inter/500.css';
 import '@fontsource/inter/600.css';
 import '@fontsource/inter/700.css';
 import '@fontsource/inter/800.css';
+import '@fontsource-variable/plus-jakarta-sans'; // headings only (R2a); one file holds every weight
 import './theme.css';
 
 import { routes } from './routes';
