@@ -86,6 +86,26 @@ Iddy compared the app with the mock-up (exported as a PDF) and it did not match:
 
 Tests that change on purpose: the menu order test (groups), the page-title test (it checks the h1 and the browser tab instead of the eyebrow), the log-in heading ("Welcome back"), the top-bar test (removed with the top bar), and the theme test on the log in page (the button moved out of it).
 
+## 12. R2/R3 design agreed in the mock-up (2026-11-06)
+An audit of the 8 remaining pages (laptop 1280 px and phone 375 px, throwaway database) found 9 problems that repeat across pages. Iddy approved fixing them once, in shared pieces (R2), then page by page (R3). The mock-up page "R2–R3 · Every page" is now the reference for R2 and R3.
+
+| # | Problem found | Fix (shared piece) |
+|---|---|---|
+| 1 | Header row breaks on two-column pages; New sale has an extra back link | One header row in the Layout, above the page's columns |
+| 2 | Page titles differ from the menu ("Every receipt", "The truck came"…) | Title = the menu name; the friendly sentence goes in the line under it |
+| 3 | Tables scroll sideways (Restock, Receive at 681 px on a phone, Store balance cut to 2 rows) | Lists are a table on a laptop and cards on a phone; never an inner sideways scroll |
+| 4 | Four looks for "main button"; turned-off buttons look like working ones | 3 levels: filled (one per screen), outlined, underlined; red outline to take away access. Turned off = dashed and flat, with the reason under it. Caramel is never a button |
+| 5 | Tiny capital labels; status and facts share one pill | Labels in sentence case above the field; filled badges for state only; outlined "Owner only" tag; "Never edited" is plain muted text |
+| 6 | Loading hides the whole frame; empty states have no next step | Loading skeleton inside the frame; empty state = icon, sentence, one action |
+| 7 | On a phone the bill and Save sit below every item | A bar fixed at the bottom of the screen holds the total and the main button (New sale, Adjust) |
+| 8 | Tap targets under 44 px | Everything tappable is at least 44 px |
+| 9 | Wasted laptop space | Main column + side panel (Sales records, Receive, Items, Users) |
+
+Decisions:
+- **Fonts:** Plus Jakarta Sans for headings (h1–h3), Inter for text and every number (tabular digits). Both from `@fontsource`, so the app works offline. Tested in the browser: DM Sans was dropped because its digits are not equal width.
+- **Patterns borrowed:** shadcn dashboard-01 (number card: label, big number, bold line, muted line; tab bar over a list; footer line under a list); Dribbble POS screens (− / + on each item card, bill on the right, large payment tiles).
+- **Open:** the pear accent (#CAEA26) from Iddy's Pinterest pin, for dark mode only. It would change the rule "only warnings keep a color". Not decided; the boards are drawn without it.
+
 ### Section 11 done checklist
 - [x] Frame, menu, login, Home and Store balance follow the PDF in light and dark; no top bar.
 - [x] Phone width: the header row fits, the drawer works, the Store balance table fits its card (found in the browser: the table's scroll box shrank to 44px and hid the rows; and the Adjust button stuck out by 42px).
