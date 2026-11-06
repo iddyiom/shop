@@ -40,7 +40,7 @@ Unit F10: Users screen (list, unlock, add, deactivate / reactivate). Write `docs
 | F5 | New sale and receipt | Done | 6c77b75 |
 | F7 | Store balance and adjust stock | Done | 087a479 |
 | F9 | Sales records, restock history and corrections | Done | 12c961e |
-| B1 | Backend: `PATCH /users/{id}` (rename, deactivate) | Done | (not committed yet) |
+| B1 | Backend: `PATCH /users/{id}` (rename, deactivate) | Done | 29ad708 |
 | B2 | Backend: `GET /sales?from=&to=` date range | Parked (Version 2, with reports) | |
 | F10 | Users: list, unlock, add, deactivate | Next | |
 
