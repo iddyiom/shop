@@ -10,7 +10,7 @@ Phase 4: React front end (plan: docs/frontend-plan.md). Phase 3, the API, is com
 (nothing)
 
 ## Next
-Unit F10: Users screen (list, unlock, add, deactivate / reactivate). Write `docs/specs/f10-users.md` first.
+Unit F10: Users screen (list, unlock, add, deactivate / reactivate). Spec drafted in `docs/specs/f10-users.md` (2026-11-06); waiting for Iddy to answer its 4 open questions before coding.
 
 ## Units
 
