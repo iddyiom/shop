@@ -7,7 +7,7 @@ Update it at the end of every unit: move the unit, add decisions, set "Next".
 Redesign (R0-R3): a new look for the finished front end (spec: docs/specs/r01-redesign.md). Phase 4 (React front end) and Phase 3 (the API) are complete.
 
 ## In progress
-R1 reworked to match the mock-up PDF (Home's frame for every page, menu groups, login, Home dashboard, Store balance), built and checked, waiting for Iddy's "Commit and push".
+(nothing)
 
 ## Next
 R2 (shared pieces: cards, tables, buttons, inputs), then R3 (each page, and Home as a dashboard), then the warning icons (spec section 10). Still waiting after that: the small things noticed along the way (owner resets a forgotten password; "1 tries remaining" wording; fixing a wrong buying price; a backup command for depot.db) and the deployment phase (PostgreSQL, Docker, logout that ends the token on the server).
@@ -49,7 +49,7 @@ R2 (shared pieces: cards, tables, buttons, inputs), then R3 (each page, and Home
 | # | Unit | Status | Commit |
 |---|---|---|---|
 | R0 | Mock-up (design artifact, no code) | Done | |
-| R1 | Shell and colors, reworked to the mock-up PDF: no top bar, header row on every page, menu groups, login, Home dashboard, Store balance | Done (not committed) | |
+| R1 | Shell and colors, reworked to the mock-up PDF: no top bar, header row on every page, menu groups, login, Home dashboard, Store balance | Done | 9c75089 |
 | R2 | Shared pieces: cards, tables, buttons, inputs | Next | |
 | R3 | The other pages in the PDF style (Home and Store balance done in R1) | Planned | |
 | W1 | Warning icons for LOW / OUT (solid, OUT pulses) | Planned | |

@@ -1,6 +1,6 @@
 # Redesign R1–R3: a new look (shadcn ideas, Vanilla and black-and-white themes)
 
-Status: R1 reworked to match the mock-up PDF (section 11), built and checked 2026-11-06, not committed yet. R0 (mock-up) Done. The 4 questions were accepted on 2026-11-06, and Iddy changed the look in the mock-up the same day (section 3).
+Status: R1 reworked to match the mock-up PDF (section 11), built and checked 2026-11-06, committed in 9c75089. R0 (mock-up) Done. The 4 questions were accepted on 2026-11-06, and Iddy changed the look in the mock-up the same day (section 3).
 Depends on: Phase 4 complete (F1–F10).
 Mock-up (approved shapes and colors): https://claude.ai/artifact/TfiWo6bhLsAiQEvjNVD5MZ (private to Iddy).
 
