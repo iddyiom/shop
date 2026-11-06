@@ -7,7 +7,7 @@ Update it at the end of every unit: move the unit, add decisions, set "Next".
 Redesign (R0-R3): a new look for the finished front end (spec: docs/specs/r01-redesign.md). Phase 4 (React front end) and Phase 3 (the API) are complete.
 
 ## In progress
-Icons: every icon is now from the Solar Linear set (svgrepo.com, CC0), built and checked, waiting for Iddy's "commit".
+(nothing)
 
 ## Next
 Iddy chooses the next step. Waiting: a sharper copy of the dark-mode tree photo (the one in the app is 643 x 360) and permission to use both photos before launch; the warning icons (W1, r01 section 10); the small things noticed along the way (owner resets a forgotten password; "1 tries remaining" wording; fixing a wrong buying price; a backup command for depot.db); the deployment phase (PostgreSQL, Docker, logout that ends the token on the server).
@@ -54,7 +54,7 @@ Iddy chooses the next step. Waiting: a sharper copy of the dark-mode tree photo 
 | R2b | Shared components: header title = menu name, loading and empty states, tables become cards on a phone | Done | 572d4e0 |
 | R2c-L | Light pass, step 1: Kilimanjaro photo behind every page, every block frosted glass; contrast measured on the photo's pixels (text on the photo uses dark text; below the header no text sits on the photo) | Done | 22c0d60 |
 | R2c-D | Dark pass: the tree photo behind every page, dark glass; old R1 dark rules removed (solid menu, white-glow money card, capital titles); every page checked in dark | Done | 22c0d60 |
-| I1 | Icons: the Solar Linear set from svgrepo.com (CC0) replaces lucide-react, one `Icon` component | Built, checked (not committed) | |
+| I1 | Icons: the Solar Linear set from svgrepo.com (CC0) replaces lucide-react, one `Icon` component | Done | ad63fce |
 | R3a | New sale (bill bar on a phone, payment tiles, Confirm with its reason underneath, "N in bill" on cards) and the Receipt in the shared frame | Done | 22c0d60 |
 | R3b–R3f | Sales records number cards; Receive lines as cards at every width; old dark cards become glass (Receive, Adjust, confirmations); Restock stacks on a tablet; tables become cards below 960 px; Items price-history timeline; Home stock-health ring | Done | 22c0d60 |
 | W1 | Warning icons for LOW / OUT (solid, OUT pulses) | Planned | |
