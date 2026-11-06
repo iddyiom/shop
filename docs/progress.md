@@ -4,13 +4,13 @@ The project's memory. Read this at the start of every session.
 Update it at the end of every unit: move the unit, add decisions, set "Next".
 
 ## Current phase
-Phase 4: React front end (plan: docs/frontend-plan.md). Phase 3, the API, is complete (units 1-9 below).
+Phase 4 (React front end) is complete: every screen of the design works against the real API. Phase 3, the API, is complete too (units 1-9 below).
 
 ## In progress
 (nothing)
 
 ## Next
-Unit F10: Users screen (list, unlock, add, deactivate / reactivate). Spec drafted in `docs/specs/f10-users.md` (2026-11-06); waiting for Iddy to answer its 4 open questions before coding.
+Iddy to choose the next step. Candidates: the small things noticed along the way (owner resets a forgotten password; "1 tries remaining" wording; fixing a wrong buying price; a backup command for depot.db), or the deployment phase (PostgreSQL, Docker, logout that ends the token on the server).
 
 ## Units
 
@@ -42,13 +42,14 @@ Unit F10: Users screen (list, unlock, add, deactivate / reactivate). Spec drafte
 | F9 | Sales records, restock history and corrections | Done | 12c961e |
 | B1 | Backend: `PATCH /users/{id}` (rename, deactivate) | Done | 29ad708 |
 | B2 | Backend: `GET /sales?from=&to=` date range | Parked (Version 2, with reports) | |
-| F10 | Users: list, unlock, add, deactivate | Next | |
+| F10 | Users: list, unlock, add, deactivate | Done (not committed yet) | |
 
 Statuses: Planned, Next, In progress, Done, Parked.
 
 ## Decisions made (newest first)
 Short notes on choices that are not obvious from the docs, so nobody undoes them by accident.
 
+- 2026-11-06: Unit F10: no rename on the Users page (the API can, the design has none). Deactivate asks first (the panel scrolls into view and Cancel gets the keyboard, found on a phone where it opened off-screen); Unlock and Bring back do not. The role in Add a user must be chosen (nothing preselected, so an owner is never created by accident). Every row except your own can be deactivated, other owners included (the design had hidden it on owner rows). The add form checks the same limits as the server's UserCreate first (src/users.ts), because a 422 has no friendly sentence; the password goes out once and the form is cleared. Checked on a throwaway API: create, log in as the new user in a second tab, lock with 3 wrong tries, unlock, deactivate (the second tab went to Log in on its next click), bring back. Phase 4 complete.
 - 2026-11-06: Unit B1: `PATCH /users/{id}` changes only `full_name` and `is_active`; any other field (role, username, password) is refused with 422 (`extra="forbid"`), so the owner never thinks a role changed when it did not. The owner cannot deactivate their own account (409 `cannot_deactivate_self`); another owner can. Reactivating does not unlock (Unlock stays its own action). No new code was needed to make deactivation work at once: `CurrentUser` and login already refuse inactive users, and tests now prove it. Rules live in the new `app/services/users.py`; create, list and unlock stay in the router (not moved in this unit). `Name` moved to the top of app/schemas.py so the users section can use it.
 - 2026-11-06: Noticed (not built): the owner cannot reset a forgotten password from the app; only the terminal can help. Worth its own small unit.
 - 2026-11-05: Unit F9: "This week" dropped and B2 parked with the reports (Version 2); Sales records shows one day: Today, Yesterday (worked out from the server's date with `dayBefore`, in UTC so no time zone can shift it) or the date picker. The day is in the address (`/sales?day=`); a future or broken day is never sent to the API. The owner's day total adds up the server's own receipt totals; shopkeepers see receipts and their totals but not the day total. A test fakes the laptop clock to a different day to prove the server's date wins (the first version of the tests could not tell, because the laptop and the fake server had the same date). Restock history: each delivery has its own address (`/restock/:id`); the delivery's lines are never changed on screen, corrections show as a column and a list; the owner corrects with Add / Remove + a number + a required reason (the screen sends one signed number). Same sub-item twice on the paperwork is added together in the table. The list keeps showing while it reloads after a correction (found in the browser: the whole page had blanked and rebuilt the form). On phones the Corrections column hides so Recorded now fits. `signed` moved to format.ts.
@@ -87,4 +88,4 @@ Short notes on choices that are not obvious from the docs, so nobody undoes them
 - 2026-11-05: Business rules live in `app/services/`, not in routers, so they are easy to read and test.
 
 ## Test status
-Backend: 117 tests passing (last run 2026-11-06). Front end: 135 tests passing (last run 2026-11-05).
+Backend: 117 tests passing. Front end: 151 tests passing (last run 2026-11-06).

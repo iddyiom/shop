@@ -1,6 +1,6 @@
 # Unit F10: Users
 
-Status: Draft
+Status: Done (Iddy accepted all 4 recommendations, 2026-11-06)
 Depends on: F3 (auth, RequireOwner, api.ts), F4 (useApi, Panel), backend unit 3 (users, unlock) and B1 (`PATCH /users/{id}`).
 
 ## 1. Goal
@@ -69,16 +69,17 @@ No backend change. `types.ts` already has `User`.
 - `add a user: sends {full_name, username, password, role}, clears the form, reloads, shows a note`
 - `add a user: username_taken shows "That username is already used" and keeps the form`
 - `a button says Saving… and is disabled while waiting`
+- `a 404 (someone changed the list) shows the message and reloads` (added while building)
 - `shopkeeper opening /users sees Owner only and GET /users is never asked`
 
 ## 8. Done checklist
-- [ ] On the real API (demo accounts): add a shopkeeper, log in as them in another tab, lock them with 3 wrong tries, unlock, deactivate (their tab is sent to Log in on the next click), bring back.
-- [ ] Light and dark mode, and phone width, look right; nothing scrolls sideways; every button works with the keyboard.
-- [ ] Every test in section 7 passes; `npm run build` green; backend `pytest` still 117.
-- [ ] No file outside section 6 changed.
-- [ ] docs/progress.md updated (F10 Done, decisions, Next, test counts).
+- [x] On a throwaway API with the demo accounts (never your depot.db): add a shopkeeper, log in as them in another tab, lock them with 3 wrong tries, unlock, deactivate (their tab is sent to Log in on the next click), bring back.
+- [x] Light and dark mode, and phone width, look right; nothing scrolls sideways; every button works with the keyboard.
+- [x] Every test in section 7 passes; `npm run build` green; backend `pytest` still 117.
+- [x] No file outside section 6 changed.
+- [x] docs/progress.md updated (F10 Done, decisions, Next, test counts).
 
-## 9. Open questions (answer before coding)
+## 9. Open questions (answered: all 4 recommendations accepted)
 1. **Rename on this page?** The API can rename since B1, but the design has no rename.
    Recommendation: not in F10. Keep the unit the size of the design; a rename can be its own small unit later if a name is ever typed wrong.
 2. **Confirm before deactivating?**
