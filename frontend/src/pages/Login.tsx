@@ -4,7 +4,6 @@ import { Navigate, useLocation } from 'react-router';
 
 import { ApiError } from '../api';
 import { useAuth } from '../auth';
-import ThemeSwitch from '../components/ThemeSwitch';
 
 const CANNOT_REACH = 'Cannot reach the API. Is it running?';
 
@@ -53,20 +52,29 @@ export default function Login() {
     }
   }
 
+  // The photo is the background in both themes (R1 spec, section 3), so this page has
+  // fixed light-on-dark colors in theme.css instead of the theme's tokens.
   return (
     <main className="login-page">
-      <div className="login-theme">
-        <ThemeSwitch />
-      </div>
+      <header className="login-top">
+        <div className="logo">
+          <span className="logo-mark" aria-hidden="true">
+            D
+          </span>
+          Depot
+        </div>
+        <p className="login-help">Forgot your password? Ask the depot owner.</p>
+      </header>
+
       <div className="login-column">
+        <div className="login-intro">
+          <p className="login-eyebrow">DEPOT MANAGEMENT</p>
+          <p className="login-tagline">Every crate counted.</p>
+        </div>
         <form className="login-card" onSubmit={submit} noValidate>
-          <div className="logo">
-            <span className="logo-mark" aria-hidden="true">D</span>
-            Depot
-          </div>
-          <div>
-            <h1>Karibu</h1>
-            <p className="login-lead">Log in to the depot system.</p>
+          <div className="login-heading">
+            <h1>Welcome back</h1>
+            <p className="login-lead">Log in with your depot account</p>
           </div>
 
           {/* Why the last session ended (expired token, locked account). */}
@@ -109,14 +117,34 @@ export default function Login() {
           <button type="submit" className="primary-button" disabled={sending || !username || !password}>
             {sending ? 'Logging in…' : 'Log in'}
           </button>
-          <p className="login-help">Forgot your password? Ask the owner.</p>
+          {/* Inside the card, under the button, as in the mock-up (development only). */}
+          {DemoLogin && (
+            <Suspense fallback={null}>
+              <DemoLogin />
+            </Suspense>
+          )}
         </form>
-        {DemoLogin && (
-          <Suspense fallback={null}>
-            <DemoLogin />
-          </Suspense>
-        )}
       </div>
+
+      {/* The depot's real rules, not marketing. */}
+      <ul className="login-promises" aria-label="How the depot keeps records">
+        <li>
+          <span>Prices</span>
+          <strong>Worked out by the server</strong>
+        </li>
+        <li>
+          <span>Stock</span>
+          <strong>Never below zero</strong>
+        </li>
+        <li>
+          <span>History</span>
+          <strong>Never edited, only added</strong>
+        </li>
+        <li>
+          <span>Safety</span>
+          <strong>Locks after 3 wrong tries</strong>
+        </li>
+      </ul>
     </main>
   );
 }

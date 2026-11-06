@@ -1,20 +1,52 @@
-// The menu links for one role. NavLink marks the current page with aria-current="page".
+// The menu links for one role, in groups (Work, Owner). A group with no links for this
+// role is not drawn at all, so a shopkeeper never sees "Owner".
+// NavLink marks the current page with aria-current="page". When the menu is collapsed,
+// CSS hides the labels only visually, so screen readers (and tests) still read them.
 import { NavLink } from 'react-router';
 
-import { menuFor } from '../menu';
+import { MENU_GROUPS, menuFor } from '../menu';
 import type { Role } from '../user';
 
-export default function Menu({ role }: { role: Role }) {
+type Props = {
+  role: Role;
+  onNavigate?: () => void; // the phone drawer closes after a page is chosen
+};
+
+export default function Menu({ role, onNavigate }: Props) {
+  const entries = menuFor(role);
   return (
-    <ul className="menu-list">
-      {menuFor(role).map((entry) => (
-        <li key={entry.to}>
-          {/* end: "Home" (/) is only current on exactly /, not on every page */}
-          <NavLink to={entry.to} end={entry.to === '/'} className="menu-link">
-            {entry.label}
-          </NavLink>
-        </li>
-      ))}
-    </ul>
+    <>
+      {MENU_GROUPS.map((group) => {
+        const inGroup = entries.filter((entry) => entry.group === group.id);
+        if (inGroup.length === 0) return null;
+        return (
+          <div key={group.id} className="menu-group">
+            <p className="menu-group-label">
+              {group.label}
+            </p>
+            <ul className="menu-list">
+              {inGroup.map((entry) => {
+                const Icon = entry.icon;
+                return (
+                  <li key={entry.to}>
+                    {/* end: "Home" (/) is only current on exactly /, not on every page */}
+                    <NavLink
+                      to={entry.to}
+                      end={entry.to === '/'}
+                      className="menu-link"
+                      title={entry.label}
+                      onClick={onNavigate}
+                    >
+                      <Icon className="menu-icon" size={18} strokeWidth={1.8} aria-hidden="true" />
+                      <span className="menu-label">{entry.label}</span>
+                    </NavLink>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        );
+      })}
+    </>
   );
 }

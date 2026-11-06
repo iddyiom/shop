@@ -5,10 +5,10 @@ import { createBrowserRouter, RouterProvider } from 'react-router';
 
 // Fonts are bundled with the app, so they work without internet (F1 spec, rule 7).
 import '@fontsource/inter/400.css';
+import '@fontsource/inter/500.css';
 import '@fontsource/inter/600.css';
 import '@fontsource/inter/700.css';
-import '@fontsource/montserrat/700.css';
-import '@fontsource/montserrat/800.css';
+import '@fontsource/inter/800.css';
 import './theme.css';
 
 import { routes } from './routes';

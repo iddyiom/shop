@@ -4,13 +4,13 @@ The project's memory. Read this at the start of every session.
 Update it at the end of every unit: move the unit, add decisions, set "Next".
 
 ## Current phase
-Phase 4 (React front end) is complete: every screen of the design works against the real API. Phase 3, the API, is complete too (units 1-9 below).
+Redesign (R0-R3): a new look for the finished front end (spec: docs/specs/r01-redesign.md). Phase 4 (React front end) and Phase 3 (the API) are complete.
 
 ## In progress
-(nothing)
+R1 reworked to match the mock-up PDF (Home's frame for every page, menu groups, login, Home dashboard, Store balance), built and checked, waiting for Iddy's "Commit and push".
 
 ## Next
-Iddy to choose the next step. Candidates: the small things noticed along the way (owner resets a forgotten password; "1 tries remaining" wording; fixing a wrong buying price; a backup command for depot.db), or the deployment phase (PostgreSQL, Docker, logout that ends the token on the server).
+R2 (shared pieces: cards, tables, buttons, inputs), then R3 (each page, and Home as a dashboard), then the warning icons (spec section 10). Still waiting after that: the small things noticed along the way (owner resets a forgotten password; "1 tries remaining" wording; fixing a wrong buying price; a backup command for depot.db) and the deployment phase (PostgreSQL, Docker, logout that ends the token on the server).
 
 ## Units
 
@@ -44,11 +44,23 @@ Iddy to choose the next step. Candidates: the small things noticed along the way
 | B2 | Backend: `GET /sales?from=&to=` date range | Parked (Version 2, with reports) | |
 | F10 | Users: list, unlock, add, deactivate | Done | e029ded |
 
+### Redesign (spec: docs/specs/r01-redesign.md)
+
+| # | Unit | Status | Commit |
+|---|---|---|---|
+| R0 | Mock-up (design artifact, no code) | Done | |
+| R1 | Shell and colors, reworked to the mock-up PDF: no top bar, header row on every page, menu groups, login, Home dashboard, Store balance | Done (not committed) | |
+| R2 | Shared pieces: cards, tables, buttons, inputs | Next | |
+| R3 | The other pages in the PDF style (Home and Store balance done in R1) | Planned | |
+| W1 | Warning icons for LOW / OUT (solid, OUT pulses) | Planned | |
+
 Statuses: Planned, Next, In progress, Done, Parked.
 
 ## Decisions made (newest first)
 Short notes on choices that are not obvious from the docs, so nobody undoes them by accident.
 
+- 2026-11-06: R1 rework after Iddy's PDF review: the app did not match the agreed mock-up (I had added a top bar with the page name from the first shadcn draft and kept the old page shapes). The PDF is now the reference. Iddy chose Home's frame for every page: no top bar; each page's header row has the menu button, the title, round buttons, the theme button and the user (FrameContext shares the menu state with PageHeader). The capital eyebrow lines are gone; tests check the h1 and the browser tab instead. Menu in groups Work / Owner (the Owner group does not exist for a shopkeeper). The demo buttons show only "Demo owner / Demo shopkeeper", no password on screen (a test checks it). Home's card lines are counted from data already on the page (receipts, out and low, days since the restock with the server's date). LOW / OUT stay words until W1. Found in the browser: the Store balance table's scroll box shrank to 44px in its flex card (flex-shrink: 0), and the Adjust button stuck out on phones (tighter cells, 14px table text as in the PDF). The pane's screenshots crop the right side at laptop width, so laptop layouts were checked by measuring (nothing wider than the window).
+- 2026-11-06: Redesign R0-R1. Iddy shaped the look in a mock-up (shadcn blocks, a Helios-style dashboard, a product-showcase dark mode, an Iceland-style login): light = Vanilla, dark = black and white (only warnings keep a color), the login on Iddy's Kilimanjaro photo (frontend/public/login-kilimanjaro.jpg; confirm the rights before launch). Only the token values changed, so every page took the new colors at once. Inter only (Montserrat removed); icons from lucide-react 1.61.0, pinned (16 days old when added). The menu collapses to an icon rail on a laptop (remembered in localStorage `depot-menu`, a screen preference only) and pops up as a drawer on a phone; labels are hidden only visually, so every link keeps its name. Found in the browser: the drawer stopped short of the bottom, because the laptop's `align-self: flex-start` shrinks a fixed box to its content (fixed with `stretch`). `pageName` was simplified to the first match, after breaking it on purpose showed the "longest match" rule could never matter. Warning icons parked by Iddy for their own unit (W1).
 - 2026-11-06: Unit F10: no rename on the Users page (the API can, the design has none). Deactivate asks first (the panel scrolls into view and Cancel gets the keyboard, found on a phone where it opened off-screen); Unlock and Bring back do not. The role in Add a user must be chosen (nothing preselected, so an owner is never created by accident). Every row except your own can be deactivated, other owners included (the design had hidden it on owner rows). The add form checks the same limits as the server's UserCreate first (src/users.ts), because a 422 has no friendly sentence; the password goes out once and the form is cleared. Checked on a throwaway API: create, log in as the new user in a second tab, lock with 3 wrong tries, unlock, deactivate (the second tab went to Log in on its next click), bring back. Phase 4 complete.
 - 2026-11-06: Unit B1: `PATCH /users/{id}` changes only `full_name` and `is_active`; any other field (role, username, password) is refused with 422 (`extra="forbid"`), so the owner never thinks a role changed when it did not. The owner cannot deactivate their own account (409 `cannot_deactivate_self`); another owner can. Reactivating does not unlock (Unlock stays its own action). No new code was needed to make deactivation work at once: `CurrentUser` and login already refuse inactive users, and tests now prove it. Rules live in the new `app/services/users.py`; create, list and unlock stay in the router (not moved in this unit). `Name` moved to the top of app/schemas.py so the users section can use it.
 - 2026-11-06: Noticed (not built): the owner cannot reset a forgotten password from the app; only the terminal can help. Worth its own small unit.
@@ -88,4 +100,4 @@ Short notes on choices that are not obvious from the docs, so nobody undoes them
 - 2026-11-05: Business rules live in `app/services/`, not in routers, so they are easy to read and test.
 
 ## Test status
-Backend: 117 tests passing. Front end: 151 tests passing (last run 2026-11-06).
+Backend: 117 tests passing. Front end: 158 tests passing (last run 2026-11-06).

@@ -51,12 +51,12 @@ afterEach(() => {
 });
 
 describe('Home', () => {
-  it('owner sees the 4 cards with formatted money: SALES TODAY 184,500', async () => {
+  it('owner sees the 4 cards with formatted money: Sales today TSh 184,500', async () => {
     loggedInAs(OWNER, homeAnswers(OWNER_SUMMARY));
     openAt('/');
     const cards = await screen.findByRole('region', { name: 'Today in numbers' });
-    expect(within(cards).getByText('SALES TODAY (TSh)')).toBeTruthy();
-    expect(within(cards).getByText('184,500')).toBeTruthy();
+    expect(within(cards).getByText('Sales today')).toBeTruthy();
+    expect(within(cards).getByText('TSh 184,500')).toBeTruthy();
     expect(within(cards).getByText('126')).toBeTruthy();
     expect(within(cards).getByText('1 Nov')).toBeTruthy();
   });
@@ -65,9 +65,9 @@ describe('Home', () => {
     loggedInAs(SHOPKEEPER, homeAnswers(SHOP_SUMMARY));
     openAt('/');
     const cards = await screen.findByRole('region', { name: 'Today in numbers' });
-    expect(within(cards).queryByText('SALES TODAY (TSh)')).toBeNull();
-    expect(screen.queryByText('184,500')).toBeNull();
-    expect(within(cards).getByText('ITEMS SOLD TODAY')).toBeTruthy();
+    expect(within(cards).queryByText('Sales today')).toBeNull();
+    expect(screen.queryByText(/184,500/)).toBeNull();
+    expect(within(cards).getByText('Items sold')).toBeTruthy();
     expect(await screen.findByText('Tell the owner: running low')).toBeTruthy();
   });
 
@@ -124,7 +124,7 @@ describe('Home', () => {
     }));
     openAt('/');
     expect(await screen.findByText('Cannot reach the API. Is it running?')).toBeTruthy();
-    expect(await screen.findByText('184,500')).toBeTruthy(); // the cards still work
+    expect(await screen.findByText('TSh 184,500')).toBeTruthy(); // the cards still work
     fireEvent.click(within(region('Needs restocking')).getByRole('button', { name: 'Try again' }));
     expect(await screen.findByText('Coca-Cola')).toBeTruthy();
   });
@@ -133,7 +133,24 @@ describe('Home', () => {
     loggedInAs(OWNER, homeAnswers(OWNER_SUMMARY));
     openAt('/');
     await screen.findByText('14:32');
-    expect(within(region('Latest sales')).getByRole('link', { name: 'All sales' }).getAttribute('href')).toBe('/sales');
+    expect(within(region('Latest sales')).getByRole('link', { name: 'See all' }).getAttribute('href')).toBe('/sales');
     expect(within(region('Needs restocking')).getByRole('link', { name: 'Store balance' }).getAttribute('href')).toBe('/stock');
+  });
+
+  it('quick actions: New sale, Receive stock, Store balance (R1 spec, section 11)', async () => {
+    loggedInAs(OWNER, homeAnswers(OWNER_SUMMARY));
+    openAt('/');
+    const actions = await screen.findByRole('navigation', { name: 'Quick actions' });
+    const links = within(actions).getAllByRole('link').map((a) => [a.textContent, a.getAttribute('href')]);
+    expect(links).toEqual([['New sale', '/sale'], ['Receive stock', '/receive'], ['Store balance', '/stock']]);
+  });
+
+  it('card lines are counted from the data on the page: receipts, out and low, days since the restock', async () => {
+    loggedInAs(OWNER, homeAnswers(OWNER_SUMMARY));
+    openAt('/');
+    const cards = await screen.findByRole('region', { name: 'Today in numbers' });
+    expect(await within(cards).findByText('From 1 receipt')).toBeTruthy();
+    expect(await within(cards).findByText('1 out, 1 running low')).toBeTruthy();
+    expect(within(cards).getByText('4 days ago')).toBeTruthy(); // 1 Nov, and the server's today is 5 Nov
   });
 });

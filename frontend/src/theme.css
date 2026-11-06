@@ -1,65 +1,66 @@
-/* The depot's colors, copied from the design's THEMES lists.
+/* The depot's colors (R1 redesign: docs/specs/r01-redesign.md).
    Components use only var(--name), never a raw color, so dark mode is one switch:
-   <html data-theme="light"> or <html data-theme="dark">. */
+   <html data-theme="light"> or <html data-theme="dark">.
+   Exception: the Log in page sits on a photo, so it has its own fixed light-on-dark colors. */
 
 [data-theme='light'] {
-  /* Sage */
-  --page: #b9cbc1;
-  --shape: #a6bbaf;
-  --nav: #5f7a6f;
-  --nav-text: #ffffff;
-  --text: #1e2b26;
-  --muted: #4e625a;
-  --eyebrow: #2f4a3f;
-  --card: #f4f7f3;
-  --inner: #e4ece6;
-  --line: #d3ded7;
+  /* Vanilla: warm cream, espresso text, caramel highlights */
+  --page: #f1e8d8;
+  --shape: #ece0cb;
+  --nav: #fffbf3;
+  --nav-text: #2b2118;
+  --text: #2b2118;
+  --muted: #6e5f4f;
+  --eyebrow: #85552a;
+  --card: #fffdf8;
+  --inner: #f6eedf;
+  --line: #e6d9c1;
   --field: #ffffff;
-  --field-border: #9fb3a8;
-  --accent: #f2e14c;
-  --on-accent: #1e2b26;
-  --strong: #1e2b26;
-  --on-strong: #ffffff;
-  --strong-muted: #c5d3cb;
-  --out: #f2a193;
-  --low: #f2e14c;
-  --ok: #dce6df;
-  --badge-text: #1e2b26;
+  --field-border: #a8916b;
+  --accent: #f0d3a3;
+  --on-accent: #2b2118;
+  --strong: #2b2118;
+  --on-strong: #fffaf0;
+  --strong-muted: #e6d6bd;
+  --out: #f1ab9c;
+  --low: #f3d27f;
+  --ok: #e4ecd9;
+  --badge-text: #2b2118;
   --error-bg: #fbe3de;
   --error-text: #8a2416;
-  --hi-card: #1e2b26;
-  --hi-text: #ffffff;
-  --hi-label: #f2e14c;
+  --hi-card: #2b2118;
+  --hi-text: #fffaf0;
+  --hi-label: #f3d27f;
 }
 
 [data-theme='dark'] {
-  /* Deep Blue */
-  --page: #081633;
-  --shape: #0e2350;
-  --nav: #0b1c40;
-  --nav-text: #c9d7ee;
-  --text: #eaf2ff;
-  --muted: #9fb3d1;
-  --eyebrow: #7dd3fc;
-  --card: #0e2350;
-  --inner: #11295a;
-  --line: #1b3a74;
-  --field: #081633;
-  --field-border: #2a4c8c;
-  --accent: #5bc0f8;
-  --on-accent: #071a3a;
-  --strong: #11295a;
-  --on-strong: #eaf2ff;
-  --strong-muted: #9fb3d1;
-  --out: #ff9a8b;
-  --low: #fbbf6b;
-  --ok: #163a78;
-  --badge-text: #1e1206;
-  --error-bg: #2a1830;
+  /* Black and white: black page, charcoal panels, white text. Only warnings keep a color. */
+  --page: #0a0a0a;
+  --shape: #141414;
+  --nav: #111111;
+  --nav-text: #e8e8e8;
+  --text: #f5f5f5;
+  --muted: #a8a8a8;
+  --eyebrow: #d6d6d6;
+  --card: #151515;
+  --inner: #1f1f1f;
+  --line: #2a2a2a;
+  --field: #0d0d0d;
+  --field-border: #6b6b6b;
+  --accent: #f5f5f5;
+  --on-accent: #0a0a0a;
+  --strong: #1f1f1f;
+  --on-strong: #f5f5f5;
+  --strong-muted: #a8a8a8;
+  --out: #ff7a70;
+  --low: #f5c451;
+  --ok: #2a2a2a;
+  --badge-text: #1a1205;
+  --error-bg: #2a1212;
   --error-text: #ffb4a8;
-  --hi-card: #5bc0f8;
-  --hi-text: #071a3a;
-  --hi-label: #071a3a;
+  --hi-card: #f5f5f5;
+  --hi-text: #0a0a0a;
+  --hi-label: #0a0a0a;
 }
 
 /* ---------- Base ---------- */
@@ -81,8 +82,9 @@ body {
 h1,
 h2,
 h3 {
-  font-family: Montserrat, Inter, sans-serif;
+  font-family: Inter, system-ui, sans-serif;
   font-weight: 800;
+  letter-spacing: -0.02em;
   line-height: 1.1;
   margin: 0;
 }
@@ -101,32 +103,18 @@ a {
 /* ---------- Shell: menu + workspace (Layout.tsx) ---------- */
 
 .shell {
-  position: relative;
   min-height: 100vh;
   display: flex;
-  flex-wrap: wrap; /* at phone width the menu stacks above the page */
+  gap: 16px;
+  padding: 16px;
   /* clip, not hidden: "hidden" still lets the browser scroll this box (it did, by 200px,
      when a button near the right edge got focus), pushing the menu off screen. */
   overflow-x: clip;
 }
 
-/* The soft rounded shape behind the page, from the design. */
-.shell::before {
-  content: '';
-  position: absolute;
-  z-index: 0;
-  width: 760px;
-  height: 560px;
-  right: -200px;
-  top: -220px;
-  border-radius: 0 0 0 300px;
-  background: var(--shape);
-  pointer-events: none;
-}
-
 .skip-link {
   position: absolute;
-  z-index: 10;
+  z-index: 30;
   left: 16px;
   top: -60px;
   padding: 10px 18px;
@@ -139,43 +127,91 @@ a {
   top: 16px;
 }
 
+/* The menu stays in view while the page scrolls. */
 .menu {
-  position: relative;
-  z-index: 1;
-  flex: 1 1 230px;
-  max-width: 100%;
-  margin: 18px 0 18px 18px;
-  padding: 26px 16px;
-  border-radius: 36px;
+  position: sticky;
+  top: 16px;
+  align-self: flex-start;
+  height: calc(100vh - 32px);
+  overflow-y: auto;
+  flex: 0 0 248px;
+  width: 248px;
+  padding: 18px 12px;
+  border-radius: 24px;
+  border: 1px solid var(--line);
   background: var(--nav);
   color: var(--nav-text);
   display: flex;
   flex-direction: column;
   gap: 6px;
+  transition: width 0.2s ease, flex-basis 0.2s ease;
 }
 
-.menu .logo {
-  padding: 0 10px 22px;
+.menu-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 2px 6px 18px;
 }
 
 .logo {
   display: flex;
   align-items: center;
-  gap: 12px;
-  font-family: Montserrat, sans-serif;
+  gap: 10px;
   font-weight: 800;
-  font-size: 22px;
+  font-size: 18px;
+  letter-spacing: -0.01em;
 }
 
 .logo-mark {
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  background: var(--accent);
-  color: var(--on-accent);
+  flex: 0 0 34px;
+  width: 34px;
+  height: 34px;
+  border-radius: 11px;
+  background: var(--hi-card);
+  color: var(--hi-text);
   display: flex;
   align-items: center;
   justify-content: center;
+  font-size: 15px;
+}
+
+.logo-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.logo-name {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.logo-note {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--muted);
+  letter-spacing: 0;
+}
+
+/* Work / Owner */
+.menu-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.menu-group + .menu-group {
+  margin-top: 12px;
+}
+
+.menu-group-label {
+  margin: 0;
+  padding: 4px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
 }
 
 .menu-list {
@@ -184,91 +220,136 @@ a {
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  flex: 1;
+  gap: 4px;
+}
+
+/* Log out sits at the bottom of the menu. */
+.menu-logout {
+  margin-top: auto;
+  border: none;
+  background: none;
+  font: inherit;
+  font-size: 15px;
+  color: var(--muted);
+  cursor: pointer;
+  text-align: left;
 }
 
 .menu-link {
   display: flex;
   align-items: center;
-  min-height: 46px;
-  padding: 0 18px;
-  border-radius: 999px;
+  gap: 12px;
+  min-height: 44px;
+  padding: 0 14px;
+  border-radius: 14px;
   color: var(--nav-text);
+  font-size: 15px;
   font-weight: 500;
   text-decoration: none;
 }
 
 .menu-link:hover {
-  background: rgb(255 255 255 / 0.1);
+  background: var(--inner);
 }
 
 .menu-link[aria-current='page'] {
   background: var(--accent);
   color: var(--on-accent);
-  font-weight: 800;
-}
-
-.user-card {
-  margin-top: 18px;
-  padding: 14px 16px;
-  border-radius: 24px;
-  background: rgb(0 0 0 / 0.15);
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.user-name {
-  font-weight: 600;
-}
-
-.user-role {
-  font-size: 14px;
-  opacity: 0.85;
-}
-
-.user-logout {
-  align-self: flex-start;
-  margin-top: 6px;
-  padding: 0;
-  border: none;
-  background: none;
-  font: inherit;
-  font-size: 14px;
   font-weight: 700;
-  text-decoration: underline;
-  color: var(--nav-text);
+}
+
+/* Dark mode: the menu is a black panel and the current page a white pill (the mock-up). */
+[data-theme='dark'] .menu {
+  background: #0c0c0c;
+}
+
+.menu-icon {
+  flex: 0 0 18px;
+}
+
+/* A round button with only an icon. Its name is in aria-label (and title for a tooltip). */
+.icon-button {
+  flex: 0 0 40px;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: var(--card);
+  color: var(--text);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
 }
 
-.workspace {
-  position: relative;
-  z-index: 1;
-  flex: 999 1 560px;
-  min-width: 0;
-  padding: 24px 40px 40px;
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
+.icon-button:hover {
+  background: var(--inner);
 }
 
-.topbar {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 12px;
+/* Phone-only parts: hidden on a laptop. */
+.drawer-close,
+.menu-button,
+.drawer-scrim {
+  display: none;
 }
 
+/* The page beside the menu. Its first row is the page's own header (PageHeader.tsx). */
 .page {
+  flex: 1 1 0;
+  min-width: 0;
+  padding: 6px 8px 40px;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 18px;
 }
 
 .page:focus {
   outline: none; /* focus lands here from the skip link; no ring around the whole page */
+}
+
+/* Laptop: the collapsed menu is a rail of round icon buttons. The labels are hidden
+   only visually (like .sr-only), so links keep their names. */
+@media (min-width: 701px) {
+  .shell.collapsed .menu {
+    flex-basis: 76px;
+    width: 76px;
+    padding: 18px 10px;
+    align-items: center;
+  }
+
+  .shell.collapsed .menu-top {
+    padding: 2px 0 18px;
+  }
+
+  .shell.collapsed .logo-text,
+  .shell.collapsed .menu-label,
+  .shell.collapsed .menu-group-label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .shell.collapsed .menu-link {
+    width: 44px;
+    padding: 0;
+    justify-content: center;
+    border-radius: 50%;
+  }
+
+  .shell.collapsed .menu-group,
+  .shell.collapsed .menu-list {
+    align-items: center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .menu {
+    transition: none;
+  }
 }
 
 /* ---------- Small shared pieces ---------- */
@@ -313,88 +394,248 @@ a {
   background: var(--out);
 }
 
+/* ---------- Page header row (PageHeader.tsx): no top bar, R1 spec section 11 ---------- */
+
 .page-header {
   display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 14px;
+}
+
+.page-title {
+  flex: 1 1 260px;
+  min-width: 0;
+}
+
+.page-header h1 {
+  font-size: clamp(24px, 3vw, 30px);
+  font-weight: 700;
+  line-height: 1.15;
+}
+
+.page-subtitle {
+  margin: 4px 0 0;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.accent-text {
+  color: var(--eyebrow);
+}
+
+.page-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.user-chip {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-left: 4px;
+}
+
+.user-chip .avatar {
+  width: 40px;
+  height: 40px;
+  font-size: 13px;
+}
+
+.user-chip-text {
+  display: flex;
   flex-direction: column;
-  gap: 8px;
+  line-height: 1.25;
+}
+
+.user-chip-text strong {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.user-chip-text > span {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* "API connected" sits inside the user's line as plain text, with a small dot. */
+.user-chip .api-pill {
+  display: inline-flex;
+  min-height: 0;
+  padding: 0;
+  gap: 5px;
+  background: none;
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.user-chip .api-dot {
+  width: 7px;
+  height: 7px;
 }
 
 .eyebrow {
   margin: 0;
-  font-size: 15px;
+  font-size: 13px;
   font-weight: 700;
   letter-spacing: 1.5px;
   color: var(--eyebrow);
 }
 
-.page-header h1 {
-  font-size: clamp(36px, 5vw, 56px);
-}
-
 .coming-soon {
   margin: 0;
   padding: 22px 24px;
-  border-radius: 28px;
+  border-radius: 24px;
   background: var(--card);
   color: var(--muted);
 }
 
 /* ---------- Home ---------- */
 
-.home-top {
+/* The main actions: one filled pill, the others outlined. */
+.pill-row {
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 20px;
+  gap: 10px;
 }
 
-.big-button {
+.action-pill {
+  min-height: 46px;
+  padding: 0 20px;
+  border-radius: 999px;
+  border: 1px solid var(--field-border);
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
   display: inline-flex;
   align-items: center;
-  gap: 16px;
-  min-height: 76px;
-  padding: 10px 30px 10px 12px;
-  border-radius: 999px;
-  background: var(--accent);
-  color: var(--on-accent);
-  text-decoration: none;
+  gap: 8px;
 }
 
-.big-button-icon {
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
-  background: var(--on-accent);
-  color: var(--accent);
+.action-pill:hover {
+  background: var(--inner);
+}
+
+.action-pill.main {
+  padding: 0 22px;
+  border-color: transparent;
+  background: var(--hi-card);
+  color: var(--hi-text);
+  font-size: 15px;
+  font-weight: 600;
+  box-shadow: 0 8px 24px rgb(0 0 0 / 0.16);
+}
+
+.action-pill.main:hover {
+  background: var(--hi-card);
+  opacity: 0.92;
+}
+
+.home-panels {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  align-items: stretch;
+}
+
+.home-panels > .panel:first-child {
+  flex: 2 1 460px;
+}
+
+.home-panels > .panel:last-child {
+  flex: 1 1 280px;
+}
+
+/* Latest sales: a list, each row a time tile, what was sold, and the total. */
+.sale-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.sale-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  border-top: 1px solid var(--line);
+}
+
+.time-tile {
+  flex: 0 0 44px;
+  height: 40px;
+  border-radius: 12px;
+  background: var(--inner);
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 600;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.big-button-text {
+.sale-what {
+  flex: 1;
+  min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  line-height: 1.3;
 }
 
-.big-button-title {
-  font-family: Montserrat, sans-serif;
-  font-weight: 800;
-  font-size: 22px;
-}
-
-.big-button-hint {
+.sale-what strong {
   font-size: 14px;
   font-weight: 600;
 }
 
-.toolbar {
+.sale-what .cut {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sale-meta {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.sale-total {
+  font-size: 14px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* Needs restocking: small tiles. */
+.low-tiles {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 10px;
+}
+
+.low-tile {
+  padding: 12px;
+  border-radius: 16px;
+  border: 1px solid var(--line);
+  background: var(--inner);
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+.low-tile strong {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.low-tile span:last-child {
+  font-size: 12px;
+  color: var(--muted);
 }
 
 /* ---------- Home: number cards ---------- */
@@ -402,44 +643,61 @@ a {
 .stat-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 16px;
+  gap: 14px;
 }
 
 .stat-card {
-  padding: 22px 24px;
-  border-radius: 32px;
+  min-height: 130px;
+  padding: 20px;
+  border-radius: 22px;
+  border: 1px solid var(--line);
   background: var(--card);
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
 
+/* The highlighted card: a soft light from the top right, like the mock-up. */
 .stat-card.strong {
-  background: var(--hi-card);
-  color: var(--hi-text);
+  background: radial-gradient(420px 220px at 85% 0%, var(--accent) 0%, var(--card) 70%);
 }
 
-.stat-label,
-.stat-note {
-  font-size: 14px;
-  color: var(--muted);
+[data-theme='dark'] .stat-card.strong {
+  background: radial-gradient(380px 260px at 70% 0%, #4a4a4a 0%, #1a1a1a 60%, var(--card) 100%);
+}
+
+.stat-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
 }
 
 .stat-label {
-  font-weight: 700;
-  letter-spacing: 1px;
+  font-size: 15px;
+  font-weight: 500;
 }
 
-.stat-card.strong .stat-label,
-.stat-card.strong .stat-note {
-  color: var(--hi-label);
+.stat-pill {
+  padding: 3px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--field-border);
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
 }
 
 .stat-value {
-  font-family: Montserrat, sans-serif;
-  font-weight: 800;
-  font-size: 40px;
-  line-height: 1;
+  font-size: 32px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+}
+
+.stat-note {
+  font-size: 13px;
+  color: var(--muted);
 }
 
 /* ---------- Panels (Panel.tsx) ---------- */
@@ -447,24 +705,20 @@ a {
 .panels {
   display: flex;
   flex-wrap: wrap;
-  gap: 20px;
+  gap: 14px;
   align-items: stretch;
 }
 
 .panel {
   flex: 1 1 320px;
   min-width: 0;
-  padding: 26px;
-  border-radius: 36px 36px 36px 8px;
+  padding: 18px 20px;
+  border-radius: 22px;
+  border: 1px solid var(--line);
   background: var(--card);
   display: flex;
   flex-direction: column;
   gap: 12px;
-}
-
-.panel + .panel {
-  flex: 1.7 1 440px;
-  border-radius: 36px 36px 8px 36px;
 }
 
 .panel-head {
@@ -475,7 +729,31 @@ a {
 }
 
 .panel-head h2 {
-  font-size: 22px;
+  font-size: 17px;
+  font-weight: 700;
+}
+
+/* Dark mode: bold capital headings, like the mock-up. */
+[data-theme='dark'] .panel-head h2 {
+  text-transform: uppercase;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+
+/* "See all": a small outlined pill. */
+.link-pill {
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--field-border);
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 500;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.link-pill:hover {
+  background: var(--inner);
 }
 
 .panel-state {
@@ -499,6 +777,63 @@ a {
 .empty-text {
   margin: 0;
   color: var(--muted);
+}
+
+
+/* ---------- A page row with one big button (Items: Add item; Receipt: Next customer) ---------- */
+
+.home-top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.big-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 52px;
+  padding: 6px 22px 6px 8px;
+  border-radius: 999px;
+  background: var(--hi-card);
+  color: var(--hi-text);
+  text-decoration: none;
+}
+
+.big-button-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: var(--hi-text);
+  color: var(--hi-card);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.big-button-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.big-button-title {
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.big-button-hint {
+  font-size: 13px;
+  opacity: 0.85;
 }
 
 /* ---------- Badges, lists, tables ---------- */
@@ -528,39 +863,10 @@ a {
   color: var(--text);
 }
 
-.low-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
 
-.low-row {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  padding: 12px 14px;
-  border-radius: 20px;
-  background: var(--inner);
-}
 
-.low-name {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}
 
-.low-name span {
-  font-size: 14px;
-  color: var(--muted);
-}
 
-.low-left {
-  font-size: 15px;
-  text-align: right;
-}
 
 .table-scroll {
   overflow-x: auto; /* wide tables scroll inside their box, never the whole page */
@@ -787,7 +1093,7 @@ a {
 
 .item-price {
   display: block;
-  font-family: Montserrat, sans-serif;
+  font-family: Inter, system-ui, sans-serif;
   font-weight: 800;
   font-size: 28px;
 }
@@ -907,7 +1213,7 @@ a {
 }
 
 .history-price {
-  font-family: Montserrat, sans-serif;
+  font-family: Inter, system-ui, sans-serif;
   font-weight: 800;
   white-space: nowrap;
 }
@@ -1046,7 +1352,7 @@ a {
 
 .confirm-old strong,
 .confirm-new strong {
-  font-family: Montserrat, sans-serif;
+  font-family: Inter, system-ui, sans-serif;
   font-weight: 800;
   font-size: 22px;
 }
@@ -1227,7 +1533,7 @@ a {
 }
 
 .preview-total strong {
-  font-family: Montserrat, sans-serif;
+  font-family: Inter, system-ui, sans-serif;
   font-weight: 800;
   font-size: 34px;
 }
@@ -1347,7 +1653,7 @@ a {
 }
 
 .product-name {
-  font-family: Montserrat, sans-serif;
+  font-family: Inter, system-ui, sans-serif;
   font-weight: 800;
   font-size: 21px;
 }
@@ -1610,99 +1916,208 @@ a {
 }
 
 .receipt-total strong {
-  font-family: Montserrat, sans-serif;
+  font-family: Inter, system-ui, sans-serif;
   font-weight: 800;
   font-size: 38px;
 }
 
 /* ---------- Log in (no menu) ---------- */
 
+/* Iddy's Kilimanjaro photo in both themes, so the colors here are fixed, not tokens:
+   white text on the photo, darkened by a gradient so the text stays readable. */
 .login-page {
   position: relative;
   min-height: 100vh;
-  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #ffffff;
+  background: #1a120c url('/login-kilimanjaro.jpg') center 30% / cover no-repeat;
+}
+
+.login-page::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgb(12 8 6 / 0.5) 0%,
+    rgb(12 8 6 / 0.25) 30%,
+    rgb(12 8 6 / 0.45) 55%,
+    rgb(12 8 6 / 0.9) 100%
+  );
+  pointer-events: none;
+}
+
+.login-page > * {
+  position: relative; /* above the gradient */
+}
+
+.login-page :focus-visible {
+  outline-color: #ffffff;
+}
+
+.login-top {
+  width: 100%;
+  padding: 20px 28px;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
+  gap: 16px;
 }
 
-.login-theme {
-  position: absolute;
-  top: 16px;
-  right: 16px;
+.login-top .logo-mark {
+  background: #ffffff;
+  color: #1c1019;
 }
 
-.login-card {
+.login-top .icon-button {
+  border-color: rgb(255 255 255 / 0.4);
+  background: rgb(255 255 255 / 0.12);
+  color: #ffffff;
+}
+
+.login-column {
+  flex: 1;
   width: 100%;
-  padding: 40px 36px;
-  border-radius: 40px 40px 40px 10px;
-  background: var(--card);
+  max-width: 420px;
+  padding: 10vh 16px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.login-intro {
+  text-align: center;
+  text-shadow: 0 2px 20px rgb(0 0 0 / 0.5);
+}
+
+.login-eyebrow {
+  margin: 0 0 6px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  color: #f6d7a8;
+}
+
+.login-tagline {
+  margin: 0;
+  font-size: clamp(32px, 6vw, 46px);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+}
+
+/* Frosted glass over the photo. */
+.login-card {
+  padding: 28px;
+  border-radius: 24px;
+  border: 1px solid rgb(255 255 255 / 0.2);
+  background: rgb(22 15 12 / 0.6);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 30px 80px rgb(0 0 0 / 0.45);
   display: flex;
   flex-direction: column;
   gap: 14px;
 }
 
-.login-column {
-  width: 100%;
-  max-width: 440px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
+.login-heading {
+  text-align: center;
 }
 
-/* DEVELOPMENT ONLY: the demo accounts box (DemoLogin.tsx). Dashed to look temporary. */
+.login-card h1 {
+  font-size: 28px;
+}
+
+.login-lead {
+  margin: 4px 0 0;
+  color: rgb(255 255 255 / 0.85);
+}
+
+/* Top right, in the bar with the logo. */
+.login-help {
+  margin: 0;
+  font-size: 14px;
+  color: rgb(255 255 255 / 0.92);
+  text-shadow: 0 1px 10px rgb(0 0 0 / 0.5);
+}
+
+.login-card .field label {
+  color: #ffffff;
+  text-transform: none; /* "Username", as in the mock-up */
+  letter-spacing: 0;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.login-card .field input {
+  border-color: rgb(255 255 255 / 0.4);
+  background: rgb(255 255 255 / 0.1);
+  color: #ffffff;
+}
+
+/* The peach-to-pink pill from the mock-up. */
+.login-card .primary-button {
+  min-height: 46px;
+  font-size: 15px;
+  background: linear-gradient(90deg, #f6d7a8, #e8afd5);
+  color: #1c1019;
+}
+
+/* DEVELOPMENT ONLY: the demo buttons (DemoLogin.tsx), inside the card under the button. */
 .demo-box {
-  padding: 20px 22px;
-  border-radius: 28px;
-  border: 2px dashed var(--field-border);
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
 
-.demo-box h2 {
-  font-size: 18px;
+/* "Development only" with a thin line on each side. */
+.demo-divider {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0;
+  color: rgb(255 255 255 / 0.78);
 }
 
-.demo-note {
-  margin: 0;
-  font-size: 14px;
-  color: var(--muted);
+.demo-divider::before,
+.demo-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: rgb(255 255 255 / 0.25);
 }
 
 .demo-buttons {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: 10px;
+  display: flex;
+  gap: 8px;
 }
 
+/* Dashed, so they look temporary. */
 .demo-button {
-  min-height: 64px;
-  padding: 10px 16px;
-  border-radius: 20px;
-  border: none;
-  background: var(--card);
-  color: var(--text);
+  flex: 1;
+  min-height: 40px;
+  padding: 0 12px;
+  border-radius: 999px;
+  border: 1px dashed rgb(255 255 255 / 0.55);
+  background: transparent;
+  color: #ffffff;
   font: inherit;
-  text-align: left;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
+  font-size: 13px;
+  font-weight: 500;
   cursor: pointer;
+}
+
+.demo-button:hover {
+  background: rgb(255 255 255 / 0.12);
 }
 
 .demo-button:disabled {
   opacity: 0.6;
   cursor: not-allowed;
-}
-
-.demo-label {
-  font-weight: 800;
-}
-
-.demo-credentials {
-  font-size: 13px;
-  color: var(--muted);
 }
 
 .demo-error p {
@@ -1711,23 +2126,38 @@ a {
 }
 
 .demo-error p[role='alert'] {
-  color: var(--error-text);
+  color: #ffb4a8;
   font-weight: 700;
 }
 
-.login-card h1 {
-  font-size: 40px;
+/* The depot's real rules along the bottom. */
+.login-promises {
+  list-style: none;
+  margin: 0;
+  width: 100%;
+  padding: 20px 28px 26px;
+  border-top: 1px solid rgb(255 255 255 / 0.18);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 16px 48px;
 }
 
-.login-lead,
-.login-help {
-  margin: 4px 0 0;
-  color: var(--muted);
-}
-
-.login-help {
-  font-size: 14px;
+.login-promises li {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
   text-align: center;
+}
+
+.login-promises span {
+  font-size: 12px;
+  color: rgb(255 255 255 / 0.78);
+}
+
+.login-promises strong {
+  font-size: 15px;
+  font-weight: 600;
 }
 
 /* ---------- Forms ---------- */
@@ -1825,38 +2255,10 @@ a {
   min-width: 0;
 }
 
-.count-row {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 12px;
-}
 
 /* A count is also a filter button (question 4). */
-.count-pill {
-  min-height: 72px;
-  padding: 12px 18px;
-  border-radius: 28px;
-  border: 3px solid transparent;
-  background: var(--card);
-  color: var(--text);
-  font: inherit;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  cursor: pointer;
-}
 
-.count-pill[aria-pressed='true'] {
-  border-color: var(--text);
-}
 
-.count-number {
-  font-family: Montserrat, sans-serif;
-  font-weight: 800;
-  font-size: 30px;
-  font-variant-numeric: tabular-nums;
-}
 
 .stopped-row td {
   opacity: 0.6;
@@ -1864,7 +2266,7 @@ a {
 
 .change-up,
 .change-down {
-  font-family: Montserrat, sans-serif;
+  font-family: Inter, system-ui, sans-serif;
   font-weight: 800;
   font-size: 18px;
   white-space: nowrap;
@@ -1991,7 +2393,7 @@ a {
 }
 
 .day-total strong {
-  font-family: Montserrat, sans-serif;
+  font-family: Inter, system-ui, sans-serif;
   font-weight: 800;
   font-size: 30px;
   font-variant-numeric: tabular-nums;
@@ -2211,6 +2613,127 @@ a {
   border-color: var(--error-text);
 }
 
+/* ---------- Store balance: the table card (mock-up PDF) ---------- */
+
+.table-card {
+  padding: 0;
+  gap: 0;
+  overflow: hidden;
+}
+
+.table-toolbar,
+.table-filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px 0;
+}
+
+.table-filters {
+  padding-bottom: 14px;
+  justify-content: space-between;
+}
+
+.search-box {
+  flex: 1 1 220px;
+  min-height: 40px;
+  padding: 0 12px;
+  border-radius: 10px;
+  border: 1px solid var(--field-border);
+  background: var(--field);
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.search-box input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  font-size: 14px;
+}
+
+.search-box:focus-within {
+  outline: 3px solid var(--text);
+  outline-offset: 2px;
+}
+
+/* All / OK / Low / Out: a tab bar; the chosen one is a raised white tab. */
+.tab-bar {
+  display: flex;
+  gap: 2px;
+  padding: 3px;
+  border-radius: 12px;
+  background: var(--inner);
+}
+
+.tab {
+  min-height: 34px;
+  padding: 0 12px;
+  border: none;
+  border-radius: 9px;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.tab[aria-pressed='true'] {
+  background: var(--card);
+  box-shadow: 0 1px 3px rgb(0 0 0 / 0.15);
+}
+
+.tab-count {
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.table-card .table-scroll {
+  flex-shrink: 0; /* a scroll box may shrink in a flex column; it squashed the rows to 44px */
+  border-top: 1px solid var(--line);
+}
+
+.table-card .data-table {
+  font-size: 14px; /* as in the mock-up */
+}
+
+.table-card .data-table th {
+  background: var(--inner);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.table-foot {
+  margin: 0;
+  padding: 12px 16px;
+  border-top: 1px solid var(--line);
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.table-card .empty-text {
+  padding: 16px;
+}
+
+/* Adjust: a small outlined button. */
+.stock-table .icon-link {
+  padding: 5px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 500;
+  text-decoration: none;
+}
+
 /* ---------- Phone width ---------- */
 
 @media (max-width: 700px) {
@@ -2219,22 +2742,100 @@ a {
     display: none;
   }
 
+  .shell {
+    padding: 0;
+    gap: 0;
+  }
+
+  /* The menu pops up as a drawer from the left. Closed, it is hidden (visibility), so
+     Tab cannot reach its links. */
   .menu {
-    margin: 12px 12px 0;
-    padding: 18px 12px;
-    border-radius: 28px;
+    position: fixed;
+    z-index: 20;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    height: auto;
+    align-self: stretch; /* the laptop's flex-start would shrink the drawer to its content */
+    width: min(300px, 85vw);
+    flex: none;
+    border-radius: 0 24px 24px 0;
+    transform: translateX(-105%);
+    visibility: hidden;
+    transition: transform 0.25s ease, visibility 0.25s;
   }
 
-  .menu-list {
-    flex-direction: row;
-    flex-wrap: wrap;
+  .shell.drawer-open .menu {
+    transform: none;
+    visibility: visible;
+    box-shadow: 0 20px 60px rgb(0 0 0 / 0.35);
   }
 
-  .workspace {
+  .drawer-scrim {
+    display: block;
+    position: fixed;
+    z-index: 15;
+    inset: 0;
+    border: none;
+    background: rgb(0 0 0 / 0.5);
+    cursor: pointer;
+  }
+
+  .drawer-close,
+  .menu-button {
+    display: inline-flex;
+  }
+
+  .collapse-button {
+    display: none;
+  }
+
+  .page {
+    padding: 14px 16px 32px;
+  }
+
+  /* Store balance: tighter cells, so the Adjust button fits inside the card. */
+  .table-card .data-table th,
+  .table-card .data-table td {
+    padding-left: 6px;
+    padding-right: 6px;
+  }
+
+  .table-card .data-table th:first-child,
+  .table-card .data-table td:first-child {
+    padding-left: 10px;
+  }
+
+  .stock-table .icon-link {
+    padding: 5px 8px;
+  }
+
+  /* The header row: menu button, title, round buttons; the user shows initials only. */
+  .page-header {
+    flex-wrap: nowrap;
+    align-items: flex-start;
+  }
+
+  .page-title {
+    flex: 1 1 auto;
+  }
+
+  .user-chip-text {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .login-top {
     padding: 16px;
+    flex-direction: column;
+    align-items: flex-start;
   }
 
-  .topbar {
-    justify-content: space-between;
+  .login-promises {
+    padding: 18px 16px 22px;
   }
 }

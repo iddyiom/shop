@@ -1,6 +1,7 @@
 // Store balance: what is in the store, for everyone. The owner also gets Adjust buttons and
 // the latest fixes to stock. Spec: docs/specs/f07-stock.md. No money on this page (rule 1).
 import { useEffect, useState } from 'react';
+import { Search } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router';
 
 import PageHeader from '../components/PageHeader';
@@ -11,7 +12,8 @@ import type { StockEntry, StockLine, StockStatus } from '../types';
 import { useApi } from '../useApi';
 import { useCurrentUser } from '../user';
 
-const STATUSES: StockStatus[] = ['OUT', 'LOW', 'OK'];
+const STATUSES: StockStatus[] = ['OK', 'LOW', 'OUT']; // the mock-up's order
+const STATUS_WORD: Record<StockStatus, string> = { OK: 'OK', LOW: 'Low', OUT: 'Out' };
 const LATEST_FIXES = 10;
 
 export default function Stock() {
@@ -54,7 +56,11 @@ export default function Stock() {
 
   const groups = [...new Set(all.filter((l) => showStopped || l.is_active).map((l) => l.group))];
 
-  const header = <PageHeader eyebrow="STORE BALANCE" title="What is in the store" tabTitle="Store balance" />;
+  const header = <PageHeader
+      title="What is in the store"
+      subtitle="Every sub-item and how many are left. Counts change only through sales, deliveries and fixes."
+      tabTitle="Store balance"
+    />;
 
   let body;
   if (stock.loading) {
@@ -82,62 +88,75 @@ export default function Stock() {
   } else {
     body = (
       <>
-        <div className="count-row" role="group" aria-label="Show by status">
-          {STATUSES.map((status) => (
-            <button
-              key={status}
-              type="button"
-              className="count-pill"
-              aria-pressed={statusFilter === status}
-              aria-label={`${status}: ${counts[status]}`}
-              onClick={() => setStatusFilter((current) => (current === status ? null : status))}
-            >
-              <StatusBadge status={status} />
-              <span className="count-number">{counts[status]}</span>
-            </button>
-          ))}
-        </div>
-
-        <div className="filter-row">
-          <label className="sr-only" htmlFor="stock-search">
-            Search stock
-          </label>
-          <input
-            id="stock-search"
-            type="search"
-            className="search-input"
-            placeholder="Search, e.g. Fanta"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
-          <div className="chips" role="group" aria-label="Filter by item">
-            <button
-              type="button"
-              className="chip-button"
-              aria-pressed={groupFilter === null}
-              onClick={() => setGroupFilter(null)}
-            >
-              All
-            </button>
-            {groups.map((group) => (
+        <section className="panel table-card" aria-label="Stock table">
+          {/* Row 1: search on the left, the status tabs on the right (mock-up PDF). */}
+          <div className="table-toolbar">
+            <label className="sr-only" htmlFor="stock-search">
+              Search stock
+            </label>
+            <span className="search-box">
+              <Search size={16} aria-hidden="true" />
+              <input
+                id="stock-search"
+                type="search"
+                placeholder="Search sub-items…"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              />
+            </span>
+            <div className="tab-bar" role="group" aria-label="Show by status">
               <button
-                key={group}
+                type="button"
+                className="tab"
+                aria-pressed={statusFilter === null}
+                onClick={() => setStatusFilter(null)}
+              >
+                All <span className="tab-count">{matching.length}</span>
+              </button>
+              {STATUSES.map((status) => (
+                <button
+                  key={status}
+                  type="button"
+                  className="tab"
+                  aria-pressed={statusFilter === status}
+                  aria-label={`${status}: ${counts[status]}`}
+                  onClick={() => setStatusFilter((current) => (current === status ? null : status))}
+                >
+                  {STATUS_WORD[status]} <span className="tab-count">{counts[status]}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Row 2: the item chips and "Show stopped". */}
+          <div className="table-filters">
+            <div className="chips" role="group" aria-label="Filter by item">
+              <button
                 type="button"
                 className="chip-button"
-                aria-pressed={groupFilter === group}
-                onClick={() => setGroupFilter(group)}
+                aria-pressed={groupFilter === null}
+                onClick={() => setGroupFilter(null)}
               >
-                {group}
+                All
               </button>
-            ))}
+              {groups.map((group) => (
+                <button
+                  key={group}
+                  type="button"
+                  className="chip-button"
+                  aria-pressed={groupFilter === group}
+                  onClick={() => setGroupFilter(group)}
+                >
+                  {group}
+                </button>
+              ))}
+            </div>
+            <label className="check-label">
+              <input type="checkbox" checked={showStopped} onChange={(e) => setShowStopped(e.target.checked)} />
+              Show stopped
+            </label>
           </div>
-          <label className="check-label">
-            <input type="checkbox" checked={showStopped} onChange={(e) => setShowStopped(e.target.checked)} />
-            Show stopped
-          </label>
-        </div>
 
-        <section className="panel" aria-label="Stock table">
           {shown.length === 0 ? (
             <p className="empty-text">Nothing matches these filters.</p>
           ) : (
@@ -196,6 +215,9 @@ export default function Stock() {
               </table>
             </div>
           )}
+          <p className="table-foot">
+            {shown.length} of {all.length} sub-items{showStopped ? '' : ' · stopped items hidden'}
+          </p>
         </section>
       </>
     );

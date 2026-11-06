@@ -1,4 +1,4 @@
-// Light (Sage) or dark (Deep Blue). The choice is remembered on this browser.
+// Light (Vanilla) or dark (black and white). The choice is remembered on this browser.
 // A theme is not secret, so localStorage is fine here (never for the login token).
 
 export type Theme = 'light' | 'dark';

@@ -124,7 +124,7 @@ export default function Receive() {
     byGroup.set(product.group, [...(byGroup.get(product.group) ?? []), product]);
   }
 
-  const header = <PageHeader eyebrow="RECEIVE STOCK" title="The truck came" tabTitle="Receive stock" />;
+  const header = <PageHeader title="The truck came" tabTitle="Receive stock" />;
 
   if (products.loading || summary.loading) {
     return (

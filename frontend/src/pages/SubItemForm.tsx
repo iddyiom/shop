@@ -141,7 +141,7 @@ export default function SubItemForm() {
   if (!group || (!isNew && !product)) {
     return (
       <>
-        <PageHeader eyebrow="ITEMS" title="Not found" tabTitle="Not found" />
+        <PageHeader title="Not found" tabTitle="Not found" />
         <p className="coming-soon">
           {groups.error ?? products.error ?? 'This item or sub-item does not exist.'}{' '}
           <Link to="/items">Back to items and prices</Link>
@@ -159,7 +159,7 @@ export default function SubItemForm() {
         ← Back to items and prices
       </Link>
       <PageHeader
-        eyebrow="ITEMS · OWNER ONLY"
+       
         title={isNew ? `New sub-item in ${group.name}` : `Edit ${product?.name}`}
         tabTitle={isNew ? 'New sub-item' : 'Edit sub-item'}
       />

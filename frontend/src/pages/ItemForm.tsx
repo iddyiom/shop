@@ -87,7 +87,7 @@ export default function ItemForm() {
   if (!isNew && !group) {
     return (
       <>
-        <PageHeader eyebrow="ITEMS" title="Item not found" tabTitle="Item not found" />
+        <PageHeader title="Item not found" tabTitle="Item not found" />
         <p className="coming-soon">
           {all.error ?? 'This item does not exist.'} <Link to="/items">Back to items and prices</Link>
         </p>
@@ -101,7 +101,7 @@ export default function ItemForm() {
         ← Back to items and prices
       </Link>
       <PageHeader
-        eyebrow="ITEMS · OWNER ONLY"
+       
         title={isNew ? 'New item' : `Edit ${group?.name}`}
         tabTitle={isNew ? 'New item' : 'Edit item'}
       />

@@ -104,7 +104,7 @@ export default function Items() {
   return (
     <>
       <div className="home-top">
-        <PageHeader eyebrow="ITEMS AND PRICES" title="What you sell" tabTitle="Items and prices" />
+        <PageHeader title="What you sell" tabTitle="Items and prices" />
         <Link to="/items/new" className="primary-link">
           + Add item
         </Link>

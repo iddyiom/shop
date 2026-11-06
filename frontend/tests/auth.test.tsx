@@ -36,7 +36,7 @@ describe('logging in', () => {
     fakeApi(loginAnswers());
     openAt('/login');
     fillAndSubmit('owner', 'right-password');
-    expect(await screen.findByText('Habari, Depot Owner')).toBeTruthy();
+    expect(await screen.findByRole('heading', { name: 'Habari, Depot Owner' })).toBeTruthy();
     expect(sessionStorage.getItem('depot-token')).toBe('token-of-owner');
     expect(localStorage.getItem('depot-token')).toBeNull();
   });
@@ -48,8 +48,10 @@ describe('logging in', () => {
     const nav = await screen.findByRole('navigation', { name: 'Main menu' });
     expect(within(nav).queryByText('Users')).toBeNull();
     expect(within(nav).queryByText('Items and prices')).toBeNull();
-    expect(within(nav).getByText('Shop Keeper')).toBeTruthy();
-    expect(within(nav).getByText('Shopkeeper')).toBeTruthy();
+    // The user is shown at the right of each page's header row (R1 spec, section 11).
+    const user = screen.getByRole('main').querySelector('.user-chip') as HTMLElement; // the greeting also says the name
+    expect(within(user).getByText('Shop Keeper')).toBeTruthy();
+    expect(within(user).getByText('Shopkeeper')).toBeTruthy();
   });
 
   it("wrong password shows the API's message with tries remaining and empties the password", async () => {
@@ -107,7 +109,7 @@ describe('the token on every call', () => {
   it('every call sends Authorization: Bearer <token>', async () => {
     const fetchMock = loggedInAs(OWNER);
     openAt('/');
-    await screen.findByText('Habari, Depot Owner');
+    await screen.findByRole('heading', { name: 'Habari, Depot Owner' });
     const me = fetchMock.mock.calls.find(([url]) => url === '/api/auth/me');
     expect(headerOf(me?.[1], 'Authorization')).toBe('Bearer token-of-owner');
   });
@@ -115,12 +117,12 @@ describe('the token on every call', () => {
   it('a 401 from any call clears the token and returns to Log in with "Your session ended"', async () => {
     loggedInAs(OWNER, { 'GET /api/stock': () => json({ error: 'not_logged_in', message: 'Please log in' }, 401) });
     openAt('/');
-    await screen.findByText('Habari, Depot Owner');
+    await screen.findByRole('heading', { name: 'Habari, Depot Owner' });
     await act(async () => {
       await apiGet('/stock').catch(() => undefined); // any page's call that comes back 401
     });
     expect(await screen.findByText('Your session ended. Please log in again.')).toBeTruthy();
-    expect(screen.getByRole('heading', { name: 'Karibu' })).toBeTruthy();
+    expect(screen.getByRole('heading', { name: 'Welcome back' })).toBeTruthy();
     expect(sessionStorage.getItem('depot-token')).toBeNull();
   });
 });
@@ -129,9 +131,9 @@ describe('protected pages', () => {
   it('no token: opening /stock goes to Log in, and after logging in lands on /stock', async () => {
     fakeApi(loginAnswers());
     const router = openAt('/stock');
-    expect(await screen.findByRole('heading', { name: 'Karibu' })).toBeTruthy();
+    expect(await screen.findByRole('heading', { name: 'Welcome back' })).toBeTruthy();
     fillAndSubmit('owner', 'right-password');
-    expect(await screen.findByText('STORE BALANCE')).toBeTruthy();
+    expect(await screen.findByRole('heading', { name: 'What is in the store' })).toBeTruthy();
     expect(router.state.location.pathname).toBe('/stock');
   });
 
@@ -142,7 +144,7 @@ describe('protected pages', () => {
     openAt('/');
     expect(screen.getByText('Loading…')).toBeTruthy();
     await act(async () => answerMe(json(OWNER)));
-    expect(await screen.findByText('Habari, Depot Owner')).toBeTruthy();
+    expect(await screen.findByRole('heading', { name: 'Habari, Depot Owner' })).toBeTruthy();
   });
 
   it('saved token for a shopkeeper: shopkeeper menu', async () => {
@@ -156,7 +158,7 @@ describe('protected pages', () => {
   it('shopkeeper opening /users sees Owner only', async () => {
     loggedInAs(SHOPKEEPER);
     openAt('/users');
-    expect(await screen.findByText('OWNER ONLY')).toBeTruthy();
+    expect(await screen.findByRole('heading', { name: 'This page is for the owner' })).toBeTruthy();
     expect(screen.queryByText('Who can log in')).toBeNull();
   });
 
@@ -164,13 +166,13 @@ describe('protected pages', () => {
     loggedInAs(OWNER);
     openAt('/');
     fireEvent.click(await screen.findByRole('button', { name: 'Log out' }));
-    expect(await screen.findByRole('heading', { name: 'Karibu' })).toBeTruthy();
+    expect(await screen.findByRole('heading', { name: 'Welcome back' })).toBeTruthy();
     expect(sessionStorage.getItem('depot-token')).toBeNull();
   });
 
   it('logged-in user opening /login is sent Home', async () => {
     loggedInAs(OWNER);
     openAt('/login');
-    expect(await screen.findByText('Habari, Depot Owner')).toBeTruthy();
+    expect(await screen.findByRole('heading', { name: 'Habari, Depot Owner' })).toBeTruthy();
   });
 });

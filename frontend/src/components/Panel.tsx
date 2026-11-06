@@ -5,7 +5,7 @@ import { Link } from 'react-router';
 
 type Props = {
   title: string;
-  link?: { to: string; label: string };
+  link?: { to: string; label: string; icon?: ReactNode };
   loading: boolean;
   error: string | null;
   onRetry: () => void;
@@ -19,7 +19,17 @@ export default function Panel({ title, link, loading, error, onRetry, children }
     <section className="panel" aria-labelledby={titleId}>
       <div className="panel-head">
         <h2 id={titleId}>{title}</h2>
-        {link && <Link to={link.to}>{link.label}</Link>}
+        {/* A link with an icon is a round button (its name in aria-label); otherwise a small pill. */}
+        {link &&
+          (link.icon ? (
+            <Link to={link.to} className="icon-button" aria-label={link.label} title={link.label}>
+              {link.icon}
+            </Link>
+          ) : (
+            <Link to={link.to} className="link-pill">
+              {link.label}
+            </Link>
+          ))}
       </div>
       {loading ? (
         <p className="panel-state" role="status">

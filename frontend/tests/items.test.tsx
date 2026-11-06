@@ -259,7 +259,7 @@ describe('owner only', () => {
   it('shopkeeper opening /items/new sees Owner only', async () => {
     loggedInAs(SHOPKEEPER, catalog());
     openAt('/items/new');
-    expect(await screen.findByText('OWNER ONLY')).toBeTruthy();
+    expect(await screen.findByRole('heading', { name: 'This page is for the owner' })).toBeTruthy();
     expect(screen.queryByLabelText('Item name')).toBeNull();
   });
 });

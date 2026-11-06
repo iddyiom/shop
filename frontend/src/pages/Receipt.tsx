@@ -25,7 +25,7 @@ export default function Receipt() {
   if (receipt.error || !receipt.data) {
     return (
       <>
-        <PageHeader eyebrow="RECEIPT" title="Receipt not found" tabTitle="Receipt" />
+        <PageHeader title="Receipt not found" tabTitle="Receipt" />
         <p className="coming-soon">
           {receipt.error ?? 'This receipt does not exist.'} <Link to="/sale">New sale</Link>
         </p>

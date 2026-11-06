@@ -1,12 +1,14 @@
-// Home: today's numbers, what needs restocking, and the latest sales.
-// Spec: docs/specs/f04-home.md. The owner also sees the money taken today.
+// Home: a dashboard of today. Greeting, the main actions, today's numbers, the latest
+// sales and what needs restocking. The owner also sees the money taken today.
+// Specs: docs/specs/f04-home.md (what it shows), docs/specs/r01-redesign.md section 11 (the look).
+import { ArrowUpRight, Plus, RefreshCw } from 'lucide-react';
 import { Link } from 'react-router';
 
 import PageHeader from '../components/PageHeader';
 import Panel from '../components/Panel';
 import StatCard from '../components/StatCard';
 import StatusBadge from '../components/StatusBadge';
-import { formatTsh, itemsSummary, PAYMENT_LABEL, shortDate, timeOf } from '../format';
+import { daysAgo, formatTsh, itemsSummary, longDate, PAYMENT_LABEL, shortDate, timeOf } from '../format';
 import type { Receipt, StockLine, Summary } from '../types';
 import { useApi } from '../useApi';
 import { useCurrentUser } from '../user';
@@ -30,45 +32,48 @@ export default function Home() {
 
   return (
     <>
-      <div className="home-top">
-        <PageHeader eyebrow="HOME" title={`Habari, ${user.fullName}`} tabTitle="Home" />
-        {/* "New sale" lives here, not in the menu (decided in the redesign). */}
-        <Link to="/sale" className="big-button">
-          <span className="big-button-icon" aria-hidden="true">
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.8" strokeLinecap="round">
-              <path d="M12 5v14M5 12h14" />
-            </svg>
-          </span>
-          <span className="big-button-text">
-            <span className="big-button-title">New sale</span>
-            <span className="big-button-hint">Pick items, totals appear instantly</span>
-          </span>
+      <PageHeader
+        title={
+          <>
+            Habari, <span className="accent-text">{user.fullName}</span>
+          </>
+        }
+        subtitle={summary.data ? `${longDate(summary.data.date)} · here is today so far` : 'Here is today so far'}
+        tabTitle="Home"
+        actions={
+          <button type="button" className="icon-button" aria-label="Refresh" title="Refresh" onClick={refreshAll}>
+            <RefreshCw size={17} strokeWidth={1.8} aria-hidden="true" />
+          </button>
+        }
+      />
+
+      {/* The main actions. "New sale" lives here, not in the menu. */}
+      <nav className="pill-row" aria-label="Quick actions">
+        <Link to="/sale" className="action-pill main">
+          <Plus size={18} strokeWidth={2.4} aria-hidden="true" />
+          New sale
         </Link>
-      </div>
+        <Link to="/receive" className="action-pill">
+          Receive stock
+        </Link>
+        <Link to="/stock" className="action-pill">
+          Store balance
+        </Link>
+      </nav>
 
-      <div className="toolbar">
-        <span className="eyebrow">{summary.data ? `TODAY · ${shortDate(summary.data.date)}` : 'TODAY'}</span>
-        <button type="button" className="pill-button" onClick={refreshAll}>
-          Refresh
-        </button>
-      </div>
+      <TodayCards
+        summary={summary.data}
+        loading={summary.loading}
+        error={summary.error}
+        onRetry={summary.reload}
+        receipts={sales.data}
+        low={low.data}
+      />
 
-      <TodayCards summary={summary.data} loading={summary.loading} error={summary.error} onRetry={summary.reload} />
-
-      <div className="panels">
-        <Panel
-          title={isOwner ? 'Needs restocking' : 'Tell the owner: running low'}
-          link={{ to: '/stock', label: 'Store balance' }}
-          loading={low.loading}
-          error={low.error}
-          onRetry={low.reload}
-        >
-          <LowStockList lines={low.data ?? []} />
-        </Panel>
-
+      <div className="home-panels">
         <Panel
           title="Latest sales"
-          link={{ to: '/sales', label: 'All sales' }}
+          link={{ to: '/sales', label: 'See all' }}
           // The sales list waits for the summary's date; show the summary's problem if it failed.
           loading={summary.error ? false : summary.loading || sales.loading}
           error={summary.error ?? sales.error}
@@ -76,13 +81,31 @@ export default function Home() {
         >
           <LatestSales receipts={(sales.data ?? []).slice(0, LATEST_SALES)} />
         </Panel>
+
+        <Panel
+          title={isOwner ? 'Needs restocking' : 'Tell the owner: running low'}
+          link={{ to: '/stock', label: 'Store balance', icon: <ArrowUpRight size={16} aria-hidden="true" /> }}
+          loading={low.loading}
+          error={low.error}
+          onRetry={low.reload}
+        >
+          <LowStockTiles lines={low.data ?? []} />
+        </Panel>
       </div>
     </>
   );
 }
 
-function TodayCards(props: { summary: Summary | null; loading: boolean; error: string | null; onRetry: () => void }) {
-  const { summary, loading, error, onRetry } = props;
+type CardsProps = {
+  summary: Summary | null;
+  loading: boolean;
+  error: string | null;
+  onRetry: () => void;
+  receipts: Receipt[] | null; // for "From 38 receipts"
+  low: StockLine[] | null; // for "1 out, 2 running low"
+};
+
+function TodayCards({ summary, loading, error, onRetry, receipts, low }: CardsProps) {
   if (loading) {
     return (
       <p className="panel-state" role="status">
@@ -103,34 +126,43 @@ function TodayCards(props: { summary: Summary | null; loading: boolean; error: s
 
   // Rule 4: the money card exists only if the API sent sales_total (owners only).
   const hasMoney = summary.sales_total !== undefined;
+  const receiptNote = receipts ? `From ${receipts.length} ${receipts.length === 1 ? 'receipt' : 'receipts'}` : 'Money taken today';
+  const outCount = low?.filter((line) => line.stock_status === 'OUT').length ?? 0;
+  const lowCount = (low?.length ?? 0) - outCount;
+  const lowNote = low ? `${outCount} out, ${lowCount} running low` : 'See the list below';
+
   return (
     <section className="stat-grid" aria-label="Today in numbers">
       {hasMoney && (
-        <StatCard label="SALES TODAY (TSh)" value={formatTsh(summary.sales_total ?? 0)} note="Owner only" strong />
+        <StatCard
+          label="Sales today"
+          value={`TSh ${formatTsh(summary.sales_total ?? 0)}`}
+          pill="Owner only"
+          note={receiptNote}
+          strong
+        />
       )}
-      <StatCard label="ITEMS SOLD TODAY" value={String(summary.items_sold)} note="Units on all receipts" strong={!hasMoney} />
-      <StatCard label="LOW OR OUT" value={String(summary.low_stock_count)} note="See the list below" />
+      <StatCard label="Items sold" value={String(summary.items_sold)} pill="Units" note="On all receipts today" />
+      <StatCard label="Low or out" value={String(summary.low_stock_count)} note={lowNote} />
       <StatCard
-        label="LAST RESTOCK"
+        label="Last restock"
         value={summary.last_restock ? shortDate(summary.last_restock) : 'None yet'}
-        note="Latest delivery date"
+        pill={summary.last_restock ? daysAgo(summary.last_restock, summary.date) : undefined}
+        note="Latest delivery"
       />
     </section>
   );
 }
 
-function LowStockList({ lines }: { lines: StockLine[] }) {
+function LowStockTiles({ lines }: { lines: StockLine[] }) {
   if (lines.length === 0) return <p className="empty-text">Nothing is low or out.</p>;
   return (
-    <ul className="low-list">
+    <ul className="low-tiles">
       {lines.map((line) => (
-        <li key={line.product_id} className="low-row">
+        <li key={line.product_id} className="low-tile">
           <StatusBadge status={line.stock_status} />
-          <span className="low-name">
-            <strong>{line.product}</strong>
-            <span>{line.group}</span>
-          </span>
-          <span className="low-left">
+          <strong>{line.product}</strong>
+          <span>
             {line.quantity_in_store} left{line.stock_status === 'LOW' ? ` · low at ${line.min_level}` : ''}
           </span>
         </li>
@@ -142,38 +174,27 @@ function LowStockList({ lines }: { lines: StockLine[] }) {
 function LatestSales({ receipts }: { receipts: Receipt[] }) {
   if (receipts.length === 0) return <p className="empty-text">No sales yet today.</p>;
   return (
-    <div className="table-scroll">
-      <table className="data-table">
-        <thead>
-          <tr>
-            <th scope="col">Time</th>
-            <th scope="col">Sold by</th>
-            <th scope="col">Items</th>
-            <th scope="col">Paid</th>
-            <th scope="col" className="number">
-              Total (TSh)
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {receipts.map((receipt) => {
-            const items = itemsSummary(receipt.items);
-            return (
-              <tr key={receipt.id}>
-                <td>{timeOf(receipt.sold_at)}</td>
-                <td>{receipt.sold_by}</td>
-                <td className="cut" title={items}>
-                  {items}
-                </td>
-                <td>
-                  <span className="chip">{PAYMENT_LABEL[receipt.payment_method]}</span>
-                </td>
-                <td className="number strong-number">{formatTsh(receipt.total)}</td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
-    </div>
+    <ul className="sale-list">
+      {receipts.map((receipt) => {
+        const items = itemsSummary(receipt.items);
+        return (
+          <li key={receipt.id} className="sale-row">
+            <span className="time-tile">{timeOf(receipt.sold_at)}</span>
+            <span className="sale-what">
+              <strong className="cut" title={items}>
+                {items}
+              </strong>
+              <span className="sale-meta">
+                <span>#{receipt.id}</span> · <span>{receipt.sold_by}</span> ·{' '}
+                <span>{PAYMENT_LABEL[receipt.payment_method]}</span>
+              </span>
+            </span>
+            <span className="sale-total">
+              TSh <span>{formatTsh(receipt.total)}</span>
+            </span>
+          </li>
+        );
+      })}
+    </ul>
   );
 }

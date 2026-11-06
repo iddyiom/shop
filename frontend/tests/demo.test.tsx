@@ -21,9 +21,13 @@ describe('demo accounts on the Log in page', () => {
   it('log in page shows the demo box in development', async () => {
     fakeApi();
     openAt('/login');
-    expect(await screen.findByRole('heading', { name: 'Demo accounts' })).toBeTruthy();
-    expect(screen.getByRole('button', { name: /^Owner/ })).toBeTruthy();
-    expect(screen.getByRole('button', { name: /^Shopkeeper/ })).toBeTruthy();
+    expect(await screen.findByRole('heading', { name: 'Development only' })).toBeTruthy();
+    expect(screen.getByRole('button', { name: 'Demo owner' })).toBeTruthy();
+    expect(screen.getByRole('button', { name: 'Demo shopkeeper' })).toBeTruthy();
+    // The mock-up shows only the names: no demo password is drawn on the page.
+    for (const account of devAccounts.accounts) {
+      expect(document.body.textContent).not.toContain(account.password);
+    }
   });
 
   it('clicking Owner logs in as the demo owner', async () => {
@@ -31,8 +35,8 @@ describe('demo accounts on the Log in page', () => {
       'POST /api/auth/login': () => json({ access_token: 'demo-token', token_type: 'bearer', user: OWNER }),
     });
     openAt('/login');
-    fireEvent.click(await screen.findByRole('button', { name: /^Owner/ }));
-    expect(await screen.findByText('Habari, Depot Owner')).toBeTruthy();
+    fireEvent.click(await screen.findByRole('button', { name: 'Demo owner' }));
+    expect(await screen.findByRole('heading', { name: 'Habari, Depot Owner' })).toBeTruthy();
 
     const login = fetchMock.mock.calls.find(([url]) => url === '/api/auth/login');
     expect(JSON.parse(String(login?.[1]?.body))).toEqual({
@@ -46,7 +50,7 @@ describe('demo accounts on the Log in page', () => {
       'POST /api/auth/login': () => json({ error: 'wrong_credentials', message: 'Wrong username or password' }, 401),
     });
     openAt('/login');
-    fireEvent.click(await screen.findByRole('button', { name: /^Owner/ }));
+    fireEvent.click(await screen.findByRole('button', { name: 'Demo owner' }));
     expect((await screen.findByRole('alert')).textContent).toBe('Wrong username or password');
     expect(screen.getByText('Create or reset them: python -m app.manage add-demo-users')).toBeTruthy();
   });

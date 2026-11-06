@@ -102,7 +102,7 @@ export default function Sale() {
       (term === '' || p.name.toLowerCase().includes(term) || p.group.toLowerCase().includes(term)),
   );
 
-  const header = <PageHeader eyebrow="NEW SALE" title="Pick the items" tabTitle="New sale" />;
+  const header = <PageHeader title="Pick the items" tabTitle="New sale" />;
 
   if (products.loading) {
     return (

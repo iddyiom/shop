@@ -66,7 +66,7 @@ export default function Adjust() {
     }
   }
 
-  const header = <PageHeader eyebrow="ADJUST STOCK" title="Fix the count" tabTitle="Adjust stock" />;
+  const header = <PageHeader title="Fix the count" tabTitle="Adjust stock" />;
   const back = (
     <Link to="/stock" className="back-link">
       ← Back to store balance

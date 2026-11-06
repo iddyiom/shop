@@ -1,7 +1,7 @@
 // Tests for src/format.ts. Specs: docs/specs/f04-home.md and f09-records.md, section 7.
 import { describe, expect, it } from 'vitest';
 
-import { dayBefore, formatTsh, itemsSummary, longDate, shortDate, timeOf } from '../src/format';
+import { dayBefore, daysAgo, formatTsh, itemsSummary, longDate, shortDate, timeOf } from '../src/format';
 
 describe('format', () => {
   it('formatTsh adds thousands separators', () => {
@@ -39,5 +39,11 @@ describe('format', () => {
   it('longDate turns 2026-11-05 into Thursday 5 November', () => {
     expect(longDate('2026-11-05')).toBe('Thursday 5 November');
     expect(longDate('2028-02-29')).toBe('Tuesday 29 February');
+  });
+  it('daysAgo counts whole days from the server today, across a month end', () => {
+    expect(daysAgo('2026-11-05', '2026-11-05')).toBe('Today');
+    expect(daysAgo('2026-11-04', '2026-11-05')).toBe('Yesterday');
+    expect(daysAgo('2026-11-01', '2026-11-05')).toBe('4 days ago');
+    expect(daysAgo('2026-10-30', '2026-11-02')).toBe('3 days ago');
   });
 });

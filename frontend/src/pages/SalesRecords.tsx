@@ -35,7 +35,7 @@ export default function SalesRecords() {
   // Question 2: adds up the totals the SERVER put on its own receipts; owner only (rule 3).
   const dayTotal = receipts.reduce((sum, receipt) => sum + receipt.total, 0);
 
-  const header = <PageHeader eyebrow="SALES RECORDS" title="Every receipt" tabTitle="Sales records" />;
+  const header = <PageHeader title="Every receipt" tabTitle="Sales records" />;
 
   if (summary.loading || summary.error) {
     return (

@@ -46,6 +46,14 @@ export function longDate(date: string): string {
   return `${WEEKDAYS[d.getUTCDay()]} ${d.getUTCDate()} ${LONG_MONTHS[d.getUTCMonth()]}`;
 }
 
+/** How long ago a day was, from the server's today: "Today", "Yesterday", "4 days ago". */
+export function daysAgo(date: string, today: string): string {
+  const days = Math.round((utcDay(today).getTime() - utcDay(date).getTime()) / 86_400_000);
+  if (days <= 0) return 'Today';
+  if (days === 1) return 'Yesterday';
+  return `${days} days ago`;
+}
+
 /** +3 / −2: a stock change with its sign, so "added" and "removed" are clear at a glance. */
 export function signed(change: number): string {
   return change > 0 ? `+${change}` : `−${Math.abs(change)}`;

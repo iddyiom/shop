@@ -50,7 +50,7 @@ export default function Users() {
     }
   }
 
-  const header = <PageHeader eyebrow="USERS" title="Who can log in" tabTitle="Users" />;
+  const header = <PageHeader title="Who can log in" tabTitle="Users" />;
 
   // Only the FIRST load blanks the page; a reload after a change keeps the list on screen.
   if (!users.data && (users.loading || users.error)) {

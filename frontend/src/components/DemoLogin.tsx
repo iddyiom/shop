@@ -33,8 +33,10 @@ export default function DemoLogin() {
 
   return (
     <section className="demo-box" aria-labelledby="demo-title">
-      <h2 id="demo-title">Demo accounts</h2>
-      <p className="demo-note">Only on this laptop (npm run dev). Never in the depot&apos;s app.</p>
+      {/* A line with the words in the middle; title says why it is here. */}
+      <h2 id="demo-title" className="demo-divider" title="Only on this laptop (npm run dev). Never in the depot's app.">
+        Development only
+      </h2>
       <div className="demo-buttons">
         {devAccounts.accounts.map((account) => (
           <button
@@ -44,10 +46,8 @@ export default function DemoLogin() {
             disabled={busy}
             onClick={() => quickLogIn(account.username, account.password)}
           >
-            <span className="demo-label">{account.label}</span>
-            <span className="demo-credentials">
-              {account.username} · {account.password}
-            </span>
+            {/* The mock-up shows only "Demo owner": the password is never drawn on screen. */}
+            Demo {account.label.toLowerCase()}
           </button>
         ))}
       </div>

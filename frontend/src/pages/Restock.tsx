@@ -53,7 +53,7 @@ export default function Restock() {
   // The note after a correction belongs to the delivery it was made on.
   const [notice, setNotice] = useState<{ deliveryId: number; text: string } | null>(null);
 
-  const header = <PageHeader eyebrow="RESTOCK HISTORY" title="Past deliveries" tabTitle="Restock history" />;
+  const header = <PageHeader title="Past deliveries" tabTitle="Restock history" />;
 
   // Only the FIRST load blanks the page; a reload after a correction keeps the old list on screen.
   if (!list.data && (list.loading || list.error)) {
