@@ -42,7 +42,7 @@ Iddy to choose the next step. Candidates: the small things noticed along the way
 | F9 | Sales records, restock history and corrections | Done | 12c961e |
 | B1 | Backend: `PATCH /users/{id}` (rename, deactivate) | Done | 29ad708 |
 | B2 | Backend: `GET /sales?from=&to=` date range | Parked (Version 2, with reports) | |
-| F10 | Users: list, unlock, add, deactivate | Done (not committed yet) | |
+| F10 | Users: list, unlock, add, deactivate | Done | e029ded |
 
 Statuses: Planned, Next, In progress, Done, Parked.
 
